@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Kesehatan</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url('https://images.unsplash.com/photo-1506801310323-534be5e7c0f8');
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 420px;
+        background: rgba(255, 255, 255, 0.85);
+        padding: 25px;
+        border-radius: 15px;
+        margin: 50px auto;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 6px 0 14px 0;
+        border-radius: 8px;
+        border: 1px solid #aaa;
+    }
+
+    button {
+        width: 100%;
+        background: #0084ff;
+        padding: 12px;
+        border: none;
+        color: white;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background: #006fd6;
+    }
+
+    .result {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f8f8;
+        border-radius: 10px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Kalkulator Kesehatan</h2>
+
+    <label>Tinggi Badan (cm)</label>
+    <input type="number" id="height" placeholder="contoh: 160">
+
+    <label>Berat Badan (kg)</label>
+    <input type="number" id="weight" placeholder="contoh: 50">
+
+    <label>Umur</label>
+    <input type="number" id="age" placeholder="contoh: 17">
+
+    <button onclick="calculate()">Hitung</button>
+
+    <div id="output" class="result" style="display:none;"></div>
+</div>
+
+<script>
+function calculate() {
+    let h = document.getElementById("height").value;
+    let w = document.getElementById("weight").value;
+    let age = document.getElementById("age").value;
+
+    if (!h || !w || !age) {
+        alert("Harap isi semua data!");
+        return;
+    }
+
+    let tinggiMeter = h / 100;
+    let bmi = (w / (tinggiMeter * tinggiMeter)).toFixed(1);
+
+    let kategori = "";
+    let saran = "";
+
+    if (bmi < 18.5) {
+        kategori = "Kurus";
+        saran = "Perbanyak makanan tinggi kalori sehat seperti alpukat, kacang-kacangan, ayam, telur, nasi merah, dan susu.";
+    }
+    else if (bmi < 25) {
+        kategori = "Normal";
+        saran = "Pertahankan pola makan seimbang: buah, sayur, ikan, ayam, telur, dan air putih yang cukup.";
+    }
+    else if (bmi < 30) {
+        kategori = "Berlebih";
+        saran = "Kurangi makanan berminyak/manis. Perbanyak sayur, buah, oatmeal, dada ayam, dan air putih.";
+    }
+    else {
+        kategori = "Obesitas";
+        saran = "Fokus pada pola makan rendah kalori, hindari gorengan, perbanyak air putih, sayur, dan olahraga teratur.";
+    }
+
+    document.getElementById("output").style.display = "block";
+    document.getElementById("output").innerHTML = `
+        <b>Hasil :</b><br>
+        BMI Anda: <b>${bmi}</b> (${kategori})<br><br>
+        <b>Saran makanan:</b><br>
+        ${saran}
+    `;
+}
+</script>
+
+</body>
+</html>
