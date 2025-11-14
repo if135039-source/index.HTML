@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Tangkap Bintang + Suara</title>
+<style>
+    body {
+        background: linear-gradient(#77bffd, #e2f5ff);
+        overflow: hidden;
+        text-align: center;
+        font-family: Arial;
+    }
+    h1 { color: #fff; text-shadow: 2px 2px #3a79a8; }
+    #score { font-size: 30px; color: white; }
+    .star {
+        width: 60px; height: 60px;
+        position: absolute;
+        background-size: cover;
+        cursor: pointer;
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Five-pointed_star.svg/1024px-Five-pointed_star.svg.png');
+        animation: float 2s infinite ease-in-out;
+    }
+    @keyframes float {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0); }
+    }
+</style>
+</head>
+<body>
+
+<h1>⭐ Tangkap Bintang! ⭐</h1>
+<div id="score">Skor: 0</div>
+
+<audio id="sound">
+  <source src="https://www.soundjay.com/buttons/sounds/button-16.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const sound = document.getElementById("sound");
+const scoreText = document.getElementById("score");
+let score = 0;
+
+// spawn bintang
+setInterval(() => {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.left = Math.random() * (window.innerWidth - 80) + "px";
+    star.style.top = Math.random() * (window.innerHeight - 150) + "px";
+
+    star.onclick = () => {
+        score++;
+        scoreText.textContent = "Skor: " + score;
+        sound.play();
+        star.remove();
+    };
+
+    document.body.appendChild(star);
+
+    setTimeout(() => star.remove(), 2000);
+}, 1000);
+</script>
+
+</body>
+</html>
