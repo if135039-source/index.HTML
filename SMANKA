@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Kalkulator Kesehatan Remaja</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: pink url('https://i.imgur.com/kxE3S4m.png'); 
+        background-size: cover;
+        background-repeat: no-repeat;
+        animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .container {
+        width: 450px;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 25px;
+        margin: 40px auto;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+        animation: slideDown 1.5s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-40px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 2px solid #ff7eb9;
+        border-radius: 10px;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        background: #ff5fa2;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background: #ff2e84;
+        transform: scale(1.05);
+    }
+
+    .result {
+        padding: 15px;
+        background: #ffe3f1;
+        border-radius: 15px;
+        margin-top: 20px;
+        animation: pop 0.8s ease;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0.7); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Animasi Kejutan */
+    #kejutan {
+        display: none;
+        font-size: 30px;
+        text-align: center;
+        animation: shake 0.5s ease infinite;
+    }
+
+    @keyframes shake {
+        0% { transform: rotate(-5deg); }
+        50% { transform: rotate(5deg); }
+        100% { transform: rotate(-5deg); }
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center; color:#ff007f;">💖 Kalkulator Kesehatan Remaja 💖</h2>
+
+    <input id="umur" type="number" placeholder="Masukkan umur">
+    <input id="berat" type="number" placeholder="Masukkan berat badan (kg)">
+    <input id="tinggi" type="number" placeholder="Masukkan tinggi badan (cm)">
+
+    <button onclick="hitungBMI()">Hitung BMI & Saran</button>
+
+    <div id="output" class="result" style="display:none;"></div>
+
+    <canvas id="myChart" style="margin-top:20px;"></canvas>
+
+    <div id="kejutan">🎉💖 SELAMAT! Kamu Keren Banget! 💖🎉</div>
+</div>
+
+<script>
+function hitungBMI() {
+    const umur = document.getElementById("umur").value;
+    const berat = document.getElementById("berat").value;
+    const tinggi = document.getElementById("tinggi").value / 100;
+
+    if (!umur || !berat || !tinggi) {
+        alert("Lengkapi semua data ya!");
+        return;
+    }
+
+    let bmi = berat / (tinggi * tinggi);
+    let kategori = "";
+    let saran = "";
+
+    if (bmi < 18.5) {
+        kategori = "Kurus";
+        saran = "Perbanyak makan protein, susu, telur, daging, alpukat, keju, roti gandum.";
+    } else if (bmi < 25) {
+        kategori = "Normal";
+        saran = "Pertahankan pola makan seimbang seperti sayur, buah, ayam, ikan, susu, nasi merah.";
+    } else if (bmi < 30) {
+        kategori = "Berlebih";
+        saran = "Kurangi makanan manis & gorengan. Makan lebih banyak sayur hijau, buah, dan air putih.";
+    } else {
+        kategori = "Obesitas";
+        saran = "Disarankan olahraga rutin & batasi makanan berminyak/manis. Konsultasi bila perlu.";
+    }
+
+    let output = `
+        <h3>Hasil Analisis</h3>
+        <p><b>BMI:</b> ${bmi.toFixed(2)}</p>
+        <p><b>Kategori:</b> ${kategori}</p>
+        <p><b>Saran Makanan:</b> ${saran}</p>
+        <p><b>Rata-rata BMI sehat:</b> 18.5 - 24.9</p>
+    `;
+
+    document.getElementById("output").innerHTML = output;
+    document.getElementById("output").style.display = "block";
+
+    tampilkanGrafik(bmi);
+
+    // Animasi kejutan
+    document.getElementById("kejutan").style.display = "block";
+    setTimeout(() => {
+        document.getElementById("kejutan").style.display = "none";
+    }, 4000);
+}
+
+let chart;
+function tampilkanGrafik(bmi) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['BMI Kamu', 'BMI Ideal'],
+            datasets: [{
+                label: 'Nilai BMI',
+                data: [bmi, 22],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            },
+            animation: {
+                duration: 2000
+            }
+        }
+    });
+}
+</script>
+
+</body>
+</html>
