@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Petualangan Edukasi — Adventure Learning</title>
+  <style>
+    :root{ --cell:64px; --cols:9; }
+    body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background: linear-gradient(180deg,#fef3f8 0%, #ffd6e8 100%); color:#222; }
+    header{ padding:16px; display:flex; gap:12px; align-items:center; justify-content:space-between; }
+    h1{ margin:0; font-size:18px; }
+    .container{ display:flex; gap:18px; padding:16px; }
+
+    /* Map */
+    .map{ width: calc(var(--cell) * var(--cols)); background:linear-gradient(180deg,#fff 0%, #f7f7ff 100%); border-radius:12px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); }
+    .grid{ display:grid; grid-template-columns: repeat(var(--cols), var(--cell)); grid-auto-rows: var(--cell); gap:4px; }
+    .cell{ background: rgba(255,255,255,.6); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; }
+    .wall{ background:#b9d9ff; }
+    .grass{ background:#e6ffe8; }
+    .door{ background:#ffdca3; }
+    .npc{ background:#ffe0f3; position:relative; }
+    .player{ background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><circle cx="24" cy="18" r="9" fill="%23ff6b81"/><rect x="12" y="28" width="24" height="12" rx="6" ry="6" fill="%23ff9aa2"/></svg>') center/48% no-repeat, linear-gradient(180deg,#fff 0%,#fff0 100%);} 
+
+    /* HUD */
+    .hud{ width:320px; min-height: calc(var(--cell) * 5); background:linear-gradient(180deg,#ffffffcc,#fff0); border-radius:12px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,.06); }
+    .stats{ display:flex; flex-direction:column; gap:8px; }
+    .score{ font-size:14px; font-weight:600; }
+    .question-box{ margin-top:8px; padding:10px; border-radius:8px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+    .answers{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    button.opt{ padding:8px 10px; border-radius:8px; border:1px solid #eee; background:#fff; cursor:pointer; }
+    .log{ margin-top:10px; font-size:12px; height:120px; overflow:auto; background:#fff8; padding:8px; border-radius:8px; }
+
+    footer{ padding:12px; text-align:center; font-size:12px; color:#7a7a7a; }
+
+    /* Responsive */
+    @media (max-width:900px){ .container{ flex-direction:column; align-items:center; } .hud{ width:100%; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Petualangan Edukasi — Adventure Learning</h1>
+      <div style="font-size:12px;color:#555">Gunakan tombol panah untuk bergerak. Temui NPC untuk menjawab soal dan buka area baru.</div>
+    </div>
+    <div style="text-align:right">
+      <div id="level">Level: 1</div>
+      <div id="lives">Nyawa: 3</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="map">
+      <div id="grid" class="grid"></div>
+    </div>
+
+    <aside class="hud">
+      <div class="stats">
+        <div class="score">Skor: <span id="score">0</span></div>
+        <div>Rata-rata benar: <span id="avg">0%</span></div>
+      </div>
+
+      <div class="question-box" id="questionBox" style="display:none">
+        <div id="questionText" style="font-weight:600"></div>
+        <div class="answers" id="answers"></div>
+      </div>
+
+      <div class="log" id="log">Selamat datang, penjelajah! Temui guru di kotak berwarna merah muda untuk mulai.</div>
+    </aside>
+  </div>
+
+  <footer>Made with ❤️ — Edu Game Demo</footer>
+
+  <script>
+  // Simple tile map: 9 cols x 7 rows
+  const cols = 9, rows = 7;
+  const gridEl = document.getElementById('grid');
+  const scoreEl = document.getElementById('score');
+  const avgEl = document.getElementById('avg');
+  const logEl = document.getElementById('log');
+  const levelEl = document.getElementById('level');
+  const livesEl = document.getElementById('lives');
+  const questionBox = document.getElementById('questionBox');
+  const questionText = document.getElementById('questionText');
+  const answersEl = document.getElementById('answers');
+
+  // Create cells and map data
+  const cells = [];
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const el = document.createElement('div');
+      el.className = 'cell grass';
+      gridEl.appendChild(el);
+      cells.push({el, r, c, type:'grass'});
+    }
+  }
+
+  // Helper index
+  const idx = (r,c)=> r*cols + c;
+
+  // Add walls
+  const walls = [ [0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[6,0],[6,1],[6,2],[6,3],[6,4],[6,5],[6,6],[6,7],[6,8] ];
+  walls.forEach(([r,c])=>{ cells[idx(r,c)].type='wall'; cells[idx(r,c)].el.className='cell wall'; });
+
+  // Add door (locked) at row 3 col 8
+  const doorPos = [3,8];
+  cells[idx(doorPos[0],doorPos[1])].type='door';
+  cells[idx(doorPos[0],doorPos[1])].el.className='cell door';
+
+  // Add NPCs with questions
+  const npcs = [ {r:2,c:4, q:{text:'Berapa 7 + 5?', opts:['10','12','13'], a:1, type:'math'}},
+                 {r:4,c:2, q:{text:'Pilihan kata yang benar untuk melengkapi: "Saya ___ buku."', opts:['membaca','membacakan','membacaah'], a:0, type:'lang'}} ];
+  npcs.forEach((n,i)=>{ const cell = cells[idx(n.r,n.c)]; cell.type='npc'; cell.el.className='cell npc'; cell.npcId = i; });
+
+  // Player start
+  let player = {r:3,c:1, score:0, correct:0, totalAnswered:0, lives:3, level:1};
+  cells[idx(player.r,player.c)].el.classList.add('player');
+
+  // Render function for dynamic classes
+  function refresh(){
+    cells.forEach(c=>{ c.el.classList.remove('player'); });
+    cells[idx(player.r,player.c)].el.classList.add('player');
+    scoreEl.textContent = player.score;
+    levelEl.textContent = 'Level: '+player.level;
+    livesEl.textContent = 'Nyawa: '+player.lives;
+    const avg = player.totalAnswered ? Math.round((player.correct/player.totalAnswered)*100) : 0;
+    avgEl.textContent = avg + '%';
+  }
+
+  // Movement handling
+  document.addEventListener('keydown', (e)=>{
+    const moves = { ArrowUp:[-1,0], ArrowDown:[1,0], ArrowLeft:[0,-1], ArrowRight:[0,1] };
+    if(!moves[e.key]) return;
+    e.preventDefault();
+    const [dr,dc] = moves[e.key];
+    const nr = player.r + dr; const nc = player.c + dc;
+    if(nr<0||nr>=rows||nc<0||nc>=cols) return;
+    const target = cells[idx(nr,nc)];
+    if(target.type==='wall') { log('Ada halangan di depan.'); return; }
+    if(target.type==='door' && !doorUnlocked){ log('Pintu terkunci. Selesaikan tantangan dulu.'); return; }
+    // move
+    player.r=nr; player.c=nc; refresh();
+    // check NPC
+    if(target.type==='npc'){ startQuestion(target.npcId); }
+    // check goal (door cell unlocked)
+    if(target.type==='door' && doorUnlocked){ log('Selamat! Kamu membuka area baru — naik level.'); levelUp(); }
+  });
+
+  // Game logic for questions
+  let doorUnlocked = false;
+  function startQuestion(npcId){
+    const n = npcs[npcId];
+    const q = n.q;
+    questionBox.style.display='block';
+    questionText.textContent = q.text;
+    answersEl.innerHTML='';
+    q.opts.forEach((opt, i)=>{
+      const btn = document.createElement('button');
+      btn.className='opt'; btn.textContent = opt;
+      btn.addEventListener('click', ()=> answerQuestion(npcId, i));
+      answersEl.appendChild(btn);
+    });
+    log('Bertemu NPC — soal: '+q.text);
+  }
+
+  function answerQuestion(npcId, chosen){
+    const n = npcs[npcId]; const q = n.q;
+    player.totalAnswered++;
+    if(chosen === q.a){
+      player.score += 10;
+      player.correct++;
+      log('Benar! +10 poin.');
+      // reward: unlock door when first NPC answered correctly
+      if(!doorUnlocked){ doorUnlocked=true; log('Sesuatu bergetar jauh... Pintu di ujung terbuka!'); cells[idx(doorPos[0],doorPos[1])].el.classList.add('door-unlocked'); }
+    } else {
+      player.lives -= 1;
+      log('Salah. Nyawa berkurang.');
+      if(player.lives<=0){ gameOver(); }
+    }
+    questionBox.style.display='none';
+    refresh();
+  }
+
+  function log(text){ const time = new Date().toLocaleTimeString(); logEl.innerHTML = `<div>[${time}] ${text}</div>` + logEl.innerHTML; }
+
+  function levelUp(){ player.level++; player.score += 20; player.correct = 0; player.totalAnswered = 0; doorUnlocked=false; // reset for demo
+    // move player to start of next level and add a new NPC question
+    player.r = 3; player.c = 1;
+    // add new NPC as a tiny progression mechanic
+    const newNpc = {r:2, c:6, q:{text:'Berapa 9 x 3?', opts:['27','24','29'], a:0, type:'math'}};
+    npcs.push(newNpc);
+    cells[idx(newNpc.r,newNpc.c)].type='npc'; cells[idx(newNpc.r,newNpc.c)].el.className='cell npc';
+    refresh();
+  }
+
+  function gameOver(){ alert('Permainan selesai — nyawamu habis. Mulai ulang?'); location.reload(); }
+
+  // initial refresh
+  refresh();
+
+  // Small accessibility: click on grid to move towards (simple step)
+  gridEl.addEventListener('click', (e)=>{
+    const cellEl = e.target.closest('.cell'); if(!cellEl) return;
+    const all = Array.from(gridEl.children); const i = all.indexOf(cellEl);
+    const target = cells[i];
+    // compute step direction
+    const dr = target.r - player.r; const dc = target.c - player.c;
+    const stepR = dr === 0 ? 0 : (dr>0?1:-1);
+    const stepC = dc === 0 ? 0 : (dc>0?1:-1);
+    const nr = player.r + stepR; const nc = player.c + stepC;
+    const t = cells[idx(nr,nc)];
+    if(t.type==='wall') { log('Ada halangan di depan.'); return; }
+    player.r = nr; player.c = nc; refresh();
+    if(t.type==='npc') startQuestion(t.npcId);
+  });
+
+  // Tiny tutorial message
+  log('Temui NPC di kotak merah muda. Jawab soal untuk membuka pintu.');
+  </script>
+</body>
+</html>
