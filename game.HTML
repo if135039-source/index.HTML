@@ -1,0 +1,32 @@
+<div id="game-area"></div>
+
+<style>
+.animal {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    background-size: cover;
+    cursor: pointer;
+}
+</style>
+
+<script>
+const animals = [
+  "https://pngimg.com/uploads/cat/cat_PNG50498.png",
+  "https://pngimg.com/uploads/rabbit/rabbit_PNG3786.png",
+  "https://pngimg.com/uploads/chicken/chicken_PNG2165.png"
+];
+
+setInterval(() => {
+    const img = document.createElement("div");
+    img.className = "animal";
+    img.style.backgroundImage = `url(${animals[Math.floor(Math.random()*animals.length)]})`;
+    img.style.left = Math.random()*window.innerWidth+"px";
+    img.style.top = Math.random()*window.innerHeight+"px";
+
+    img.onclick = () => img.remove();
+
+    document.body.appendChild(img);
+    setTimeout(()=>img.remove(),2000);
+}, 1200);
+</script>
