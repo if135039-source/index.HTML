@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Block Blast Pastel</title>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f9c5d1, #fcebf4);
+        font-family: Poppins, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+    }
+
+    h1 {
+        color: #ff2e79;
+        margin-top: 20px;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+        100% { transform: translateY(0); }
+    }
+
+    #score {
+        font-size: 22px;
+        padding: 10px;
+        color: #6b1b5c;
+        font-weight: 600;
+    }
+
+    .game {
+        margin: 20px auto;
+        width: 350px;
+        height: 350px;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+    }
+
+    .block {
+        width: 100%;
+        padding-bottom: 100%;
+        border-radius: 8px;
+        cursor: pointer;
+        animation: fadeIn 0.7s ease;
+        position: relative;
+        transition: transform 0.15s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.3); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .block:active {
+        transform: scale(0.8);
+    }
+
+    /* Particle animasi lucu */
+    .particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.7;
+        animation: float 0.7s linear forwards;
+    }
+
+    @keyframes float {
+        from { transform: scale(1); opacity: 0.9; }
+        to { transform: translateY(-40px) scale(0) rotate(360deg); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<h1>💖 Block Blast Pastel 💖</h1>
+<div id="score">Score: 0</div>
+
+<div class="game" id="gameBoard"></div>
+
+<script>
+const gameBoard = document.getElementById("gameBoard");
+const colors = ["#ff9aa2", "#ffb7b2", "#ffdac1", "#e2f0cb", "#b5ead7", "#c7ceea"];
+let score = 0;
+
+/* Generate Blok */
+function generateBlocks() {
+    for (let i = 0; i < 49; i++) {
+        const div = document.createElement("div");
+        div.classList.add("block");
+        div.style.background = colors[Math.floor(Math.random() * colors.length)];
+        div.addEventListener("click", () => popBlock(div));
+        gameBoard.appendChild(div);
+    }
+}
+
+/* Animasi partikel lucu */
+function createParticles(x, y) {
+    for (let i = 0; i < 6; i++) {
+        const p = document.createElement("div");
+        p.classList.add("particle");
+        p.style.left = x + "px";
+        p.style.top = y + "px";
+        document.body.appendChild(p);
+
+        setTimeout(() => p.remove(), 700);
+    }
+}
+
+/* Hapus blok + score */
+function popBlock(block) {
+    let rect = block.getBoundingClientRect();
+    createParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+    block.style.transform = "scale(0)";
+    block.style.transition = "0.3s ease";
+
+    setTimeout(() => {
+        block.style.opacity = "0";
+        block.remove();
+        addScore();
+        dropNewBlock();
+    }, 200);
+}
+
+/* Tambah score */
+function addScore() {
+    score += 10;
+    document.getElementById("score").innerText = "Score: " + score;
+}
+
+/* Tambah blok baru dari atas */
+function dropNewBlock() {
+    const div = document.createElement("div");
+    div.classList.add("block");
+    div.style.background = colors[Math.floor(Math.random() * colors.length)];
+    div.style.animation = "fadeIn 0.5s ease";
+    div.addEventListener("click", () => popBlock(div));
+    gameBoard.appendChild(div);
+}
+
+generateBlocks();
+</script>
+
+</body>
+</html>
