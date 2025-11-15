@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Game Matematika Paling Seru!</title>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #ffd6e8, #c7e9ff);
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+    }
+
+    h1 {
+        margin-top: 20px;
+        color: #ff2f72;
+        font-size: 36px;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        50% { transform: translateY(-6px); }
+    }
+
+    .game-box {
+        width: 400px;
+        margin: 30px auto;
+        padding: 25px;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 0 20px rgba(255, 82, 152, 0.3);
+        animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #question {
+        font-size: 40px;
+        font-weight: bold;
+        margin: 20px 0;
+        color: #333;
+    }
+
+    input {
+        width: 80%;
+        padding: 10px;
+        border: 2px solid #ffa3c2;
+        border-radius: 10px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    button {
+        width: 200px;
+        padding: 12px;
+        margin-top: 15px;
+        background: #ff6ea6;
+        border: none;
+        border-radius: 15px;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #ff2f72;
+        transform: scale(1.05);
+    }
+
+    #score, #level {
+        font-size: 22px;
+        margin-top: 10px;
+        color: #333;
+    }
+
+    /* Timer bar */
+    #timerBar {
+        width: 100%;
+        height: 12px;
+        background: #ffe4ef;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    #timeLeft {
+        height: 100%;
+        width: 100%;
+        background: #ff3f82;
+        transition: width 1s linear;
+    }
+
+    /* Efek benar/salah */
+    .correct {
+        animation: correctAnim 0.5s ease;
+    }
+
+    @keyframes correctAnim {
+        0% { background: #ffffff; }
+        50% { background: #b0ffb0; }
+        100% { background: #ffffff; }
+    }
+
+    .wrong {
+        animation: wrongAnim 0.5s ease;
+    }
+
+    @keyframes wrongAnim {
+        0% { background: #ffffff; }
+        50% { background: #ffd1d1; }
+        100% { background: #ffffff; }
+    }
+
+    /* Efek kejutan */
+    #surprise {
+        display: none;
+        font-size: 30px;
+        margin-top: 15px;
+        animation: shake 0.5s infinite;
+    }
+
+    @keyframes shake {
+        0% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+        100% { transform: rotate(-3deg); }
+    }
+
+</style>
+
+</head>
+<body>
+
+<h1>🔥 Game Matematika Paling Seru 🔥</h1>
+
+<div class="game-box">
+    <div id="score">Score: 0</div>
+    <div id="level">Level: 1</div>
+
+    <div id="timerBar"><div id="timeLeft"></div></div>
+
+    <div id="question">5 + 3 ?</div>
+
+    <input id="answer" type="number" placeholder="Jawaban kamu...">
+
+    <button onclick="checkAnswer()">Jawab</button>
+
+    <div id="surprise">🎉 Hebat banget kamu! 🎉</div>
+</div>
+
+<script>
+let score = 0;
+let level = 1;
+let correctAns;
+let timer;
+let timeRemaining = 15;
+
+function playPop() {
+    const snd = new AudioContext();
+    const osc = snd.createOscillator();
+    const gain = snd.createGain();
+    osc.connect(gain);
+    gain.connect(snd.destination);
+    osc.frequency.value = 500;
+    osc.type = "square";
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.001, snd.currentTime + 0.2);
+}
+
+function newQuestion() {
+    timeRemaining = 15;
+    document.getElementById("timeLeft").style.width = "100%";
+
+    clearInterval(timer);
+    timer = setInterval(updateTimer, 1000);
+
+    let a = Math.floor(Math.random() * (10 * level)) + 1;
+    let b = Math.floor(Math.random() * (10 * level)) + 1;
+
+    const ops = ["+", "-", "×", "÷"];
+    const realOps = ["+", "-", "*", "/"];
+    let index = Math.floor(Math.random() * 4);
+
+    let opSymbol = ops[index];
+    let opReal = realOps[index];
+
+    if (opReal === "/") {
+        a = a * b; // supaya hasil pembagian bulat
+    }
+
+    correctAns = eval(`${a} ${opReal} ${b}`);
+
+    document.getElementById("question").innerText = `${a} ${opSymbol} ${b} = ?`;
+}
+
+function updateTimer() {
+    timeRemaining--;
+    document.getElementById("timeLeft").style.width = `${(timeRemaining / 15) * 100}%`;
+
+    if (timeRemaining <= 0) {
+        clearInterval(timer);
+        wrong();
+        setTimeout(newQuestion, 700);
+    }
+}
+
+function checkAnswer() {
+    let userAns = document.getElementById("answer").value;
+
+    if (userAns === "") return;
+
+    if (Number(userAns) === correctAns) {
+        correct();
+    } else {
+        wrong();
+    }
+
+    document.getElementById("answer").value = "";
+    setTimeout(newQuestion, 600);
+}
+
+/* Animasi BENAR */
+function correct() {
+    playPop();
+    document.querySelector(".game-box").classList.add("correct");
+
+    score += 10;
+    if (score % 50 === 0) {
+        level++;
+        document.getElementById("surprise").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("surprise").style.display = "none";
+        }, 2000);
+    }
+
+    document.getElementById("score").innerText = "Score: " + score;
+    document.getElementById("level").innerText = "Level: " + level;
+
+    setTimeout(() => {
+        document.querySelector(".game-box").classList.remove("correct");
+    }, 300);
+}
+
+/* Animasi SALAH */
+function wrong() {
+    document.querySelector(".game-box").classList.add("wrong");
+
+    setTimeout(() => {
+        document.querySelector(".game-box").classList.remove("wrong");
+    }, 300);
+}
+
+newQuestion();
+</script>
+
+</body>
+</html>
