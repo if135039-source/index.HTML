@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Game Sains + Eksperimen</title>
+
+<style>
+    body {
+        background: #e8f6ff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+    }
+    h1 {
+        color: #0077cc;
+    }
+    .box {
+        background: white;
+        padding: 20px;
+        margin: 25px auto;
+        max-width: 700px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    img {
+        width: 250px;
+        border-radius: 15px;
+        margin-bottom: 15px;
+    }
+    .option {
+        background: #d9ecff;
+        padding: 10px;
+        margin: 8px auto;
+        width: 80%;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+    .option:hover {
+        background: #bfe0ff;
+    }
+    button {
+        margin-top: 12px;
+        padding: 12px 25px;
+        font-size: 18px;
+        background: #0077cc;
+        border: none;
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #005fa3;
+    }
+    #result {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    /* Eksperimen box */
+    #water-cup {
+        width: 150px;
+        margin-top: 10px;
+    }
+    #ball {
+        width: 80px;
+        position: relative;
+        transition: all 0.5s ease-in-out;
+    }
+</style>
+</head>
+<body>
+
+<h1>🔬 Game Sains + Eksperimen Interaktif</h1>
+
+<!-- ===================== GAME 1: SAINS + GAMBAR ===================== -->
+<div class="box">
+    <h2>📸 Game Sains + Gambar</h2>
+    <img id="science-img" src="" alt="science image">
+    <h3 id="question">Loading question...</h3>
+
+    <div id="options"></div>
+    <p id="result"></p>
+
+    <button onclick="nextQuestion()">Soal Berikutnya</button>
+</div>
+
+
+<!-- ===================== GAME 2: SIMULASI EKSPERIMEN AIR MENGUAP ===================== -->
+<div class="box">
+    <h2>💧 Eksperimen 1 – Air Menguap</h2>
+
+    <img id="water-cup" src="https://i.ibb.co/kKwyJJQ/water.png">
+
+    <p>Klik tombol untuk memanaskan air dan lihat apa yang terjadi!</p>
+
+    <button onclick="heatWater()">Panaskan Air 🔥</button>
+    <p id="evaporate-result"></p>
+</div>
+
+
+<!-- ===================== GAME 3: SIMULASI GAYA DORONG ===================== -->
+<div class="box">
+    <h2>🧪 Eksperimen 2 – Gaya Dorong (Force)</h2>
+
+    <img id="ball" src="https://i.ibb.co/hcX0jqt/ball.png">
+
+    <p>Geser bola dengan memilih kekuatan dorongan:</p>
+
+    <button onclick="pushBall(50)">Dorong Pelan</button>
+    <button onclick="pushBall(150)">Dorong Sedang</button>
+    <button onclick="pushBall(300)">Dorong Kuat 💥</button>
+
+</div>
+
+
+
+<script>
+// ================== GAME 1: SAINS + GAMBAR ===================
+const scienceQuestions = [
+    {
+        q: "Apa nama planet ini?",
+        options: ["Mars", "Bumi", "Jupiter", "Venus"],
+        answer: 1,
+        img: "https://i.ibb.co/3MTjbPb/earth.jpg"
+    },
+    {
+        q: "Bagian tumbuhan manakah ini?",
+        options: ["Batang", "Akar", "Daun", "Bunga"],
+        answer: 2,
+        img: "https://i.ibb.co/Jn2z1sG/leaf.jpg"
+    },
+    {
+        q: "Hewan apakah ini?",
+        options: ["Kucing", "Burung", "Ikan", "Kura-kura"],
+        answer: 2,
+        img: "https://i.ibb.co/2P9NTXv/fish.jpg"
+    },
+    {
+        q: "Apa alat ini?",
+        options: ["Termometer", "Barometer", "Kompas", "Lup"],
+        answer: 0,
+        img: "https://i.ibb.co/MpnsHVB/thermometer.jpg"
+    }
+];
+
+let currentQ = 0;
+
+// Menampilkan soal baru
+function nextQuestion() {
+    currentQ = Math.floor(Math.random() * scienceQuestions.length);
+    const q = scienceQuestions[currentQ];
+
+    document.getElementById("science-img").src = q.img;
+    document.getElementById("question").innerHTML = q.q;
+
+    let optionHTML = "";
+    q.options.forEach((opt, i) => {
+        optionHTML += `<div class='option' onclick='checkAnswer(${i})'>${opt}</div>`;
+    });
+
+    document.getElementById("options").innerHTML = optionHTML;
+
+    document.getElementById("result").innerHTML = "";
+}
+
+// Mengecek jawaban
+function checkAnswer(i) {
+    const q = scienceQuestions[currentQ];
+
+    if (i === q.answer) {
+        document.getElementById("result").innerHTML = "✔️ Benar! Hebat!";
+        document.getElementById("result").style.color = "green";
+    } else {
+        document.getElementById("result").innerHTML =
+            "❌ Salah! Jawaban: " + q.options[q.answer];
+        document.getElementById("result").style.color = "red";
+    }
+}
+
+nextQuestion();
+
+
+// ================== EKSPERIMEN 1: AIR MENGUAP ===================
+let waterLevel = 100;
+
+function heatWater() {
+    if (waterLevel <= 0) {
+        document.getElementById("evaporate-result").innerHTML = 
+            "💨 Air sudah sepenuhnya menguap!";
+        return;
+    }
+
+    waterLevel -= 25;
+
+    document.getElementById("water-cup").style.opacity = waterLevel / 100;
+
+    document.getElementById("evaporate-result").innerHTML =
+        "Air sedang menguap... tersisa " + waterLevel + "%";
+}
+
+
+// ================== EKSPERIMEN 2: GAYA DORONG ===================
+function pushBall(force) {
+    const ball = document.getElementById("ball");
+    ball.style.transform = `translateX(${force}px)`;
+}
+</script>
+
+</body>
+</html>
