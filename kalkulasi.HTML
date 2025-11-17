@@ -1,91 +1,151 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Berat Badan Remaja</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            width: 300px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .result {
-            margin-top: 20px;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personality Quiz</title>
+
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #b8e8ff, #e3d7ff);
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 500px;
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        text-align: center;
+        animation: fadeIn 0.7s;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: none;
+        background: #8ba3ff;
+        color: white;
+        border-radius: 12px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #6f87f5;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h2>Kalkulator Berat Badan Remaja</h2>
-        <label for="weight">Berat Badan (kg):</label>
-        <input type="number" id="weight" placeholder="Masukkan berat badan">
-        <label for="height">Tinggi Badan (cm):</label>
-        <input type="number" id="height" placeholder="Masukkan tinggi badan">
-        <button onclick="calculateBMI()">Hitung BMI</button>
-        <div class="result" id="result"></div>
-    </div>
 
-    <script>
-        function calculateBMI() {
-            const weight = parseFloat(document.getElementById('weight').value);
-            const height = parseFloat(document.getElementById('height').value) / 100; // ubah cm ke meter
-            
-            if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
-                document.getElementById('result').innerHTML = "Masukkan nilai yang valid!";
-                return;
-            }
+<div class="container" id="quizContainer">
 
-            const bmi = weight / (height * height);
-            let category = '';
+    <h2 id="question">Loading...</h2>
 
-            if (bmi < 18.5) {
-                category = 'Kekurangan Berat Badan';
-            } else if (bmi < 25) {
-                category = 'Normal';
-            } else if (bmi < 30) {
-                category = 'Overweight';
-            } else {
-                category = 'Obesitas';
-            }
+    <div id="answers"></div>
 
-            document.getElementById('result').innerHTML = 
-                `BMI Anda: ${bmi.toFixed(2)} <br>Kategori: <strong>${category}</strong>`;
-        }
-    </script>
+</div>
+
+<script>
+const questions = [
+    {
+        q: "Kamu lebih suka menghabiskan waktu di…",
+        options: [
+            { text: "Tempat ramai penuh aktivitas", type: "Enerjik" },
+            { text: "Tempat tenang dan nyaman", type: "Tenang" },
+            { text: "Tempat estetik untuk bikin konten", type: "Kreatif" }
+        ]
+    },
+    {
+        q: "Kalau punya waktu libur, kamu akan…",
+        options: [
+            { text: "Keluar jalan-jalan", type: "Enerjik" },
+            { text: "Tidur dan recharge energi", type: "Tenang" },
+            { text: "Membuat sesuatu (gambar, video, tulisan)", type: "Kreatif" }
+        ]
+    },
+    {
+        q: "Kamu paling suka tipe musik yang…",
+        options: [
+            { text: "Beat cepat & bikin semangat", type: "Enerjik" },
+            { text: "Lofi, mellow, calm", type: "Tenang" },
+            { text: "Indie, unik, penuh karakter", type: "Kreatif" }
+        ]
+    }
+];
+
+let index = 0;
+let score = { "Enerjik": 0, "Tenang": 0, "Kreatif": 0 };
+
+function loadQuestion() {
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+
+    const answerDiv = document.getElementById("answers");
+    answerDiv.innerHTML = "";
+
+    q.options.forEach((opt) => {
+        let btn = document.createElement("button");
+        btn.innerText = opt.text;
+        btn.onclick = () => selectAnswer(opt.type);
+        answerDiv.appendChild(btn);
+    });
+}
+
+function selectAnswer(type) {
+    score[type]++;
+
+    index++;
+    if (index < questions.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    const container = document.getElementById("quizContainer");
+
+    // cari tipe terbanyak
+    let finalType = Object.keys(score).reduce((a, b) => 
+        score[a] > score[b] ? a : b
+    );
+    
+    const descriptions = {
+        "Enerjik": "Kamu penuh semangat, aktif, dan suka berpetualang! ✨🔥",
+        "Tenang": "Kamu lembut, kalem, dan suka suasana damai. ☁️💙",
+        "Kreatif": "Kamu imajinatif, unik, dan suka menciptakan hal baru. 🎨🌈"
+    };
+
+    container.innerHTML = `
+        <h2>Hasil Kepribadian Kamu</h2>
+        <h1 style="color:#6f87f5;">${finalType}</h1>
+        <p>${descriptions[finalType]}</p>
+        <button onclick="location.reload()">Ulangi Quiz</button>
+    `;
+}
+
+loadQuestion();
+</script>
+
 </body>
 </html>
