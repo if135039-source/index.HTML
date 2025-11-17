@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gravity Lab — Eksperimen Fisika</title>
+  <style>
+    :root{--bg:#0f1724;--panel:#0b1220;--accent:#3b82f6;--muted:#94a3b8;--glass:rgba(255,255,255,0.04)}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{background:linear-gradient(180deg,#071021 0%, #071730 60%);color:#e6eef8;display:flex;gap:16px;padding:18px;box-sizing:border-box}
+    .app{display:grid;grid-template-columns:1fr 360px;gap:16px;width:100%;height:calc(100vh - 36px)}
+    .canvas-wrap{background:var(--panel);border-radius:12px;padding:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6);display:flex;flex-direction:column}
+    canvas{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:8px;flex:1;display:block}
+    .controls{background:var(--panel);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px}
+    .card{background:var(--glass);padding:10px;border-radius:10px}
+    label{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+    input[type=range]{width:100%}
+    button{background:linear-gradient(180deg,var(--accent),#2563eb);border:none;padding:8px 10px;border-radius:8px;color:white;font-weight:600;cursor:pointer}
+    .row{display:flex;gap:8px}
+    .small{padding:6px 8px;background:#0b1220;border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+    .muted{color:var(--muted);font-size:13px}
+    footer{font-size:12px;color:var(--muted);text-align:center}
+    .stat{display:flex;gap:8px;align-items:center}
+    .hint{font-size:12px;color:var(--muted)}
+    .flex-col{display:flex;flex-direction:column}
+    .toggle{display:inline-flex;align-items:center;gap:8px}
+    @media(max-width:900px){.app{grid-template-columns:1fr} .controls{height:320px;overflow:auto}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="canvas-wrap">
+      <div class="card" style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <strong>Gravity Lab</strong>
+          <div class="hint">Eksperimen gaya gravitasi, benturan, massa, dan gesekan</div>
+        </div>
+        <div class="stat muted">FPS: <span id="fps">0</span></div>
+      </div>
+
+      <canvas id="c"></canvas>
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+        <button id="playPause">Pause</button>
+        <button id="resetBtn" class="small">Reset</button>
+        <div style="flex:1" class="muted">Klik canvas untuk spawn bola. Drag untuk memindahkan. Scroll untuk zoom.</div>
+      </div>
+    </div>
+
+    <aside class="controls">
+      <div class="card">
+        <label>Gravity <span id="gVal">9.8</span></label>
+        <input type="range" id="grav" min="-20" max="20" step="0.1" value="9.8">
+      </div>
+
+      <div class="card">
+        <label>Air Resistance (damping) <span id="dVal">0.01</span></label>
+        <input type="range" id="damping" min="0" max="0.2" step="0.001" value="0.01">
+      </div>
+
+      <div class="card">
+        <label>Default Mass <span id="mVal">1.0</span></label>
+        <input type="range" id="mass" min="0.1" max="10" step="0.1" value="1.0">
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center"><strong>Spawn</strong><span class="muted">Shapes</span></div>
+        <div class="row" style="margin-top:8px">
+          <button id="spawnBall">Ball</button>
+          <button id="spawnBox" class="small">Box</button>
+          <button id="clear" class="small">Clear</button>
+        </div>
+        <div style="margin-top:8px" class="hint">Setelah spawn, klik-drag untuk memberi kecepatan awal (drag dan lepaskan).</div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between"><strong>Challenge</strong><span class="muted">Goal Area</span></div>
+        <div style="margin-top:8px" class="row">
+          <button id="toggleGoal" class="small">Toggle Goal</button>
+          <button id="newGoal" class="small">New Random Goal</button>
+        </div>
+        <div style="margin-top:8px" class="hint">Aktifkan goal lalu cobalah membuat bola masuk area menggunakan gravitasimu.</div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between"><strong>Simulation</strong><span class="muted">Options</span></div>
+        <div style="margin-top:8px" class="row">
+          <label class="toggle"><input type="checkbox" id="elastic" checked> Elastic collisions</label>
+        </div>
+        <div style="margin-top:8px" class="row">
+          <label class="toggle"><input type="checkbox" id="showVectors"> Show velocity vectors</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div><strong>Tips</strong></div>
+        <ul class="muted" style="margin:8px 0 0 18px;padding:0">
+          <li>Ubah gravity ke negatif untuk efek antigravitasi.</li>
+          <li>Tingkatkan massa untuk melihat momentum lebih besar.</li>
+          <li>Gunakan damping untuk meniru gesekan udara.</li>
+        </ul>
+      </div>
+
+      <footer>File ini: single-page HTML — buka di browser (double-click)</footer>
+    </aside>
+  </div>
+
+  <script>
+  // Gravity Lab — simple 2D physics playground (circles + boxes)
+  // Author: ChatGPT helper
+
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let W = 1200, H = 700;
+  function resize(){
+    const rect = canvas.getBoundingClientRect();
+    W = rect.width = Math.max(320, window.innerWidth - 420);
+    H = rect.height = Math.max(300, window.innerHeight - 84);
+    canvas.width = W * devicePixelRatio;
+    canvas.height = H * devicePixelRatio;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Controls
+  const gravInput = document.getElementById('grav');
+  const gVal = document.getElementById('gVal');
+  const dampInput = document.getElementById('damping');
+  const dVal = document.getElementById('dVal');
+  const massInput = document.getElementById('mass');
+  const mVal = document.getElementById('mVal');
+  const playPause = document.getElementById('playPause');
+  const fpsEl = document.getElementById('fps');
+  const spawnBallBtn = document.getElementById('spawnBall');
+  const spawnBoxBtn = document.getElementById('spawnBox');
+  const clearBtn = document.getElementById('clear');
+  const resetBtn = document.getElementById('resetBtn');
+  const toggleGoalBtn = document.getElementById('toggleGoal');
+  const newGoalBtn = document.getElementById('newGoal');
+  const elasticBox = document.getElementById('elastic');
+  const showVec = document.getElementById('showVectors');
+
+  gVal.textContent = gravInput.value;
+  dVal.textContent = dampInput.value;
+  mVal.textContent = massInput.value;
+
+  gravInput.oninput = ()=> gVal.textContent = gravInput.value;
+  dampInput.oninput = ()=> dVal.textContent = dampInput.value;
+  massInput.oninput = ()=> mVal.textContent = massInput.value;
+
+  let gravity = parseFloat(gravInput.value);
+  let damping = parseFloat(dampInput.value);
+  let defaultMass = parseFloat(massInput.value);
+
+  gravInput.addEventListener('change', ()=> gravity = parseFloat(gravInput.value));
+  dampInput.addEventListener('change', ()=> damping = parseFloat(dampInput.value));
+  massInput.addEventListener('change', ()=> defaultMass = parseFloat(massInput.value));
+
+  // World
+  let objects = [];
+  let running = true;
+
+  // Goal area
+  let goal = {on:false,x:W*0.8,y:H*0.8,r:60};
+  function randomGoal(){ goal.x = 80 + Math.random()*(W-160); goal.y = 80 + Math.random()*(H-160); goal.r = 40 + Math.random()*70; }
+
+  toggleGoalBtn.onclick = ()=>{ goal.on = !goal.on; toggleGoalBtn.textContent = goal.on? 'Hide Goal' : 'Show Goal'; }
+  newGoalBtn.onclick = ()=>{ randomGoal(); }
+
+  // Utilities
+  function rand(min,max){return min + Math.random()*(max-min)}
+
+  // Objects: circle and box
+  class Body{
+    constructor(opts){
+      this.type = opts.type || 'circle';
+      this.x = opts.x; this.y = opts.y;
+      this.vx = opts.vx||0; this.vy = opts.vy||0;
+      this.ax = 0; this.ay = 0;
+      this.mass = opts.mass||1;
+      if(this.type==='circle'){
+        this.r = opts.r||rand(8,30);
+        this.color = opts.color||`hsl(${Math.floor(rand(0,360))} 70% 58%)`;
+      } else {
+        this.w = opts.w||rand(24,70); this.h = opts.h||rand(18,60);
+        this.color = opts.color||`hsl(${Math.floor(rand(0,360))} 70% 48%)`;
+      }
+      this.elasticity = 0.75; // for wall/obj collisions
+    }
+    applyForce(fx,fy){ this.ax += fx/this.mass; this.ay += fy/this.mass; }
+    integrate(dt){
+      // Simple Euler
+      this.vx += this.ax * dt; this.vy += this.ay * dt;
+      // damping
+      this.vx *= (1 - Math.min(0.99, damping));
+      this.vy *= (1 - Math.min(0.99, damping));
+      this.x += this.vx * dt; this.y += this.vy * dt;
+      this.ax = 0; this.ay = 0;
+    }
+    draw(ctx){
+      ctx.save();
+      ctx.fillStyle = this.color;
+      if(this.type==='circle'){
+        ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill();
+      } else {
+        ctx.fillRect(this.x - this.w/2, this.y - this.h/2, this.w, this.h);
+      }
+      ctx.restore();
+    }
+  }
+
+  // Spawn helpers
+  function spawnCircle(x,y,mass,vel){
+    const b = new Body({type:'circle', x,y, mass:mass, r:12 + Math.random()*24});
+    if(vel){ b.vx = vel.x; b.vy = vel.y; }
+    objects.push(b);
+    return b;
+  }
+  function spawnBox(x,y,mass,vel){
+    const b = new Body({type:'box', x,y, mass:mass, w:30 + Math.random()*60, h:20 + Math.random()*40});
+    if(vel){ b.vx = vel.x; b.vy = vel.y; }
+    objects.push(b);
+    return b;
+  }
+
+  spawnBallBtn.onclick = ()=> spawnCircle(W/2, H/4, defaultMass, {x:rand(-80,80), y:rand(-40,40)});
+  spawnBoxBtn.onclick = ()=> spawnBox(W/2, H/2, defaultMass, {x:rand(-40,40), y:rand(-20,20)});
+  clearBtn.onclick = ()=> objects = [];
+  resetBtn.onclick = ()=>{ objects = []; gravity = parseFloat(gravInput.value); damping = parseFloat(dampInput.value); }
+
+  // Simple collision handlers
+  function circleCircle(a,b){
+    const dx = b.x - a.x, dy = b.y - a.y; const dist = Math.hypot(dx,dy);
+    const minD = (a.r + b.r);
+    if(dist < minD && dist>0){
+      const overlap = (minD - dist);
+      const nx = dx/dist, ny = dy/dist;
+      // push apart proportional to masses
+      const totalMass = a.mass + b.mass;
+      const pushA = (overlap * (b.mass/totalMass));
+      const pushB = (overlap * (a.mass/totalMass));
+      a.x -= nx * pushA; a.y -= ny * pushA;
+      b.x += nx * pushB; b.y += ny * pushB;
+      // relative velocity
+      const rvx = b.vx - a.vx, rvy = b.vy - a.vy;
+      const relVelAlongNormal = rvx*nx + rvy*ny;
+      if(relVelAlongNormal > 0) return; // moving apart
+      const e = elasticBox.checked ? Math.min(a.elasticity, b.elasticity) : 0.0;
+      const j = -(1+e) * relVelAlongNormal / (1/a.mass + 1/b.mass);
+      const jx = j * nx, jy = j * ny;
+      a.vx -= jx / a.mass; a.vy -= jy / a.mass;
+      b.vx += jx / b.mass; b.vy += jy / b.mass;
+    }
+  }
+
+  function circleAABB(circle, box){
+    // box is axis-aligned: use box.x,y as center
+    const hw = box.w/2, hh = box.h/2;
+    const nearestX = Math.max(box.x - hw, Math.min(circle.x, box.x + hw));
+    const nearestY = Math.max(box.y - hh, Math.min(circle.y, box.y + hh));
+    const dx = circle.x - nearestX, dy = circle.y - nearestY;
+    const dist2 = dx*dx + dy*dy;
+    if(dist2 < circle.r * circle.r){
+      const dist = Math.sqrt(dist2) || 0.0001;
+      const nx = dx/dist, ny = dy/dist;
+      const penetration = circle.r - dist;
+      // push circle away
+      circle.x += nx * penetration; circle.y += ny * penetration;
+      // reflect velocity
+      const relVel = circle.vx * nx + circle.vy * ny;
+      if(relVel < 0){
+        const e = elasticBox.checked ? circle.elasticity : 0.0;
+        const j = -(1+e) * relVel * circle.mass; // treat box as immovable-ish scaled by mass
+        circle.vx += (j * nx) / circle.mass; circle.vy += (j * ny) / circle.mass;
+      }
+    }
+  }
+
+  // Box-box simple AABB separation (inelastic)
+  function boxBox(a,b){
+    if(Math.abs(a.x - b.x) < (a.w/2 + b.w/2) && Math.abs(a.y - b.y) < (a.h/2 + b.h/2)){
+      // push out along minimal axis
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const overlapX = (a.w/2 + b.w/2) - Math.abs(dx);
+      const overlapY = (a.h/2 + b.h/2) - Math.abs(dy);
+      if(overlapX < overlapY){
+        const dir = dx>0?1:-1; a.x -= dir * overlapX/2; b.x += dir * overlapX/2;
+        // swap vx roughly
+        const temp = a.vx; a.vx = b.vx * 0.6; b.vx = temp * 0.6;
+      } else {
+        const dir = dy>0?1:-1; a.y -= dir * overlapY/2; b.y += dir * overlapY/2;
+        const temp = a.vy; a.vy = b.vy * 0.6; b.vy = temp * 0.6;
+      }
+    }
+  }
+
+  // Simulation loop
+  let last = performance.now(); let acc = 0; const step = 1/120; let frames = 0, fpsTime = 0;
+  function update(now){
+    const dtReal = Math.min(0.05, (now - last)/1000); last = now;
+    if(running){
+      // fixed-step integration for stability
+      acc += dtReal;
+      while(acc >= step){
+        stepSim(step);
+        acc -= step;
+      }
+    }
+    render();
+    // fps
+    frames++; fpsTime += dtReal; if(fpsTime > 0.5){ fpsEl.textContent = Math.round(frames / fpsTime); frames = 0; fpsTime = 0; }
+    requestAnimationFrame(update);
+  }
+
+  function stepSim(dt){
+    // apply gravity
+    for(const b of objects){
+      b.applyForce(0, gravity * b.mass);
+    }
+    // integrate
+    for(const b of objects){ b.integrate(dt * 60); }
+    // collisions with walls
+    for(const b of objects){
+      if(b.type==='circle'){
+        if(b.x - b.r < 0){ b.x = b.r; b.vx = -b.vx * b.elasticity; }
+        if(b.x + b.r > W){ b.x = W - b.r; b.vx = -b.vx * b.elasticity; }
+        if(b.y - b.r < 0){ b.y = b.r; b.vy = -b.vy * b.elasticity; }
+        if(b.y + b.r > H){ b.y = H - b.r; b.vy = -b.vy * b.elasticity; }
+      } else {
+        if(b.x - b.w/2 < 0){ b.x = b.w/2; b.vx = -b.vx * b.elasticity; }
+        if(b.x + b.w/2 > W){ b.x = W - b.w/2; b.vx = -b.vx * b.elasticity; }
+        if(b.y - b.h/2 < 0){ b.y = b.h/2; b.vy = -b.vy * b.elasticity; }
+        if(b.y + b.h/2 > H){ b.y = H - b.h/2; b.vy = -b.vy * b.elasticity; }
+      }
+    }
+    // pairwise collisions
+    for(let i=0;i<objects.length;i++){
+      for(let j=i+1;j<objects.length;j++){
+        const A = objects[i], B = objects[j];
+        if(A.type==='circle' && B.type==='circle') circleCircle(A,B);
+        else if(A.type==='circle' && B.type==='box') circleAABB(A,B);
+        else if(A.type==='box' && B.type==='circle') circleAABB(B,A);
+        else if(A.type==='box' && B.type==='box') boxBox(A,B);
+      }
+    }
+    // goal detection
+    if(goal.on){
+      for(const b of objects){
+        if(b.type==='circle'){
+          const dx = b.x - goal.x, dy = b.y - goal.y;
+          if(Math.hypot(dx,dy) < goal.r){
+            // mark as success (change color / slow)
+            b.color = 'hsl(140 60% 45%)'; b.vx *= 0.5; b.vy *= 0.5;
+          }
+        }
+      }
+    }
+  }
+
+  function render(){
+    ctx.clearRect(0,0,W,H);
+    // background grid
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1;
+    const grid = 40; for(let x=0;x<W;x+=grid){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(let y=0;y<H;y+=grid){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    ctx.restore();
+
+    // goal
+    if(goal.on){
+      ctx.save(); ctx.beginPath(); ctx.fillStyle = 'rgba(120,240,160,0.08)'; ctx.strokeStyle = 'rgba(120,240,160,0.25)'; ctx.lineWidth = 2;
+      ctx.arc(goal.x,goal.y,goal.r,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
+    }
+
+    // objects
+    for(const b of objects){
+      b.draw(ctx);
+      if(showVec.checked){
+        ctx.beginPath(); ctx.moveTo(b.x,b.y); ctx.lineTo(b.x + b.vx*0.2, b.y + b.vy*0.2); ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.stroke();
+      }
+    }
+  }
+
+  // Input for spawning / dragging
+  let isDown = false, dragObj = null, dragStart = null;
+  canvas.addEventListener('pointerdown', (e)=>{
+    const rect = canvas.getBoundingClientRect(); const x = (e.clientX - rect.left); const y = (e.clientY - rect.top);
+    // check if clicked near an object
+    for(let i = objects.length-1;i>=0;i--){ const b = objects[i];
+      if(b.type==='circle'){
+        if(Math.hypot(b.x-x,b.y-y) < b.r + 6){ dragObj = b; isDown = true; dragStart = {x,y}; return; }
+      } else {
+        if(x > b.x - b.w/2 && x < b.x + b.w/2 && y > b.y - b.h/2 && y < b.y + b.h/2){ dragObj = b; isDown=true; dragStart={x,y}; return; }
+      }
+    }
+    // else spawn a circle at position but wait for drag to set velocity
+    isDown = true; dragStart = {x,y,spawn:true};
+  });
+  canvas.addEventListener('pointermove', (e)=>{
+    if(!isDown) return;
+    const rect = canvas.getBoundingClientRect(); const x = (e.clientX - rect.left); const y = (e.clientY - rect.top);
+    // visual drag line
+    render();
+    ctx.beginPath(); ctx.moveTo(dragStart.x, dragStart.y); ctx.lineTo(x,y); ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.stroke();
+  });
+  canvas.addEventListener('pointerup', (e)=>{
+    const rect = canvas.getBoundingClientRect(); const x = (e.clientX - rect.left); const y = (e.clientY - rect.top);
+    if(dragObj){
+      // give initial velocity based on drag
+      const dx = x - dragStart.x, dy = y - dragStart.y;
+      dragObj.vx += dx * 0.5; dragObj.vy += dy * 0.5; dragObj = null;
+    } else if(dragStart && dragStart.spawn){
+      const dx = x - dragStart.x, dy = y - dragStart.y;
+      spawnCircle(dragStart.x, dragStart.y, defaultMass, {x:dx*0.5, y:dy*0.5});
+    }
+    isDown = false; dragStart = null;
+  });
+
+  // wheel to zoom (scales visual only)
+  let scale = 1.0; canvas.addEventListener('wheel', (e)=>{
+    e.preventDefault(); scale *= (e.deltaY>0?0.95:1.05); scale = Math.min(2, Math.max(0.5, scale)); canvas.style.transform = `scale(${scale})`;
+  }, {passive:false});
+
+  // pause/play
+  playPause.onclick = ()=>{ running = !running; playPause.textContent = running? 'Pause' : 'Play'; }
+
+  // init with a few objects
+  for(let i=0;i<6;i++) spawnCircle(120 + i*80, 80 + i*30, 0.5 + i*0.5);
+  for(let i=0;i<2;i++) spawnBox(300 + i*160, 200 + i*40, 2 + i);
+
+  // start
+  requestAnimationFrame(update);
+
+  // adapt canvas size to container on load
+  setTimeout(()=>{ resize(); randomGoal(); },200);
+  </script>
+</body>
+</html>
