@@ -1,56 +1,114 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Game Anak - Bahasa Inggris Nama Buah</title>
+<title>Game Bahasa Inggris - Nama Buah</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
+        background: #f0ffe6;
         text-align: center;
-        background: #f7ffe5;
-        margin: 0;
-        padding: 20px;
+        padding: 30px;
     }
-    h1 {
-        color: #4CAF50;
-    }
-    #game-box {
+    #container {
         background: white;
         padding: 20px;
-        max-width: 500px;
+        max-width: 450px;
         margin: auto;
         border-radius: 15px;
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     img {
         width: 200px;
+        border-radius: 10px;
         margin-bottom: 20px;
-        border-radius: 10px;
-    }
-    button {
-        background: #4CAF50;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 10px;
-        font-size: 18px;
-        color: white;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-    button:hover {
-        background: #45a049;
     }
     input {
         padding: 10px;
         width: 80%;
-        border-radius: 10px;
+        font-size: 18px;
+        border-radius: 8px;
         border: 2px solid #4CAF50;
-        font-size: 16px;
+    }
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        font-size: 18px;
+        border: none;
+        background: #4CAF50;
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #45a049;
     }
     #result {
-        font-size: 20px;
-        margin-top: 10px;
+        margin-top: 15px;
         font-weight: bold;
+        font-size: 20px;
     }
 </style>
 </head>
+<body>
+
+<h1>🍎 Game Belajar Nama Buah (English) 🍌</h1>
+
+<div id="container">
+    <h2>Tebak Nama Buah Ini!</h2>
+
+    <img id="fruit-img" src="" alt="fruit">
+
+    <input id="answer" type="text" placeholder="Tulis nama buah dalam Bahasa Inggris...">
+
+    <br>
+    <button onclick="checkAnswer()">Cek Jawaban</button>
+    <p id="result"></p>
+
+    <button onclick="newFruit()">Buah Selanjutnya ➡️</button>
+</div>
+
+<script>
+// List buah
+const fruits = [
+    {name: "apple", img: "https://i.ibb.co/3FTdZF4/apple.jpg"},
+    {name: "banana", img: "https://i.ibb.co/NVqr9T7/banana.jpg"},
+    {name: "orange", img: "https://i.ibb.co/9Gx73Q8/orange.jpg"},
+    {name: "grape", img: "https://i.ibb.co/dJR4Y4M/grape.jpg"},
+    {name: "mango", img: "https://i.ibb.co/7YyvzZ6/mango.jpg"},
+    {name: "watermelon", img: "https://i.ibb.co/J5YQDdp/watermelon.jpg"}
+];
+
+let currentFruit = null;
+
+// Buah baru (acak)
+function newFruit() {
+    const random = Math.floor(Math.random() * fruits.length);
+    currentFruit = fruits[random];
+
+    document.getElementById("fruit-img").src = currentFruit.img;
+    document.getElementById("answer").value = "";
+    document.getElementById("result").innerHTML = "";
+}
+
+// Cek jawaban
+function checkAnswer() {
+    const val = document.getElementById("answer").value.toLowerCase();
+
+    if (val === currentFruit.name) {
+        document.getElementById("result").innerHTML = "✔️ Benar!";
+        document.getElementById("result").style.color = "green";
+    } else {
+        document.getElementById("result").innerHTML =
+            "❌ Salah! Jawaban yang benar: <b>" + currentFruit.name + "</b>";
+        document.getElementById("result").style.color = "red";
+    }
+}
+
+// Game mulai pertama
+newFruit();
+</script>
+
+</body>
+</html>
