@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChillChat – Chat Anonim</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #121212;
+        color: white;
+    }
+
+    header {
+        background: #1f1f1f;
+        padding: 15px;
+        font-size: 22px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    #rooms {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        overflow-x: auto;
+    }
+
+    .room {
+        padding: 10px 14px;
+        background: #2b2b2b;
+        border-radius: 10px;
+        cursor: pointer;
+        white-space: nowrap;
+        border: 1px solid transparent;
+        user-select: none;
+    }
+
+    .room.active {
+        border: 1px solid #fff;
+        background: #3c3c3c;
+    }
+
+    #chat-box {
+        height: 67vh;
+        overflow-y: auto;
+        padding: 15px;
+        background: #101010;
+    }
+
+    .msg {
+        max-width: 70%;
+        padding: 10px 14px;
+        margin: 10px 0;
+        border-radius: 10px;
+        background: #333;
+    }
+
+    .me {
+        background: #005eff;
+        margin-left: auto;
+    }
+
+    .bot {
+        background: #3a3a3a;
+        border-left: 4px solid #00c896;
+    }
+
+    #input-area {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        background: #1a1a1a;
+    }
+
+    #message {
+        flex: 1;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        font-size: 15px;
+    }
+
+    #send {
+        background: #007bff;
+        border: none;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+</style>
+</head>
+
+<body>
+<header>ChillChat – Chat Anonim</header>
+
+<div id="rooms">
+    <div class="room active" onclick="changeRoom('chill')">😌 Chill</div>
+    <div class="room" onclick="changeRoom('sad')">😢 Sad</div>
+    <div class="room" onclick="changeRoom('happy')">😄 Happy</div>
+    <div class="room" onclick="changeRoom('random')">🎲 Random</div>
+    <div class="room" onclick="changeRoom('curhat')">💬 Curhat</div>
+</div>
+
+<div id="chat-box"></div>
+
+<div id="input-area">
+    <input id="message" placeholder="Ketik pesan anonim..." onkeydown="if(event.key==='Enter') sendMessage()">
+    <button id="send" onclick="sendMessage()">Kirim</button>
+</div>
+
+<script>
+    let currentRoom = "chill";
+
+    let chats = {
+        chill: [],
+        sad: [],
+        happy: [],
+        random: [],
+        curhat: []
+    };
+
+    function changeRoom(room) {
+        currentRoom = room;
+
+        document.querySelectorAll(".room").forEach(r => r.classList.remove("active"));
+        event.target.classList.add("active");
+
+        loadChat();
+    }
+
+    function loadChat() {
+        const box = document.getElementById("chat-box");
+        box.innerHTML = "";
+
+        chats[currentRoom].forEach(msg => {
+            const div = document.createElement("div");
+            div.className = "msg " + msg.type;
+            div.textContent = msg.text;
+            box.appendChild(div);
+        });
+
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function sendMessage() {
+        const input = document.getElementById("message");
+        const text = input.value.trim();
+        if (!text) return;
+
+        chats[currentRoom].push({ text: text, type: "me" });
+        input.value = "";
+        loadChat();
+
+        setTimeout(() => botReply(text), 600);
+    }
+
+    // === SIMPLE BOT AI === //
+    function botReply(userText) {
+        let reply = generateBotResponse(userText, currentRoom);
+
+        chats[currentRoom].push({
+            text: reply,
+            type: "bot"
+        });
+
+        loadChat();
+    }
+
+    function generateBotResponse(text, mood) {
+        text = text.toLowerCase();
+
+        // Bot logika dasar / mood-based AI
+        if (mood === "curhat") {
+            if (text.includes("sedih") || text.includes("capek")) {
+                return "Aku ngerti kok... kadang hidup memang berat. Ceritain aja ya, aku dengerin.";
+            }
+            if (text.includes("cinta") || text.includes("pacar")) {
+                return "Masalah cinta memang ribet... apa yang bikin kamu kepikiran banget?";
+            }
+            return "Hmmm... aku dengerin ya. Coba ceritain lebih detail?";
+        }
+
+        if (mood === "sad") {
+            return "Aku ada di sini ya. Kamu nggak sendirian kok.";
+        }
+
+        if (mood === "happy") {
+            return "Asik! Ceritain hal menyenangkan lainnya dong 😄";
+        }
+
+        if (mood === "chill") {
+            return "Santai aja... ceritain apa yang ada di pikiranmu 👀";
+        }
+
+        if (mood === "random") {
+            const randomReplies = [
+                "Kamu tau? Semut bisa tidur 8 jam sehari.",
+                "Fun fact: Otak manusia lebih kuat dari superkomputer.",
+                "Hmmm... menarik juga.",
+                "Lanjut dong 👀"
+            ];
+            return randomReplies[Math.floor(Math.random() * randomReplies.length)];
+        }
+
+        return "Aku dengerin kok.";
+    }
+
+    loadChat();
+</script>
+</body>
+</html>
