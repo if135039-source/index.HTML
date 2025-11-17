@@ -1,0 +1,79 @@
+import React, { useState } from "react";
+
+export default function BMICalculator() {
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [result, setResult] = useState(null);
+
+  const calculateBMI = () => {
+    const w = parseFloat(weight);
+    const h = parseFloat(height) / 100;
+
+    if (!w || !h) {
+      setResult({ bmi: null, status: "Masukkan data yang valid." });
+      return;
+    }
+
+    const bmi = w / (h * h);
+    let status;
+
+    if (bmi < 18.5) status = "Kekurangan berat badan";
+    else if (bmi < 25) status = "Berat badan ideal";
+    else if (bmi < 30) status = "Kelebihan berat badan";
+    else status = "Obesitas";
+
+    setResult({ bmi: bmi.toFixed(2), status });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-sky-200 to-indigo-300 flex items-center justify-center p-6">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md space-y-6">
+        <h1 className="text-3xl font-bold text-center text-indigo-600">Kalkulator BMI</h1>
+
+        <div className="space-y-4">
+          <div>
+            <label className="font-medium">Berat Badan (kg)</label>
+            <input
+              type="number"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              placeholder="Masukkan berat badan"
+              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400"
+            />
+          </div>
+
+          <div>
+            <label className="font-medium">Tinggi Badan (cm)</label>
+            <input
+              type="number"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+              placeholder="Masukkan tinggi badan"
+              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400"
+            />
+          </div>
+
+          <button
+            onClick={calculateBMI}
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition"
+          >
+            Hitung BMI
+          </button>
+        </div>
+
+        {result && (
+          <div className="mt-6 text-center bg-indigo-50 p-4 rounded-xl">
+            {result.bmi ? (
+              <>
+                <p className="text-lg font-semibold">BMI Anda: {result.bmi}</p>
+                <p className="text-indigo-700 font-bold mt-1">Status: {result.status}</p>
+              </>
+            ) : (
+              <p className="text-red-500 font-semibold">{result.status}</p>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
