@@ -406,5 +406,46 @@ document.addEventListener('keydown', (e)=>{
 init();
 
 </script>
+  <!-- Efek Suara Lucu -->
+  <audio id="clickSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_f38b5a4e90.mp3?filename=pop-94319.mp3"></audio>
+
+  <script>
+    const clickSound = document.getElementById('clickSound');
+
+    function playClick(){
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    // Tambahkan pada tombol
+    document.addEventListener('click', function(e){
+      if(e.target.tagName === 'BUTTON' || e.target.classList.contains('option')){
+        playClick();
+      }
+    });
+  </script>
+
+  <!-- Suara Benar & Salah -->
+  <audio id="correctSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_5c1c2ad4e2.mp3?filename=correct-2-46134.mp3"></audio>
+  <audio id="wrongSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0308b5c0f3.mp3?filename=error-126627.mp3"></audio>
+
+  <script>
+    const correctSound = document.getElementById('correctSound');
+    const wrongSound = document.getElementById('wrongSound');
+
+    // Fungsi memutar suara
+    function playCorrect(){ correctSound.currentTime = 0; correctSound.play(); }
+    function playWrong(){ wrongSound.currentTime = 0; wrongSound.play(); }
+
+    // Deteksi jawaban benar / salah
+    document.addEventListener('click', function(e){
+      if(e.target.classList.contains('option')){
+        const isCorrect = e.target.dataset.correct === 'true';
+        if(isCorrect){ playCorrect(); }
+        else{ playWrong(); }
+      }
+    });
+  </script>
+
 </body>
 </html>
