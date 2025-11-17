@@ -1,189 +1,124 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Kalkulator Kesehatan Remaja</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tes Zodiak Estetik</title>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: "Poppins", sans-serif;
-        background: pink url('https://i.imgur.com/kxE3S4m.png'); 
-        background-size: cover;
-        background-repeat: no-repeat;
-        animation: fadeIn 2s ease;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    .container {
-        width: 450px;
-        background: rgba(255, 255, 255, 0.8);
-        padding: 25px;
-        margin: 40px auto;
-        border-radius: 20px;
-        box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
-        animation: slideDown 1.5s ease;
-        backdrop-filter: blur(10px);
-    }
-
-    @keyframes slideDown {
-        from { transform: translateY(-40px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 2px solid #ff7eb9;
-        border-radius: 10px;
-        outline: none;
-    }
-
-    button {
-        width: 100%;
-        padding: 15px;
-        background: #ff5fa2;
-        border: none;
-        border-radius: 20px;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-        transition: 0.3s;
-        margin-top: 10px;
-    }
-
-    button:hover {
-        background: #ff2e84;
-        transform: scale(1.05);
-    }
-
-    .result {
-        padding: 15px;
-        background: #ffe3f1;
-        border-radius: 15px;
-        margin-top: 20px;
-        animation: pop 0.8s ease;
-    }
-
-    @keyframes pop {
-        0% { transform: scale(0.7); opacity: 0; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* Animasi Kejutan */
-    #kejutan {
-        display: none;
-        font-size: 30px;
-        text-align: center;
-        animation: shake 0.5s ease infinite;
-    }
-
-    @keyframes shake {
-        0% { transform: rotate(-5deg); }
-        50% { transform: rotate(5deg); }
-        100% { transform: rotate(-5deg); }
-    }
-
+  body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#1e1b4b,#312e81,#4c1d95);
+    color:white;
+    overflow-x:hidden;
+  }
+  .container{
+    max-width:500px;
+    margin:60px auto;
+    background:rgba(255,255,255,0.1);
+    padding:25px;
+    border-radius:20px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 0 25px rgba(255,255,255,0.15);
+    animation:fadeIn 1.2s ease;
+  }
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);}
+  }
+  h1{
+    text-align:center;
+    margin-bottom:20px;
+    font-weight:600;
+  }
+  label{
+    font-size:18px;
+  }
+  input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    margin:10px 0 20px 0;
+    font-size:16px;
+  }
+  button{
+    width:100%;
+    padding:14px;
+    border:none;
+    background:#a78bfa;
+    color:white;
+    font-size:18px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+  }
+  button:hover{
+    background:#c4b5fd;
+    transform:scale(1.03);
+  }
+  .hasil{
+    margin-top:25px;
+    padding:20px;
+    background:rgba(255,255,255,0.15);
+    border-radius:15px;
+    display:none;
+    animation:fadeIn 0.8s ease;
+  }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="text-align:center; color:#ff007f;">💖 Kalkulator Kesehatan Remaja 💖</h2>
+  <h1>✨ Tes Zodiak Estetik ✨</h1>
+  <label for="tgl">Masukkan Tanggal Lahir:</label>
+  <input type="date" id="tgl" />
+  <button onclick="cekZodiak()">Lihat Zodiak</button>
 
-    <input id="umur" type="number" placeholder="Masukkan umur">
-    <input id="berat" type="number" placeholder="Masukkan berat badan (kg)">
-    <input id="tinggi" type="number" placeholder="Masukkan tinggi badan (cm)">
-
-    <button onclick="hitungBMI()">Hitung BMI & Saran</button>
-
-    <div id="output" class="result" style="display:none;"></div>
-
-    <canvas id="myChart" style="margin-top:20px;"></canvas>
-
-    <div id="kejutan">🎉💖 SELAMAT! Kamu Keren Banget! 💖🎉</div>
+  <div class="hasil" id="hasil"></div>
 </div>
 
+<!-- Efek Suara -->
+<audio id="klikSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_f38ae0ff52.mp3"></audio>
+<audio id="doneSound" src="https://cdn.pixabay.com/audio/2022/03/10/audio_f4c89f9486.mp3"></audio>
+
 <script>
-function hitungBMI() {
-    const umur = document.getElementById("umur").value;
-    const berat = document.getElementById("berat").value;
-    const tinggi = document.getElementById("tinggi").value / 100;
-
-    if (!umur || !berat || !tinggi) {
-        alert("Lengkapi semua data ya!");
-        return;
-    }
-
-    let bmi = berat / (tinggi * tinggi);
-    let kategori = "";
-    let saran = "";
-
-    if (bmi < 18.5) {
-        kategori = "Kurus";
-        saran = "Perbanyak makan protein, susu, telur, daging, alpukat, keju, roti gandum.";
-    } else if (bmi < 25) {
-        kategori = "Normal";
-        saran = "Pertahankan pola makan seimbang seperti sayur, buah, ayam, ikan, susu, nasi merah.";
-    } else if (bmi < 30) {
-        kategori = "Berlebih";
-        saran = "Kurangi makanan manis & gorengan. Makan lebih banyak sayur hijau, buah, dan air putih.";
-    } else {
-        kategori = "Obesitas";
-        saran = "Disarankan olahraga rutin & batasi makanan berminyak/manis. Konsultasi bila perlu.";
-    }
-
-    let output = `
-        <h3>Hasil Analisis</h3>
-        <p><b>BMI:</b> ${bmi.toFixed(2)}</p>
-        <p><b>Kategori:</b> ${kategori}</p>
-        <p><b>Saran Makanan:</b> ${saran}</p>
-        <p><b>Rata-rata BMI sehat:</b> 18.5 - 24.9</p>
-    `;
-
-    document.getElementById("output").innerHTML = output;
-    document.getElementById("output").style.display = "block";
-
-    tampilkanGrafik(bmi);
-
-    // Animasi kejutan
-    document.getElementById("kejutan").style.display = "block";
-    setTimeout(() => {
-        document.getElementById("kejutan").style.display = "none";
-    }, 4000);
+function playClick(){
+  document.getElementById('klikSound').play();
+}
+function playDone(){
+  document.getElementById('doneSound').play();
 }
 
-let chart;
-function tampilkanGrafik(bmi) {
-    const ctx = document.getElementById('myChart').getContext('2d');
+document.querySelector('button').addEventListener('click', playClick);
 
-    if (chart) chart.destroy();
+function cekZodiak(){
+  const tgl = document.getElementById("tgl").value;
+  if(!tgl) return;
 
-    chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['BMI Kamu', 'BMI Ideal'],
-            datasets: [{
-                label: 'Nilai BMI',
-                data: [bmi, 22],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            scales: {
-                y: { beginAtZero: true }
-            },
-            animation: {
-                duration: 2000
-            }
-        }
-    });
+  const date = new Date(tgl);
+  const d = date.getDate();
+  const m = date.getMonth() + 1;
+  let zodiak = "";
+  let deskripsi = "";
+
+  if((m==3&&d>=21)||(m==4&&d<=19)){zodiak="Aries";deskripsi="Penuh energi dan semangat baru.";}
+  else if((m==4&&d>=20)||(m==5&&d<=20)){zodiak="Taurus";deskripsi="Tenang, lembut, dan penuh keteguhan hati.";}
+  else if((m==5&&d>=21)||(m==6&&d<=20)){zodiak="Gemini";deskripsi="Cerdas, lincah, dan komunikatif.";}
+  else if((m==6&&d>=21)||(m==7&&d<=22)){zodiak="Cancer";deskripsi="Penyayang, sensitif, dan intuitif.";}
+  else if((m==7&&d>=23)||(m==8&&d<=22)){zodiak="Leo";deskripsi="Penuh pesona, percaya diri, dan hangat.";}
+  else if((m==8&&d>=23)||(m==9&&d<=22)){zodiak="Virgo";deskripsi="Rapi, detail, dan pemikir logis.";}
+  else if((m==9&&d>=23)||(m==10&&d<=22)){zodiak="Libra";deskripsi="Indah, seimbang, dan penuh harmoni.";}
+  else if((m==10&&d>=23)||(m==11&&d<=21)){zodiak="Scorpio";deskripsi="Misterius, kuat, dan penuh intensitas.";}
+  else if((m==11&&d>=22)||(m==12&&d<=21)){zodiak="Sagitarius";deskripsi="Pencari petualangan dan kebebasan.";}
+  else if((m==12&&d>=22)||(m==1&&d<=19)){zodiak="Capricorn";deskripsi="Ambisius, disiplin, dan dewasa.";}
+  else if((m==1&&d>=20)||(m==2&&d<=18)){zodiak="Aquarius";deskripsi="Unik, mandiri, dan penuh ide.";}
+  else if((m==2&&d>=19)||(m==3&&d<=20)){zodiak="Pisces";deskripsi="Lembut, imajinatif, dan penuh empati.";}
+
+  const hasil = document.getElementById("hasil");
+  hasil.style.display = "block";
+  hasil.innerHTML = `<h2>${zodiak}</h2><p>${deskripsi}</p>`;
+
+  playDone();
 }
 </script>
 
