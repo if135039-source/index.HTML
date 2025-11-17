@@ -1,202 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Zodiak Gen Z Super Detail</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Zodiak Gen Z</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>✨ Quiz Zodiak Ala Gen Z ✨</h1>
-    <p class="subtitle">Jawab 15 pertanyaan dan temukan zodiak yang paling cocok sama personality kamu! 🔮</p>
+    <div class="container">
+        <h1>✨ Quiz Zodiak Ala Gen Z ✨</h1>
+        <p class="subtitle">Jawab pertanyaannya dan lihat zodiak yang cocok sama personality kamu! 🔮</p>
 
-    <div id="quiz"></div>
+        <div id="quiz"></div>
 
-    <button id="nextBtn" onclick="nextQuestion()">Next ➜</button>
+        <button id="nextBtn" onclick="nextQuestion()">Next ➜</button>
 
-    <div id="result" class="hidden resultBox"></div>
-</div>
+        <div id="result" class="hidden resultBox"></div>
+    </div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ffb4e6, #b2c9ff, #c4ffe2);
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.container {
-    background: rgba(255, 255, 255, 0.25);
-    padding: 30px;
-    width: 380px;
-    border-radius: 20px;
-    backdrop-filter: blur(12px);
-    text-align: center;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-}
-
-h1 {
-    font-size: 26px;
-    color: #fff;
-    text-shadow: 0 0 8px #ff69f7;
-}
-
-.subtitle {
-    color: #fff;
-    font-size: 14px;
-}
-
-.question {
-    color: white;
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
-.option {
-    background: rgba(255, 255, 255, 0.35);
-    padding: 12px;
-    border-radius: 12px;
-    margin: 8px 0;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.option:hover {
-    background: rgba(255, 255, 255, 0.6);
-    transform: scale(1.03);
-}
-
-#nextBtn {
-    margin-top: 20px;
-    padding: 12px;
-    width: 100%;
-    border-radius: 12px;
-    border: none;
-    font-size: 16px;
-    background: #fff;
-    color: #444;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#nextBtn:hover {
-    background: #fee8ff;
-}
-
-.hidden {
-    display: none;
-}
-
-.resultBox {
-    background: rgba(255, 255, 255, 0.4);
-    margin-top: 20px;
-    padding: 20px;
-    border-radius: 12px;
-    color: #333;
-    text-align: left;
-}
-
-.resultBox h2 {
-    text-align: center;
-    color: #ff69f7;
-}
-let current = 0;
-let scores = {
-    fire: 0,
-    earth: 0,
-    air: 0,
-    water: 0
-};
-
-const questions = [
-    { q: "1. Apa vibe kamu kalau kenal orang baru?", options:[{text:"Outgoing banget, langsung bestie.", type:"fire"},{text:"Kalem dulu, liat situasi.", type:"earth"},{text:"Random & lucu, biar cair.", type:"air"},{text:"Sensitive tapi hangat.", type:"water"}] },
-    { q: "2. Gaya kreatif kamu kayak apa?", options:[{text:"Bold, warna ngejreng.", type:"fire"},{text:"Natural, earthy tone.", type:"earth"},{text:"Eksperimental banget.", type:"air"},{text:"Dreamy dan sentimental.", type:"water"}] },
-    { q: "3. Kalau lagi bad mood?", options:[{text:"Meledak sebentar terus selesai.", type:"fire"},{text:"Diam dan fokus ke hal lain.", type:"earth"},{text:"Jadi overthinking.", type:"air"},{text:"Denger lagu mellow sambil healing.", type:"water"}] },
-    { q: "4. Vibe kamu di tongkrongan?", options:[{text:"Pembawa energi, rame terus.", type:"fire"},{text:"Sang penenang.", type:"earth"},{text:"Badut tongkrongan.", type:"air"},{text:"Temen curhat semua orang.", type:"water"}] },
-    { q: "5. Style relationship kamu?", options:[{text:"Passionate dan intens.", type:"fire"},{text:"Stabil, setia, solid.", type:"earth"},{text:"Fun dan fleksibel.", type:"air"},{text:"Deep emotional bond.", type:"water"}] },
-    { q: "6. Weekend ideal kamu?", options:[{text:"Party & adventure.", type:"fire"},{text:"Nature trip santai.", type:"earth"},{text:"Cafe hopping & chatting.", type:"air"},{text:"Movie night & selfcare.", type:"water"}] },
-    { q: "7. Gaya fashion sehari-hari?", options:[{text:"Bold & statement.", type:"fire"},{text:"Earth tones & comfy.", type:"earth"},{text:"Trendy & quirky.", type:"air"},{text:"Soft pastel & cozy.", type:"water"}] },
-    { q: "8. Cara ngadepin masalah?", options:[{text:"Langsung action.", type:"fire"},{text:"Plan & sabar.", type:"earth"},{text:"Diskusi & brainstorming.", type:"air"},{text:"Refleksi & feel emotions.", type:"water"}] },
-    { q: "9. Hobi utama?", options:[{text:"Sports & challenge.", type:"fire"},{text:"Gardening & crafting.", type:"earth"},{text:"Social media & memes.", type:"air"},{text:"Reading & journaling.", type:"water"}] },
-    { q: "10. Musik favorit?", options:[{text:"Energetic & upbeat.", type:"fire"},{text:"Acoustic & chill.", type:"earth"},{text:"Pop & quirky.", type:"air"},{text:"Indie & mellow.", type:"water"}] },
-    { q: "11. Karakter di grup?", options:[{text:"Leader.", type:"fire"},{text:"Supporter.", type:"earth"},{text:"Comic relief.", type:"air"},{text:"The empath.", type:"water"}] },
-    { q: "12. Mood pas bangun pagi?", options:[{text:"Siap conquer dunia!", type:"fire"},{text:"Santai dulu, ngopi.", type:"earth"},{text:"Random vibes, hehe.", type:"air"},{text:"Mellow & chill.", type:"water"}] },
-    { q: "13. Reaksi sama kritik?", options:[{text:"Defensive tapi cepet pulih.", type:"fire"},{text:"Tenang, evaluasi.", type:"earth"},{text:"Bingung tapi santai.", type:"air"},{text:"Sedih tapi introspeksi.", type:"water"}] },
-    { q: "14. Tujuan hidup utama?", options:[{text:"Menjadi terkenal & berpengaruh.", type:"fire"},{text:"Hidup stabil & nyaman.", type:"earth"},{text:"Explorasi ide & kreatifitas.", type:"air"},{text:"Hubungan & emosi mendalam.", type:"water"}] },
-    { q: "15. Aktivitas pas galau?", options:[{text:"Nge-gym / keluar rumah.", type:"fire"},{text:"Masak / crafting.", type:"earth"},{text:"Scroll medsos & chatting.", type:"air"},{text:"Mendengarkan musik mellow.", type:"water"}] },
-];
-
-const zodiacDetails = {
-    fire: [
-        {name:"Aries", desc:"Berani, energik, dan penuh semangat.", color:"Merah", number:9, love:"Leo, Sagittarius"}, 
-        {name:"Leo", desc:"Percaya diri, kreatif, karismatik.", color:"Emas", number:1, love:"Aries, Sagittarius"}, 
-        {name:"Sagittarius", desc:"Bebas, optimis, petualang.", color:"Ungu", number:3, love:"Aries, Leo"}
-    ],
-    earth: [
-        {name:"Taurus", desc:"Kuat, stabil, penyayang dan sabar.", color:"Hijau", number:6, love:"Virgo, Capricorn"}, 
-        {name:"Virgo", desc:"Perfeksionis, analitis, rajin.", color:"Coklat", number:7, love:"Taurus, Capricorn"}, 
-        {name:"Capricorn", desc:"Ambisius, disiplin, pekerja keras.", color:"Abu-abu", number:10, love:"Taurus, Virgo"}
-    ],
-    air: [
-        {name:"Gemini", desc:"Cerdas, lincah, komunikatif.", color:"Kuning", number:5, love:"Libra, Aquarius"}, 
-        {name:"Libra", desc:"Harmonis, adil, elegan.", color:"Biru muda", number:8, love:"Gemini, Aquarius"}, 
-        {name:"Aquarius", desc:"Unik, kreatif, visioner.", color:"Biru elektrik", number:11, love:"Gemini, Libra"}
-    ],
-    water: [
-        {name:"Cancer", desc:"Peka, penyayang, dan intuitif.", color:"Putih", number:2, love:"Scorpio, Pisces"}, 
-        {name:"Scorpio", desc:"Misterius, kuat, penuh passion.", color:"Hitam", number:4, love:"Cancer, Pisces"}, 
-        {name:"Pisces", desc:"Imaginatif, sensitif, penuh empati.", color:"Aqua", number:12, love:"Cancer, Scorpio"}
-    ]
-};
-
-function loadQuestion() {
-    const qBox = document.getElementById("quiz");
-    const q = questions[current];
-
-    qBox.innerHTML = `<div class='question'>${q.q}</div>` +
-        q.options.map((opt, i) => `<div class='option' onclick="choose('${opt.type}')">${opt.text}</div>`).join('');
-}
-
-function choose(type) {
-    scores[type]++;
-    nextQuestion();
-}
-
-function nextQuestion() {
-    current++;
-    if(current >= questions.length) return showResult();
-    loadQuestion();
-}
-
-function showResult() {
-    document.getElementById("quiz").classList.add("hidden");
-    document.getElementById("nextBtn").classList.add("hidden");
-
-    const top = Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-
-    const zodiacList = zodiacDetails[top];
-    const chosen = zodiacList[Math.floor(Math.random()*zodiacList.length)];
-
-    document.getElementById("result").classList.remove("hidden");
-    document.getElementById("result").innerHTML = `
-        <h2>🌟 Zodiakmu: ${chosen.name} 🌟</h2>
-        <p><b>Elemen dominan:</b> ${top.toUpperCase()}</p>
-        <p><b>Karakter:</b> ${chosen.desc}</p>
-        <p><b>Warna keberuntungan:</b> ${chosen.color}</p>
-        <p><b>Nomor keberuntungan:</b> ${chosen.number}</p>
-        <p><b>Love match:</b> ${chosen.love}</p>
-        <p>💖 Vibenya cocok banget sama personality kamu, bestie!</p>
-    `;
-}
-
-loadQuestion();
-
