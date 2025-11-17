@@ -1,90 +1,24 @@
-let current = 0;
-let scores = {
-    fire: 0,
-    earth: 0,
-    air: 0,
-    water: 0
-};
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Zodiak Gen Z Super Detail</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-const questions = [
-    { q: "1. Apa vibe kamu kalau kenal orang baru?", options:[{text:"Outgoing banget, langsung bestie.", type:"fire"},{text:"Kalem dulu, liat situasi.", type:"earth"},{text:"Random & lucu, biar cair.", type:"air"},{text:"Sensitive tapi hangat.", type:"water"}] },
-    { q: "2. Gaya kreatif kamu kayak apa?", options:[{text:"Bold, warna ngejreng.", type:"fire"},{text:"Natural, earthy tone.", type:"earth"},{text:"Eksperimental banget.", type:"air"},{text:"Dreamy dan sentimental.", type:"water"}] },
-    { q: "3. Kalau lagi bad mood?", options:[{text:"Meledak sebentar terus selesai.", type:"fire"},{text:"Diam dan fokus ke hal lain.", type:"earth"},{text:"Jadi overthinking.", type:"air"},{text:"Denger lagu mellow sambil healing.", type:"water"}] },
-    { q: "4. Vibe kamu di tongkrongan?", options:[{text:"Pembawa energi, rame terus.", type:"fire"},{text:"Sang penenang.", type:"earth"},{text:"Badut tongkrongan.", type:"air"},{text:"Temen curhat semua orang.", type:"water"}] },
-    { q: "5. Style relationship kamu?", options:[{text:"Passionate dan intens.", type:"fire"},{text:"Stabil, setia, solid.", type:"earth"},{text:"Fun dan fleksibel.", type:"air"},{text:"Deep emotional bond.", type:"water"}] },
-    { q: "6. Weekend ideal kamu?", options:[{text:"Party & adventure.", type:"fire"},{text:"Nature trip santai.", type:"earth"},{text:"Cafe hopping & chatting.", type:"air"},{text:"Movie night & selfcare.", type:"water"}] },
-    { q: "7. Gaya fashion sehari-hari?", options:[{text:"Bold & statement.", type:"fire"},{text:"Earth tones & comfy.", type:"earth"},{text:"Trendy & quirky.", type:"air"},{text:"Soft pastel & cozy.", type:"water"}] },
-    { q: "8. Cara ngadepin masalah?", options:[{text:"Langsung action.", type:"fire"},{text:"Plan & sabar.", type:"earth"},{text:"Diskusi & brainstorming.", type:"air"},{text:"Refleksi & feel emotions.", type:"water"}] },
-    { q: "9. Hobi utama?", options:[{text:"Sports & challenge.", type:"fire"},{text:"Gardening & crafting.", type:"earth"},{text:"Social media & memes.", type:"air"},{text:"Reading & journaling.", type:"water"}] },
-    { q: "10. Musik favorit?", options:[{text:"Energetic & upbeat.", type:"fire"},{text:"Acoustic & chill.", type:"earth"},{text:"Pop & quirky.", type:"air"},{text:"Indie & mellow.", type:"water"}] },
-    { q: "11. Karakter di grup?", options:[{text:"Leader.", type:"fire"},{text:"Supporter.", type:"earth"},{text:"Comic relief.", type:"air"},{text:"The empath.", type:"water"}] },
-    { q: "12. Mood pas bangun pagi?", options:[{text:"Siap conquer dunia!", type:"fire"},{text:"Santai dulu, ngopi.", type:"earth"},{text:"Random vibes, hehe.", type:"air"},{text:"Mellow & chill.", type:"water"}] },
-    { q: "13. Reaksi sama kritik?", options:[{text:"Defensive tapi cepet pulih.", type:"fire"},{text:"Tenang, evaluasi.", type:"earth"},{text:"Bingung tapi santai.", type:"air"},{text:"Sedih tapi introspeksi.", type:"water"}] },
-    { q: "14. Tujuan hidup utama?", options:[{text:"Menjadi terkenal & berpengaruh.", type:"fire"},{text:"Hidup stabil & nyaman.", type:"earth"},{text:"Explorasi ide & kreatifitas.", type:"air"},{text:"Hubungan & emosi mendalam.", type:"water"}] },
-    { q: "15. Aktivitas pas galau?", options:[{text:"Nge-gym / keluar rumah.", type:"fire"},{text:"Masak / crafting.", type:"earth"},{text:"Scroll medsos & chatting.", type:"air"},{text:"Mendengarkan musik mellow.", type:"water"}] },
-];
+<div class="container">
+    <h1>✨ Quiz Zodiak Ala Gen Z ✨</h1>
+    <p class="subtitle">Jawab 15 pertanyaan dan temukan zodiak yang paling cocok sama personality kamu! 🔮</p>
 
-const zodiacDetails = {
-    fire: [
-        {name:"Aries", desc:"Berani, energik, dan penuh semangat.", color:"Merah", number:9, love:"Leo, Sagittarius"}, 
-        {name:"Leo", desc:"Percaya diri, kreatif, karismatik.", color:"Emas", number:1, love:"Aries, Sagittarius"}, 
-        {name:"Sagittarius", desc:"Bebas, optimis, petualang.", color:"Ungu", number:3, love:"Aries, Leo"}
-    ],
-    earth: [
-        {name:"Taurus", desc:"Kuat, stabil, penyayang dan sabar.", color:"Hijau", number:6, love:"Virgo, Capricorn"}, 
-        {name:"Virgo", desc:"Perfeksionis, analitis, rajin.", color:"Coklat", number:7, love:"Taurus, Capricorn"}, 
-        {name:"Capricorn", desc:"Ambisius, disiplin, pekerja keras.", color:"Abu-abu", number:10, love:"Taurus, Virgo"}
-    ],
-    air: [
-        {name:"Gemini", desc:"Cerdas, lincah, komunikatif.", color:"Kuning", number:5, love:"Libra, Aquarius"}, 
-        {name:"Libra", desc:"Harmonis, adil, elegan.", color:"Biru muda", number:8, love:"Gemini, Aquarius"}, 
-        {name:"Aquarius", desc:"Unik, kreatif, visioner.", color:"Biru elektrik", number:11, love:"Gemini, Libra"}
-    ],
-    water: [
-        {name:"Cancer", desc:"Peka, penyayang, dan intuitif.", color:"Putih", number:2, love:"Scorpio, Pisces"}, 
-        {name:"Scorpio", desc:"Misterius, kuat, penuh passion.", color:"Hitam", number:4, love:"Cancer, Pisces"}, 
-        {name:"Pisces", desc:"Imaginatif, sensitif, penuh empati.", color:"Aqua", number:12, love:"Cancer, Scorpio"}
-    ]
-};
+    <div id="quiz"></div>
 
-function loadQuestion() {
-    const qBox = document.getElementById("quiz");
-    const q = questions[current];
+    <button id="nextBtn" onclick="nextQuestion()">Next ➜</button>
 
-    qBox.innerHTML = `<div class='question'>${q.q}</div>` +
-        q.options.map((opt, i) => `<div class='option' onclick="choose('${opt.type}')">${opt.text}</div>`).join('');
-}
+    <div id="result" class="hidden resultBox"></div>
+</div>
 
-function choose(type) {
-    scores[type]++;
-    nextQuestion();
-}
-
-function nextQuestion() {
-    current++;
-    if(current >= questions.length) return showResult();
-    loadQuestion();
-}
-
-function showResult() {
-    document.getElementById("quiz").classList.add("hidden");
-    document.getElementById("nextBtn").classList.add("hidden");
-
-    const top = Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
-
-    const zodiacList = zodiacDetails[top];
-    const chosen = zodiacList[Math.floor(Math.random()*zodiacList.length)];
-
-    document.getElementById("result").classList.remove("hidden");
-    document.getElementById("result").innerHTML = `
-        <h2>🌟 Zodiakmu: ${chosen.name} 🌟</h2>
-        <p><b>Elemen dominan:</b> ${top.toUpperCase()}</p>
-        <p><b>Karakter:</b> ${chosen.desc}</p>
-        <p><b>Warna keberuntungan:</b> ${chosen.color}</p>
-        <p><b>Nomor keberuntungan:</b> ${chosen.number}</p>
-        <p><b>Love match:</b> ${chosen.love}</p>
-        <p>💖 Vibenya cocok banget sama personality kamu, bestie!</p>
-    `;
-}
-
-loadQuestion();
+<script src="script.js"></script>
+</body>
+</html>
