@@ -6,108 +6,114 @@
 
 <style>
     body {
+        background: #eaffea;
         font-family: Arial, sans-serif;
-        background: #f0ffe6;
         text-align: center;
-        padding: 30px;
+        padding: 20px;
     }
-    #container {
+    #game-box {
         background: white;
         padding: 20px;
-        max-width: 450px;
         margin: auto;
+        max-width: 500px;
         border-radius: 15px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    h1 {
+        color: #2b8a3e;
     }
     img {
-        width: 200px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+        width: 240px;
+        height: auto;
+        border-radius: 15px;
+        margin-bottom: 15px;
     }
     input {
-        padding: 10px;
         width: 80%;
-        font-size: 18px;
+        padding: 10px;
+        border: 2px solid #2b8a3e;
         border-radius: 8px;
-        border: 2px solid #4CAF50;
+        font-size: 18px;
     }
     button {
-        margin-top: 15px;
-        padding: 10px 20px;
+        margin-top: 12px;
+        padding: 10px 25px;
         font-size: 18px;
+        background: #2b8a3e;
         border: none;
-        background: #4CAF50;
         color: white;
         border-radius: 10px;
         cursor: pointer;
     }
     button:hover {
-        background: #45a049;
+        background: #237031;
     }
     #result {
         margin-top: 15px;
-        font-weight: bold;
         font-size: 20px;
+        font-weight: bold;
     }
 </style>
 </head>
 <body>
 
-<h1>🍎 Game Belajar Nama Buah (English) 🍌</h1>
+<h1>🍎 English Fruit Game 🍌</h1>
 
-<div id="container">
+<div id="game-box">
     <h2>Tebak Nama Buah Ini!</h2>
 
-    <img id="fruit-img" src="" alt="fruit">
+    <img id="fruit-image" src="" alt="Fruit">
 
-    <input id="answer" type="text" placeholder="Tulis nama buah dalam Bahasa Inggris...">
+    <input type="text" id="answer" placeholder="Type the fruit name in English..."><br>
 
-    <br>
-    <button onclick="checkAnswer()">Cek Jawaban</button>
+    <button onclick="checkAnswer()">Check Answer</button>
+
     <p id="result"></p>
 
-    <button onclick="newFruit()">Buah Selanjutnya ➡️</button>
+    <button onclick="nextFruit()">Next Fruit ➡️</button>
 </div>
 
 <script>
-// List buah
+// Daftar buah + gambar
 const fruits = [
     {name: "apple", img: "https://i.ibb.co/3FTdZF4/apple.jpg"},
     {name: "banana", img: "https://i.ibb.co/NVqr9T7/banana.jpg"},
     {name: "orange", img: "https://i.ibb.co/9Gx73Q8/orange.jpg"},
     {name: "grape", img: "https://i.ibb.co/dJR4Y4M/grape.jpg"},
     {name: "mango", img: "https://i.ibb.co/7YyvzZ6/mango.jpg"},
-    {name: "watermelon", img: "https://i.ibb.co/J5YQDdp/watermelon.jpg"}
+    {name: "watermelon", img: "https://i.ibb.co/J5YQDdp/watermelon.jpg"},
+    {name: "pineapple", img: "https://i.ibb.co/3m4p6x0/pineapple.jpg"},
+    {name: "strawberry", img: "https://i.ibb.co/0j3Wqkc/strawberry.jpg"}
 ];
 
 let currentFruit = null;
 
-// Buah baru (acak)
-function newFruit() {
-    const random = Math.floor(Math.random() * fruits.length);
-    currentFruit = fruits[random];
+// Fungsi buah baru
+function nextFruit() {
+    const randomIndex = Math.floor(Math.random() * fruits.length);
+    currentFruit = fruits[randomIndex];
 
-    document.getElementById("fruit-img").src = currentFruit.img;
+    document.getElementById("fruit-image").src = currentFruit.img;
     document.getElementById("answer").value = "";
     document.getElementById("result").innerHTML = "";
 }
 
 // Cek jawaban
 function checkAnswer() {
-    const val = document.getElementById("answer").value.toLowerCase();
+    const userAnswer = document.getElementById("answer").value.toLowerCase();
 
-    if (val === currentFruit.name) {
-        document.getElementById("result").innerHTML = "✔️ Benar!";
+    if (userAnswer === currentFruit.name) {
+        document.getElementById("result").innerHTML = "✔️ Correct! Great job!";
         document.getElementById("result").style.color = "green";
     } else {
         document.getElementById("result").innerHTML =
-            "❌ Salah! Jawaban yang benar: <b>" + currentFruit.name + "</b>";
+            "❌ Wrong! The correct answer is: <b>" + currentFruit.name + "</b>";
         document.getElementById("result").style.color = "red";
     }
 }
 
-// Game mulai pertama
-newFruit();
+// Mulai game dari buah pertama
+nextFruit();
 </script>
 
 </body>
