@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Zodiak Gen Z</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>✨ Quiz Zodiak Ala Gen Z ✨</h1>
+        <p class="subtitle">Jawab pertanyaannya dan lihat zodiak yang cocok sama personality kamu! 🔮</p>
+
+        <div id="quiz"></div>
+
+        <button id="nextBtn" onclick="nextQuestion()">Next ➜</button>
+
+        <div id="result" class="hidden resultBox"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffb4e6, #b2c9ff, #c4ffe2);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 30px;
+    width: 350px;
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+h1 {
+    font-size: 26px;
+    color: #fff;
+    text-shadow: 0 0 8px #ff69f7;
+}
+
+.subtitle {
+    color: #fff;
+    font-size: 14px;
+}
+
+.question {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.option {
+    background: rgba(255, 255, 255, 0.35);
+    padding: 12px;
+    border-radius: 12px;
+    margin: 8px 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.option:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(1.03);
+}
+
+#nextBtn {
+    margin-top: 20px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+    background: #fff;
+    color: #444;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#nextBtn:hover {
+    background: #fee8ff;
+}
+
+.hidden {
+    display: none;
+}
+
+.resultBox {
+    background: rgba(255, 255, 255, 0.4);
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    color: #333;
+}
+let current = 0;
+let scores = {
+    fire: 0,
+    earth: 0,
+    air: 0,
+    water: 0
+};
+
+const questions = [
+    {
+        q: "🔥 1. Apa vibe kamu kalau kenal orang baru?",
+        options: [
+            { text: "Outgoing banget, langsung bestie.", type: "fire" },
+            { text: "Kalem dulu, liat situasi.", type: "earth" },
+            { text: "Random & lucu, biar cair.", type: "air" },
+            { text: "Sensitive tapi hangat.", type: "water" }
+        ]
+    },
+    {
+        q: "🎨 2. Gaya kreatif kamu kayak apa?",
+        options: [
+            { text: "Bold, warna ngejreng.", type: "fire" },
+            { text: "Natural, earthy tone.", type: "earth" },
+            { text: "Eksperimental banget.", type: "air" },
+            { text: "Dreamy dan sentimental.", type: "water" }
+        ]
+    },
+    {
+        q: "😤 3. Kalau lagi bad mood?",
+        options: [
+            { text: "Meledak sebentar terus selesai.", type: "fire" },
+            { text: "Diam dan fokus ke hal lain.", type: "earth" },
+            { text: "Jadi overthinking.", type: "air" },
+            { text: "Denger lagu mellow sambil healing.", type: "water" }
+        ]
+    },
+    {
+        q: "🌈 4. Vibe kamu di tongkrongan?",
+        options: [
+            { text: "Pembawa energi, rame terus.", type: "fire" },
+            { text: "Sang penenang.", type: "earth" },
+            { text: "Badut tongkrongan.", type: "air" },
+            { text: "Temen curhat semua orang.", type: "water" }
+        ]
+    },
+    {
+        q: "✨ 5. Style relationship kamu?",
+        options: [
+            { text: "Passionate dan intens.", type: "fire" },
+            { text: "Stabil, setia, solid.", type: "earth" },
+            { text: "Fun dan fleksibel.", type: "air" },
+            { text: "Deep emotional bond.", type: "water" }
+        ]
+    }
+];
+
+const resultZodiacs = {
+    fire: ["Aries", "Leo", "Sagittarius"],
+    earth: ["Taurus", "Virgo", "Capricorn"],
+    air: ["Gemini", "Libra", "Aquarius"],
+    water: ["Cancer", "Scorpio", "Pisces"]
+};
+
+function loadQuestion() {
+    const qBox = document.getElementById("quiz");
+    const q = questions[current];
+
+    qBox.innerHTML = `
+        <div class='question'>${q.q}</div>
+        ${q.options
+            .map((opt, i) => 
+                `<div class='option' onclick="choose('${opt.type}')">${opt.text}</div>`
+            )
+            .join("")}
+    `;
+}
+
+function choose(type) {
+    scores[type]++;
+    nextQuestion();
+}
+
+function nextQuestion() {
+    current++;
+    if (current >= questions.length) return showResult();
+    loadQuestion();
+}
+
+function showResult() {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("nextBtn").classList.add("hidden");
+
+    // cari elemen dengan skor tertinggi
+    const top = Object.keys(scores).reduce((a, b) =>
+        scores[a] > scores[b] ? a : b
+    );
+
+    // pilih random zodiak dari elemen
+    const zodiacList = resultZodiacs[top];
+    const chosen = zodiacList[Math.floor(Math.random() * zodiacList.length)];
+
+    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("result").innerHTML = `
+        <h2>Zodiakmu adalah 🌟 <b>${chosen}</b> 🌟</h2>
+        <p>Elemen dominan kamu: <b>${top.toUpperCase()}</b></p>
+        <p>Vibenya cocok banget sama kamu, bestie 💖</p>
+    `;
+}
+
+loadQuestion();
+
