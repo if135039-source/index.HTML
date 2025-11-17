@@ -2,210 +2,112 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Game Sains + Eksperimen</title>
+<title>Game Sains + Gambar Stabil</title>
 
 <style>
     body {
         background: #e8f6ff;
-        font-family: Arial, sans-serif;
+        font-family: Arial;
         text-align: center;
         padding: 20px;
-    }
-    h1 {
-        color: #0077cc;
     }
     .box {
         background: white;
         padding: 20px;
-        margin: 25px auto;
-        max-width: 700px;
+        margin: auto;
+        width: 600px;
         border-radius: 15px;
         box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
     img {
-        width: 250px;
+        width: 260px;
         border-radius: 15px;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
     .option {
-        background: #d9ecff;
-        padding: 10px;
-        margin: 8px auto;
-        width: 80%;
-        border-radius: 10px;
         cursor: pointer;
+        margin: 10px auto;
+        padding: 10px;
+        width: 80%;
+        background: #d9ecff;
+        border-radius: 10px;
         font-size: 18px;
     }
     .option:hover {
         background: #bfe0ff;
     }
-    button {
-        margin-top: 12px;
-        padding: 12px 25px;
-        font-size: 18px;
-        background: #0077cc;
-        border: none;
-        color: white;
-        border-radius: 10px;
-        cursor: pointer;
-    }
-    button:hover {
-        background: #005fa3;
-    }
-    #result {
-        font-size: 20px;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-
-    /* Eksperimen box */
-    #water-cup {
-        width: 150px;
-        margin-top: 10px;
-    }
-    #ball {
-        width: 80px;
-        position: relative;
-        transition: all 0.5s ease-in-out;
-    }
 </style>
 </head>
 <body>
 
-<h1>🔬 Game Sains + Eksperimen Interaktif</h1>
+<h1>🔬 Game Sains + Gambar (Versi Gambar Stabil)</h1>
 
-<!-- ===================== GAME 1: SAINS + GAMBAR ===================== -->
 <div class="box">
-    <h2>📸 Game Sains + Gambar</h2>
-    <img id="science-img" src="" alt="science image">
-    <h3 id="question">Loading question...</h3>
-
+    <img id="img" src="" alt="">
+    <h2 id="question"></h2>
     <div id="options"></div>
     <p id="result"></p>
-
     <button onclick="nextQuestion()">Soal Berikutnya</button>
 </div>
 
-
-<!-- ===================== GAME 2: SIMULASI EKSPERIMEN AIR MENGUAP ===================== -->
-<div class="box">
-    <h2>💧 Eksperimen 1 – Air Menguap</h2>
-
-    <img id="water-cup" src="https://i.ibb.co/kKwyJJQ/water.png">
-
-    <p>Klik tombol untuk memanaskan air dan lihat apa yang terjadi!</p>
-
-    <button onclick="heatWater()">Panaskan Air 🔥</button>
-    <p id="evaporate-result"></p>
-</div>
-
-
-<!-- ===================== GAME 3: SIMULASI GAYA DORONG ===================== -->
-<div class="box">
-    <h2>🧪 Eksperimen 2 – Gaya Dorong (Force)</h2>
-
-    <img id="ball" src="https://i.ibb.co/hcX0jqt/ball.png">
-
-    <p>Geser bola dengan memilih kekuatan dorongan:</p>
-
-    <button onclick="pushBall(50)">Dorong Pelan</button>
-    <button onclick="pushBall(150)">Dorong Sedang</button>
-    <button onclick="pushBall(300)">Dorong Kuat 💥</button>
-
-</div>
-
-
-
 <script>
-// ================== GAME 1: SAINS + GAMBAR ===================
-const scienceQuestions = [
+const questions = [
     {
-        q: "Apa nama planet ini?",
-        options: ["Mars", "Bumi", "Jupiter", "Venus"],
-        answer: 1,
-        img: "https://i.ibb.co/3MTjbPb/earth.jpg"
+        q: "Planet apa ini?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg",
+        options: ["Mars", "Jupiter", "Earth", "Venus"],
+        answer: 2
     },
     {
-        q: "Bagian tumbuhan manakah ini?",
+        q: "Bagian tumbuhan apakah ini?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/2/20/Leaf_Chromolithograph_detail.jpg",
         options: ["Batang", "Akar", "Daun", "Bunga"],
-        answer: 2,
-        img: "https://i.ibb.co/Jn2z1sG/leaf.jpg"
+        answer: 2
     },
     {
-        q: "Hewan apakah ini?",
-        options: ["Kucing", "Burung", "Ikan", "Kura-kura"],
-        answer: 2,
-        img: "https://i.ibb.co/2P9NTXv/fish.jpg"
+        q: "Hewan apa ini?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/1/1c/Fish_in_Tonle_Sap.jpg",
+        options: ["Kucing", "Anjing", "Ikan", "Semut"],
+        answer: 2
     },
     {
-        q: "Apa alat ini?",
+        q: "Alat apakah ini?",
+        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Thermometer_%28PSF%29.png/640px-Thermometer_%28PSF%29.png",
         options: ["Termometer", "Barometer", "Kompas", "Lup"],
-        answer: 0,
-        img: "https://i.ibb.co/MpnsHVB/thermometer.jpg"
+        answer: 0
     }
 ];
 
-let currentQ = 0;
+let current = 0;
 
-// Menampilkan soal baru
 function nextQuestion() {
-    currentQ = Math.floor(Math.random() * scienceQuestions.length);
-    const q = scienceQuestions[currentQ];
+    current = Math.floor(Math.random() * questions.length);
+    let q = questions[current];
 
-    document.getElementById("science-img").src = q.img;
+    document.getElementById("img").src = q.img;
     document.getElementById("question").innerHTML = q.q;
 
-    let optionHTML = "";
+    let optHTML = "";
     q.options.forEach((opt, i) => {
-        optionHTML += `<div class='option' onclick='checkAnswer(${i})'>${opt}</div>`;
+        optHTML += `<div class="option" onclick="checkAnswer(${i})">${opt}</div>`;
     });
-
-    document.getElementById("options").innerHTML = optionHTML;
+    document.getElementById("options").innerHTML = optHTML;
 
     document.getElementById("result").innerHTML = "";
 }
 
-// Mengecek jawaban
 function checkAnswer(i) {
-    const q = scienceQuestions[currentQ];
-
-    if (i === q.answer) {
-        document.getElementById("result").innerHTML = "✔️ Benar! Hebat!";
+    if (i === questions[current].answer) {
+        document.getElementById("result").innerHTML = "✔️ Benar!";
         document.getElementById("result").style.color = "green";
     } else {
         document.getElementById("result").innerHTML =
-            "❌ Salah! Jawaban: " + q.options[q.answer];
+            "❌ Salah! Jawaban: " + questions[current].options[questions[current].answer];
         document.getElementById("result").style.color = "red";
     }
 }
 
 nextQuestion();
-
-
-// ================== EKSPERIMEN 1: AIR MENGUAP ===================
-let waterLevel = 100;
-
-function heatWater() {
-    if (waterLevel <= 0) {
-        document.getElementById("evaporate-result").innerHTML = 
-            "💨 Air sudah sepenuhnya menguap!";
-        return;
-    }
-
-    waterLevel -= 25;
-
-    document.getElementById("water-cup").style.opacity = waterLevel / 100;
-
-    document.getElementById("evaporate-result").innerHTML =
-        "Air sedang menguap... tersisa " + waterLevel + "%";
-}
-
-
-// ================== EKSPERIMEN 2: GAYA DORONG ===================
-function pushBall(force) {
-    const ball = document.getElementById("ball");
-    ball.style.transform = `translateX(${force}px)`;
-}
 </script>
 
 </body>
