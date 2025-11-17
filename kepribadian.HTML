@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personality Quiz Lengkap</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #b8e8ff, #e3d7ff);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 600px;
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        animation: fadeIn 0.7s;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        background: #8ba3ff;
+        color: white;
+        border-radius: 12px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #6f87f5;
+    }
+
+    p {
+        font-size: 16px;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            padding: 20px;
+        }
+        button {
+            font-size: 15px;
+            padding: 13px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container" id="quizContainer">
+
+    <h2 id="question">Loading...</h2>
+
+    <div id="answers"></div>
+
+</div>
+
+<script>
+const questions = [
+    {
+        q: "Kamu lebih suka menghabiskan waktu di…",
+        options: [
+            { text: "Acara ramai penuh aktivitas", type: "Enerjik" },
+            { text: "Ruang tenang dan nyaman", type: "Tenang" },
+            { text: "Tempat estetik untuk konten", type: "Kreatif" },
+            { text: "Tempat diskusi atau ngobrol santai", type: "Humoris" }
+        ]
+    },
+    {
+        q: "Kalau punya waktu libur, kamu akan…",
+        options: [
+            { text: "Traveling atau jalan-jalan", type: "Enerjik" },
+            { text: "Rebahan dan recharge energi", type: "Tenang" },
+            { text: "Membuat karya (gambar/video)", type: "Kreatif" },
+            { text: "Mengerjakan puzzle atau soal", type: "Logis" }
+        ]
+    },
+    {
+        q: "Tipe musik yang kamu suka?",
+        options: [
+            { text: "Beat cepat & bikin semangat", type: "Enerjik" },
+            { text: "Lofi / mellow / calm", type: "Tenang" },
+            { text: "Indie atau eksperimen", type: "Kreatif" },
+            { text: "Lagu lucu / yang bikin senyum", type: "Humoris" }
+        ]
+    },
+    {
+        q: "Saat menghadapi masalah, kamu lebih memilih…",
+        options: [
+            { text: "Aksi cepat langsung bergerak", type: "Enerjik" },
+            { text: "Diam dulu & menenangkan diri", type: "Tenang" },
+            { text: "Bikin mindmap & ide kreatif", type: "Kreatif" },
+            { text: "Menganalisis dan hitung solusi", type: "Logis" }
+        ]
+    },
+    {
+        q: "Kalau lihat situasi canggung, kamu…",
+        options: [
+            { text: "Buat suasana lebih rame", type: "Enerjik" },
+            { text: "Tetap diam dan mengamati", type: "Tenang" },
+            { text: "Membuat candaan ringan", type: "Humoris" },
+            { text: "Mengalihkan ke topik logis", type: "Logis" }
+        ]
+    },
+    {
+        q: "Hal apa yang paling menggambarkan kamu?",
+        options: [
+            { text: "Aktif, suka bergerak", type: "Enerjik" },
+            { text: "Kalem & stabil", type: "Tenang" },
+            { text: "Unik & penuh ide", type: "Kreatif" },
+            { text: "Ceria & humoris", type: "Humoris" }
+        ]
+    }
+];
+
+let index = 0;
+let score = { "Enerjik": 0, "Tenang": 0, "Kreatif": 0, "Logis": 0, "Humoris": 0 };
+
+function loadQuestion() {
+    const q = questions[index];
+    document.getElementById("question").innerText = q.q;
+
+    const answerDiv = document.getElementById("answers");
+    answerDiv.innerHTML = "";
+
+    q.options.forEach((opt) => {
+        let btn = document.createElement("button");
+        btn.innerText = opt.text;
+        btn.onclick = () => selectAnswer(opt.type);
+        answerDiv.appendChild(btn);
+    });
+}
+
+function selectAnswer(type) {
+    score[type]++;
+
+    index++;
+    if (index < questions.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    const container = document.getElementById("quizContainer");
+
+    let finalType = Object.keys(score).reduce((a, b) => 
+        score[a] > score[b] ? a : b
+    );
+    
+    const descriptions = {
+        "Enerjik": "Kamu penuh semangat, aktif, dan suka tantangan! ⚡🔥",
+        "Tenang": "Kamu kalem, stabil, dan penuh ketenangan. 🌿💙",
+        "Kreatif": "Kamu unik, imajinatif, dan penuh ide menarik. 🎨🌈",
+        "Logis": "Kamu realistis, analitis, dan suka hal terstruktur. 🧠📘",
+        "Humoris": "Kamu ceria, fun, dan selalu membawa tawa. 😂✨"
+    };
+
+    container.innerHTML = `
+        <h2>Hasil Kepribadian Kamu</h2>
+        <h1 style="color:#6f87f5;">${finalType}</h1>
+        <p>${descriptions[finalType]}</p>
+        <button onclick="location.reload()">Ulangi Quiz</button>
+    `;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
