@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Website Sekolah • Kelas XI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f7ff;
+    }
+
+    /* HEADER */
+    header {
+      background: #1e4ee3;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: #163cc0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 12px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 6px 12px;
+    }
+    nav a:hover {
+      background: white;
+      color: #163cc0;
+      border-radius: 6px;
+    }
+
+    /* SECTION */
+    section {
+      padding: 25px;
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      margin-top: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #1e4ee3;
+      border-left: 6px solid #1e4ee3;
+      padding-left: 10px;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table, th, td {
+      border: 1px solid #d9d9d9;
+    }
+    th {
+      background: #1e4ee3;
+      color: white;
+      padding: 10px;
+    }
+    td {
+      padding: 10px;
+      background: #fafcff;
+    }
+
+    /* GALLERY */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    footer {
+      margin-top: 30px;
+      background: #1e4ee3;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  WEBSITE KELAS XI • SMA NEGERI 12
+</header>
+
+<nav>
+  <a href="#profil">Profil</a>
+  <a href="#jadwal">Jadwal</a>
+  <a href="#pengumuman">Pengumuman</a>
+  <a href="#galeri">Galeri</a>
+</nav>
+
+<!-- PROFIL -->
+<section id="profil">
+  <h2>Profil Sekolah</h2>
+  <p>
+    SMA Negeri 12 adalah sekolah yang berfokus pada pembentukan karakter, 
+    kreativitas, dan kemampuan akademik siswa. Kelas XI memiliki 5 rombongan 
+    belajar dengan berbagai kegiatan akademik dan non-akademik.
+  </p>
+</section>
+
+<!-- JADWAL -->
+<section id="jadwal">
+  <h2>Jadwal Kegiatan Kelas XI</h2>
+  <table>
+    <tr>
+      <th>Hari</th>
+      <th>Kegiatan</th>
+      <th>Waktu</th>
+    </tr>
+    <tr>
+      <td>Senin</td>
+      <td>Upacara & Pelajaran Umum</td>
+      <td>07.00 - 14.00</td>
+    </tr>
+    <tr>
+      <td>Rabu</td>
+      <td>Ekstrakurikuler</td>
+      <td>15.00 - 17.00</td>
+    </tr>
+    <tr>
+      <td>Jumat</td>
+      <td>Senam Pagi</td>
+      <td>07.00 - 08.00</td>
+    </tr>
+  </table>
+</section>
+
+<!-- PENGUMUMAN -->
+<section id="pengumuman">
+  <h2>Pengumuman</h2>
+  <ul>
+    <li>📌 Ulangan harian Matematika akan dilaksanakan tanggal 22 November.</li>
+    <li>📌 Siswa wajib membawa jas hujan mulai minggu depan.</li>
+    <li>📌 Pengambilan raport tanggal 15 Desember.</li>
+  </ul>
+</section>
+
+<!-- GALERI -->
+<section id="galeri">
+  <h2>Galeri Kegiatan</h2>
+  <div class="gallery">
+    <img src="https://picsum.photos/300?random=1">
+    <img src="https://picsum.photos/300?random=2">
+    <img src="https://picsum.photos/300?random=3">
+    <img src="https://picsum.photos/300?random=4">
+  </div>
+</section>
+
+<footer>
+  © 2025 Website Kelas XI • Dibuat dengan ❤️ oleh Siswa
+</footer>
+
+</body>
+</html>
