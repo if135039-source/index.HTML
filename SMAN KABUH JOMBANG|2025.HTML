@@ -1,233 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kuis IPA Estetik</title>
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Confetti -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 <style>
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,#fbc2eb,#a6c1ee);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  body{
+    margin:0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg,#f9e7ff,#d6e4ff,#ffe9d6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
   }
-
-  .container {
-    width: 90%;
-    max-width: 700px;
-    background: rgba(255,255,255,0.25);
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    backdrop-filter: blur(10px);
-    animation: fadeIn 1s ease-in-out;
+  .card{
+    width:90%;
+    max-width:600px;
+    background:rgba(255,255,255,0.4);
+    backdrop-filter:blur(12px);
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    text-align:center;
   }
-
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
+  button{
+    padding:12px 20px;
+    margin:8px 0;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    background:#ffffffaa;
   }
-
-  h1 {
-    text-align: center;
-    color: #fff;
-    font-size: 32px;
-    margin-bottom: 20px;
+  .answer-btn:hover{
+    transform:scale(1.05);
+    background:#fff;
   }
-
-  .btn {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    margin: 8px 0;
-    font-size: 18px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  .btn:hover { transform: scale(1.04); }
-
-  .correct { background: #4ade80 !important; color: white; }
-  .wrong { background: #f87171 !important; color: white; animation: shake 0.2s; }
-
-  @keyframes shake {
-    0% {transform: translateX(0);}
-    25% {transform: translateX(-5px);}
-    50% {transform: translateX(5px);}
-    75% {transform: translateX(-3px);}
-    100% {transform: translateX(0);}
-  }
-
-  #result, #chartContainer { display: none; }
-  .explanation {
-    background: rgba(255,255,255,0.3);
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-  }
-
-  #startBtn {
-    background: #6a5acd;
-    color: white;
-    font-size: 20px;
-    border-radius: 14px;
-  }
+  #result, #chartContainer{display:none;}
+  canvas{margin-top:20px;}
 </style>
 </head>
 <body>
-
-<div class="container">
-  <h1>Kuis IPA Estetik</h1>
-
-  <button class="btn" id="startBtn">Mulai Kuis</button>
-
-  <div id="quizArea" style="display:none;">
-    <h2 id="questionText"></h2>
-    <div id="options"></div>
-  </div>
-
-  <div id="result">
-    <h2>Hasil Kuis</h2>
-    <p id="scoreText"></p>
-    <h3>Penjelasan Jawaban</h3>
-    <div id="explanations"></div>
-  </div>
-
-  <div id="chartContainer">
-    <canvas id="resultChart"></canvas>
-  </div>
+<div class="card">
+  <h2 style="margin-top:0;">Kuis IPA Estetik</h2>
+  <button id="startBtn">Mulai Kuis</button>
+  <div id="quizBox" style="display:none;"></div>
+  <div id="result"></div>
+  <div id="chartContainer"><canvas id="chart"></canvas></div>
 </div>
 
-<!-- Suara -->
-<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
-<audio id="correctSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7f26f0e5bb.mp3?filename=correct-2-46134.mp3"></audio>
-<audio id="wrongSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6b48dbef52.mp3?filename=error-126627.mp3"></audio>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const soal = [
-  { q: "1. Bagian tumbuhan yang berfungsi menyerap air?", o:["Akar","Batang","Daun","Bunga"], a:0, e:"Akar menyerap air dan mineral dari tanah." },
-  { q: "2. Planet terdekat dari matahari?", o:["Bumi","Venus","Merkurius","Mars"], a:2, e:"Planet terdekat adalah Merkurius." },
-  { q: "3. Alat untuk mengukur suhu?", o:["Barometer","Termometer","Higrometer","Altimeter"], a:1, e:"Termometer digunakan untuk mengukur suhu." },
-  { q: "4. Hewan yang berkembang biak dengan bertelur?", o:["Kucing","Ayam","Sapi","Kambing"], a:1, e:"Ayam berkembang biak dengan bertelur." },
-  { q: "5. Sumber energi terbesar di bumi?", o:["Matahari","Air","Angin","Panas bumi"], a:0, e:"Matahari adalah sumber energi terbesar." },
-  { q: "6. Zat yang dibutuhkan tumbuhan untuk fotosintesis?", o:["Oksigen","Karbon dioksida","Nitrogen","Hidrogen"], a:1, e:"Tumbuhan membutuhkan CO₂ untuk fotosintesis." },
-  { q: "7. Organ pernapasan manusia?", o:["Paru-paru","Lambung","Jantung","Usus"], a:0, e:"Paru-paru berfungsi sebagai organ pernapasan." },
-  { q: "8. Air berubah menjadi gas disebut?", o:["Membeku","Mengembun","Menguap","Mencair"], a:2, e:"Air yang menguap berubah menjadi gas." },
-  { q: "9. Sumber energi listrik di rumah?", o:["Baterai","Aki","PLN","Generator"], a:2, e:"Di rumah kita menggunakan listrik dari PLN." },
-  { q: "10. Hewan mamalia adalah?", o:["Ayam","Ikan","Kucing","Bebek"], a:2, e:"Kucing termasuk hewan mamalia." },
-  { q:"11. Bagian mata untuk melihat?", o:["Iris","Retina","Lensa","Kornea"], a:1, e:"Retina menangkap cahaya menjadi sinyal."},
-  { q:"12. Benda cair memiliki...?", o:["Bentuk tetap","Volume tetap","Tidak bervolume","Tidak bermassa"], a:1, e:"Cairan memiliki volume tetap, bentuk berubah."},
-  { q:"13. Gigi untuk mengunyah?", o:["Geraham","Taring","Seri","Gigi susu"], a:0, e:"Geraham fungsinya mengunyah makanan."},
-  { q:"14. Proses pembuatan makanan pada tumbuhan?", o:["Respirasi","Fotosintesis","Ekskresi","Transpirasi"], a:1, e:"Fotosintesis membuat makanan."},
-  { q:"15. Contoh gaya gesek?", o:["Batu jatuh","Ban mobil berjalan","Besinya meleleh","Lampu menyala"], a:1, e:"Ban mobil bergerak karena gaya gesek."},
-  { q:"16. Benda yang dapat ditarik magnet?", o:["Kertas","Plastik","Besi","Kayu"], a:2, e:"Besi adalah bahan yang ditarik magnet."},
-  { q:"17. Hewan herbivora?", o:["Singa","Harimau","Kelinci","Serigala"], a:2, e:"Kelinci pemakan tumbuhan."},
-  { q:"18. Bentuk bumi?", o:["Kotak","Bulat","Segitiga","Silinder"], a:1, e:"Bentuk bumi bulat pepat."},
-  { q:"19. Wujud air yang paling dingin?", o:["Uap","Cair","Es","Awan"], a:2, e:"Es adalah wujud padat dari air."},
-  { q:"20. Gas yang kita hirup saat bernapas?", o:["CO2","O2","N2O","He"], a:1, e:"Oksigen (O2) dibutuhkan tubuh manusia."}
+const clickSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_9ef0e5d8c6.mp3?filename=click-124467.mp3");
+const correctSound = new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_c76feadfde.mp3?filename=correct-2-46134.mp3");
+const wrongSound = new Audio("https://cdn.pixabay.com/download/audio/2022/10/26/audio_843f3a0ab1.mp3?filename=wrong-answer-126503.mp3");
+
+const questions = [
+  {q:"Apa satuan SI untuk massa?", a:["Meter","Kilogram","Liter","Newton"], c:1, e:"Kilogram adalah satuan SI untuk massa."},
+  {q:"Planet terdekat dari Matahari adalah?", a:["Venus","Mars","Merkurius","Bumi"], c:2, e:"Merkurius adalah planet yang paling dekat dengan Matahari."},
+  {q:"Bagian tumbuhan yang bertugas melakukan fotosintesis?", a:["Akar","Batang","Daun","Bunga"], c:2, e:"Daun memiliki klorofil untuk fotosintesis."},
+  {q:"Zat yang dibutuhkan tumbuhan untuk fotosintesis adalah?", a:["CO₂","O₂","Hidrogen","Nitrogen"], c:0, e:"Fotosintesis memerlukan CO₂."},
+  {q:"Alat untuk mengukur suhu adalah?", a:["Barometer","Termometer","Higrometer","Anemometer"], c:1, e:"Termometer digunakan untuk mengukur suhu."},
+  {q:"Gaya yang memperlambat gerak benda disebut?", a:["Gaya Dorong","Gaya Gesek","Gaya Magnet","Gaya Gravitasi"], c:1, e:"Gaya gesek memperlambat gerak benda."},
+  {q:"Bagian mata yang berfungsi mengatur banyaknya cahaya?", a:["Kornea","Lensa","Retina","Iris"], c:3, e:"Iris mengatur besar kecilnya pupil."},
+  {q:"Hewan yang berkembang biak dengan bertelur disebut?", a:["Vivipar","Ovovivipar","Ovipar","Amfibi"], c:2, e:"Ovipar adalah hewan bertelur."},
+  {q:"Gas yang paling banyak di atmosfer adalah?", a:["Oksigen","Hidrogen","Nitrogen","Helium"], c:2, e:"Nitrogen menyusun sekitar 78% udara."},
+  {q:"Sumber energi utama bagi Bumi adalah?", a:["Bulan","Matahari","Bintang lain","Api"], c:1, e:"Matahari adalah sumber energi utama."},
+  {q:"Air berubah menjadi uap disebut?", a:["Kondensasi","Evaporasi","Sublimasi","Presipitasi"], c:1, e:"Evaporasi adalah penguapan."},
+  {q:"Bagian sel yang mengatur semua kegiatan sel?", a:["Sitoplasma","Mitokondria","Nukleus","Ribosom"], c:2, e:"Nukleus adalah pusat kendali sel."},
+  {q:"Gigi taring berfungsi untuk?", a:["Mengunyah","Mengoyak","Menghaluskan","Menelan"], c:1, e:"Gigi taring digunakan untuk mengoyak."},
+  {q:"Benda yang dapat ditarik magnet adalah?", a:["Aluminium","Kayu","Plastik","Besi"], c:3, e:"Besi bersifat feromagnetik."},
+  {q:"Bunyi merambat paling cepat melalui?", a:["Udara","Besi","Air","Hampa udara"], c:1, e:"Bunyi merambat lebih cepat di benda padat."},
+  {q:"Ular bergerak dengan cara?", a:["Melompat","Berjalan","Melata","Terbang"], c:2, e:"Ular melata dengan otot tubuhnya."},
+  {q:"Organ penyusun sistem pernapasan adalah?", a:["Jantung","Paru-paru","Hati","Ginjal"], c:1, e:"Paru-paru berfungsi untuk bernapas."},
+  {q:"Bumi berotasi dalam waktu?", a:["12 jam","24 jam","30 jam","365 hari"], c:1, e:"Rotasi Bumi memakan waktu 24 jam."},
+  {q:"Urutan planet dari yang terbesar?", a:["Jupiter","Saturnus","Uranus","Neptunus"], c:0, e:"Jupiter adalah planet terbesar."},
+  {q:"Sifat cahaya adalah?", a:["Membengkok","Merambat lurus","Memutar","Diam"], c:1, e:"Cahaya merambat lurus."}
 ];
 
-let index = 0;
-let benar = 0;
-let salah = 0;
-let jawabanUser = [];
+let index=0, correct=0, wrong=0;
+let explanations=[];
 
-document.getElementById("startBtn").onclick = () => {
-  document.getElementById("clickSound").play();
-  document.getElementById("startBtn").style.display = "none";
-  document.getElementById("quizArea").style.display = "block";
-  loadSoal();
-};
-
-function loadSoal(){
-  const q = soal[index];
-  document.getElementById("questionText").innerText = q.q;
-
-  const optionsDiv = document.getElementById("options");
-  optionsDiv.innerHTML = "";
-
-  q.o.forEach((opt,i)=>{
-    const btn = document.createElement("button");
-    btn.className="btn";
-    btn.innerText = opt;
-    btn.onclick = () => pilihJawaban(i, btn);
-    optionsDiv.appendChild(btn);
-  });
+startBtn.onclick=()=>{
+  clickSound.play();
+  startBtn.style.display="none";
+  quizBox.style.display="block";
+  loadQuestion();
 }
 
-function pilihJawaban(i, btn){
-  document.getElementById("clickSound").play();
+function loadQuestion(){
+  const q=questions[index];
+  quizBox.innerHTML = `<h3>${q.q}</h3>` + q.a.map((opt,i)=>`
+    <button class='answer-btn' onclick='checkAnswer(${i})'>${opt}</button>`).join(" ");
+}
 
-  const benarIndex = soal[index].a;
-
-  if(i === benarIndex){
-    benar++;
-    btn.classList.add("correct");
-    document.getElementById("correctSound").play();
-    confetti({ particleCount: 100, spread: 70 });
-  } else {
-    salah++;
-    btn.classList.add("wrong");
-    document.getElementById("wrongSound").play();
+function checkAnswer(i){
+  clickSound.play();
+  const q=questions[index];
+  if(i===q.c){
+    correct++;
+    correctSound.play();
+    document.body.style.animation="correctFlash 0.5s";
+  } else{
+    wrong++;
+    wrongSound.play();
+    document.body.style.animation="wrongFlash 0.5s";
   }
-
-  jawabanUser.push(i);
-
-  setTimeout(()=>{
-    index++;
-    if(index < soal.length){
-      loadSoal();
-    } else {
-      selesai();
-    }
-  }, 800);
+  explanations.push(`<p><b>${q.q}</b><br>Jawaban benar: ${q.a[q.c]}<br>${q.e}</p>`);
+  index++;
+  if(index<questions.length) setTimeout(loadQuestion,600);
+  else finishQuiz();
 }
 
-function selesai(){
-  document.getElementById("quizArea").style.display = "none";
-  document.getElementById("result").style.display = "block";
+function finishQuiz(){
+  quizBox.style.display="none";
+  result.style.display="block";
+  result.innerHTML = `<h3>Hasil Kuis</h3>
+    <p>Benar: ${correct}</p>
+    <p>Salah: ${wrong}</p>
+    <h4>Penjelasan:</h4>${explanations.join("")}`;
 
-  document.getElementById("scoreText").innerText =
-    `Benar: ${benar} | Salah: ${salah}`;
-
-  const expDiv = document.getElementById("explanations");
-  expDiv.innerHTML = "";
-
-  soal.forEach((s,i)=>{
-    const box = document.createElement("div");
-    box.className = "explanation";
-    box.innerHTML = `<b>${s.q}</b><br>
-                     Jawaban benar: <b>${s.o[s.a]}</b><br>
-                     Penjelasan: ${s.e}<br>`;
-    expDiv.appendChild(box);
-  });
-
-  // grafik
-  document.getElementById("chartContainer").style.display = "block";
-
-  new Chart(document.getElementById("resultChart"), {
-    type: "pie",
-    data: {
-      labels: ["Benar","Salah"],
-      datasets: [{
-        data: [benar, salah],
-        backgroundColor: ["#4ade80","#f87171"]
-      }]
-    }
+  chartContainer.style.display="block";
+  new Chart(document.getElementById('chart'),{
+    type:'pie',
+    data:{labels:['Benar','Salah'], datasets:[{data:[correct,wrong]}]},
   });
 }
 </script>
-
+<style>
+@keyframes correctFlash{0%{background:#c8ffdf;}100%{background:linear-gradient(135deg,#f9e7ff,#d6e4ff,#ffe9d6);} }
+@keyframes wrongFlash{0%{background:#ffd1d1;}100%{background:linear-gradient(135deg,#f9e7ff,#d6e4ff,#ffe9d6);} }
+</style>
 </body>
 </html>
