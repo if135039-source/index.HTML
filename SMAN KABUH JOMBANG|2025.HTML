@@ -1,351 +1,148 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Game Kuis IPA — Estetik & Menarik</title>
-  <style>
-    :root{
-      --bg1: #0f172a; /* dark navy */
-      --glass: rgba(255,255,255,0.06);
-      --accent: #7c3aed; /* purple */
-      --accent-2: #06b6d4; /* teal */
-      --card: rgba(255,255,255,0.04);
-      --glass-2: rgba(255,255,255,0.03);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1) 0%, #071028 100%);color:#e6eef8}
-    .app{min-height:100vh;display:grid;grid-template-rows:120px 1fr 90px;gap:18px;padding:22px;box-sizing:border-box}
-
-    header{display:flex;align-items:center;gap:18px}
-    .logo{display:flex;flex-direction:column;gap:4px}
-    .logo h1{margin:0;font-size:20px;letter-spacing:0.6px}
-    .logo p{margin:0;font-size:12px;opacity:0.8}
-    .hero-img{height:88px;width:88px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 6px 24px rgba(0,0,0,0.5)}
-    .hero-img img{width:100%;height:100%;object-fit:cover;display:block}
-
-    main{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
-    @media (max-width:980px){main{grid-template-columns:1fr} .sidebar{order:2}}
-
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);backdrop-filter: blur(6px);}
-
-    .question-area{min-height:380px}
-    .progress{height:12px;background:linear-gradient(90deg,#093b63 0%, rgba(255,255,255,0.03) 100%);border-radius:999px;overflow:hidden;margin-bottom:14px}
-    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%;transition:width .6s cubic-bezier(.2,.9,.3,1)}
-
-    .q-title{display:flex;align-items:center;gap:12px}
-    .q-title h2{margin:0;font-size:20px}
-    .q-img{height:160px;border-radius:12px;overflow:hidden;margin-top:12px}
-    .q-img img{width:100%;height:100%;object-fit:cover;display:block}
-
-    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-    @media(max-width:520px){.options{grid-template-columns:1fr}}
-
-    .option{padding:12px;border-radius:10px;background:var(--card);cursor:pointer;border:1px solid rgba(255,255,255,0.03);transition:transform .12s ease, box-shadow .12s ease}
-    .option:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(12,17,46,0.6)}
-    .option.correct{background:linear-gradient(90deg,#16a34a22,#16a34a11);border-color:#10b981}
-    .option.wrong{background:linear-gradient(90deg,#ef444422,#ef444411);border-color:#ef4444}
-
-    .sidebar{position:relative}
-    .score{font-size:36px;font-weight:700}
-    .mini{opacity:0.8;font-size:13px}
-
-    footer{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    button.btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;padding:10px 16px;border-radius:10px;color:white;font-weight:600;cursor:pointer}
-    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:10px;color:inherit}
-
-    .meta{display:flex;flex-direction:column;gap:6px}
-    .meta small{opacity:0.8}
-
-    .center{display:flex;align-items:center;justify-content:center}
-
-    /* confetti canvas */
-    #confetti{position:fixed;left:0;top:0;pointer-events:none;width:100%;height:100%;z-index:9999}
-
-    /* result modal */
-    .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.96);min-width:320px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:22px;border-radius:14px;box-shadow:0 18px 60px rgba(2,6,23,0.8);display:none;z-index:10000}
-    .modal.show{display:block;animation:pop .28s ease both}
-    @keyframes pop{from{opacity:0;transform:translate(-50%,-50%) scale(.94)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-
-    .footer-hint{opacity:0.9;font-size:13px}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kuis IPA Estetik</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f7f7ff;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .btn {
+    background: #6c63ff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .card {
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 20px;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .hero-img img {
+    width: 120px;
+    border-radius: 16px;
+  }
+  .question-area {
+    display: none;
+  }
+  .options button {
+    width: 100%;
+    margin: 8px 0;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: #ecebff;
+  }
+  .correct { background: #b2f7b2 !important; }
+  .wrong { background: #ffb2b2 !important; }
+</style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="hero-img card"><img src="https://images.unsplash.com/photo-1527434001075-9b8bd7d7f8d1?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9a9d6d7d3c0b8a9b6b7f" alt="bg"/></div>
-      <div class="logo">
-        <h1>Kuis IPA — Estetik</h1>
-        <p>20 soal | Suara benar/salah | Animasi & responsif</p>
-      </div>
-      <div style="flex:1"></div>
-      <div class="mini center">by <strong>Tim Kuis</strong></div>
-    </header>
-
-    <main>
-      <section class="card question-area">
-        <div class="progress"><i id="progBar"></i></div>
-        <div class="q-title">
-          <h2 id="qNumber">Soal 1</h2>
-          <div style="flex:1"></div>
-          <div class="mini">Skor: <span id="miniScore">0</span></div>
-        </div>
-
-        <div id="questionText" style="margin-top:10px;font-size:18px">Memuat soal...</div>
-        <div class="q-img" id="qImg" style="display:none;margin-top:12px;border:1px solid rgba(255,255,255,0.04);"></div>
-
-        <div class="options" id="optionsRoot"></div>
-
-        <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <button class="ghost" id="skipBtn">Lewati</button>
-          <div style="flex:1"></div>
-          <div class="mini footer-hint">Pilih jawaban — efek suara akan dimainkan saat jawaban dikonfirmasi.</div>
-        </div>
-      </section>
-
-      <aside class="card sidebar">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="mini">Sisa Soal</div>
-            <div class="score" id="remaining">20</div>
-          </div>
-          <div style="text-align:right">
-            <div class="mini">Tanggal</div>
-            <div class="mini" id="today"></div>
-          </div>
-        </div>
-
-        <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
-
-        <div class="meta">
-          <div><strong>Aturan</strong></div>
-          <small>• 20 soal pilihan ganda</small>
-          <small>• +10 poin untuk jawaban benar</small>
-          <small>• -3 poin untuk jawaban salah</small>
-          <small>• Lewati tanpa penalti</small>
-        </div>
-
-        <div style="height:18px"></div>
-
-        <div style="display:flex;gap:10px;flex-direction:column">
-          <button class="btn" id="startBtn">Mulai Kuis</button>
-          <button class="ghost" id="restartBtn">Mulai Ulang</button>
-        </div>
-      </aside>
-    </main>
-
-    <footer class="card">
-      <div>Tips: Baca soal dengan teliti. Gunakan tombol <strong>Lewati</strong> bila ragu.</div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="ghost" id="showKey">Tampilkan Kunci</button>
-        <button class="btn" id="viewResult">Lihat Hasil</button>
-      </div>
-    </footer>
+<header>
+  <button class="btn" id="startBtn" style="margin: 0 auto; display:block;""hero-img"><img src="https://images.unsplash.com/photo-1527434001075-9b8bd7d7f8d1?q=80&w=800&auto=format&fit=crop" /></div>
+  <div>
+    <h2>Kuis IPA — Estetik</h2>
+    <p>20 Soal Pilihan Ganda</p>
   </div>
+</header>
 
-  <canvas id="confetti"></canvas>
+<section class="card question-area" id="quizBox">
+  <h3 id="questionText"></h3>
+  <div class="options" id="options"></div>
+  <p id="progress"></p>
+</section>
 
-  <div class="modal" id="resultModal">
-    <h3>Hasil Kuis</h3>
-    <p>Skor akhir: <strong id="finalScore">0</strong></p>
-    <p>Benar: <strong id="correctCount">0</strong> — Salah: <strong id="wrongCount">0</strong> — Lewat: <strong id="skipCount">0</strong></p>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn" id="closeRes">Tutup</button>
-      <button class="ghost" id="retryRes">Main Lagi</button>
-    </div>
-  </div>
+<script>
+  const questions = [
+    {q:"Apa satuan SI untuk gaya?", a:["Newton","Joule","Watt","Pascal"], c:0},
+    {q:"Planet manakah yang disebut Planet Merah?", a:["Venus","Mars","Saturnus","Merkurius"], c:1},
+    {q:"Bagian tumbuhan tempat fotosintesis?", a:["Akar","Batang","Daun","Bunga"], c:2},
+    {q:"Zat yang dibutuhkan tumbuhan untuk fotosintesis?", a:["Oksigen","Karbon dioksida","Nitrogen","Hidrogen"], c:1},
+    {q:"Alat ukur suhu?", a:["Barometer","Termometer","Higrometer","Manometer"], c:1},
+    {q:"Air menguap menjadi?", a:["Padat","Plasma","Gas","Mineral"], c:2},
+    {q:"Gigi manusia dewasa berjumlah?", a:["24","28","30","32"], c:3},
+    {q:"Bagian sel tempat respirasi?", a:["Mitokondria","Ribosom","Kloroplas","Nukleus"], c:0},
+    {q:"Bagian bumi yang paling luar?", a:["Inti","Mantel","Kerak bumi","Litosfer"], c:2},
+    {q:"Sumber energi terbesar bumi?", a:["Bulan","Bintang lain","Matahari","Magma"], c:2},
+    {q:"Zat tunggal adalah?", a:["Air murni","Air gula","Kopi susu","Teh manis"], c:0},
+    {q:"Cahaya merambat?", a:["Lurus","Melengkung","Zigzag","Tidak menentu"], c:0},
+    {q:"Hewan pemakan tumbuhan disebut?", a:["Karnivora","Omnivora","Herbivora","Detritivora"], c:2},
+    {q:"Bagian telinga untuk keseimbangan?", a:["Koklea","Gendang","Telinga luar","Tiga saluran setengah lingkaran"], c:3},
+    {q:"Jenis awan pembawa hujan?", a:["Cirrus","Stratus","Cumulonimbus","Altocumulus"], c:2},
+    {q:"Benda cair memiliki?", a:["Bentuk tetap","Volume tetap","Massa berubah","Tidak bervolume"], c:1},
+    {q:"Hewan yang berkembang biak dengan bertelur?", a:["Vivipar","Ovipar","Ovovivipar","Metamorfosa"], c:1},
+    {q:"Perubahan wujud padat ke gas?", a:["Mencair","Menyublim","Menguap","Membeku"], c:1},
+    {q:"Indra penciuman berada di?", a:["Lidah","Hidung","Mata","Kulit"], c:1},
+    {q:"Lapisan atmosfer paling dekat bumi?", a:["Stratosfer","Mesosfer","Troposfer","Termosfer"], c:2}
+  ];
 
-  <script>
-    // Data soal (20 soal IPA bersifat umum)
-    const questions = [
-      {q: 'Manakah organ pada manusia yang berfungsi sebagai pusat pernapasan dan mengatur pertukaran oksigen & karbon dioksida?', choices: ['Jantung','Paru-paru','Hati','Ginjal'], answer:1, img: 'https://images.unsplash.com/photo-1531177071279-6f07b25f6d49?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc'},
-      {q: 'Satuan SI untuk massa adalah ...', choices: ['Gram (g)','Kilogram (kg)','Newton (N)','Liter (L)'], answer:1},
-      {q: 'Proses konversi air menjadi uap air disebut ...', choices: ['Kondensasi','Evaporasi (penguapan)','Presipitasi','Sublimasi'], answer:1},
-      {q: 'Energi yang tersimpan pada makanan disebut ...', choices: ['Energi kinetik','Energi potensial','Energi kimia','Energi listrik'], answer:2},
-      {q: 'Perubahan wujud zat dari padat langsung menjadi gas disebut ...', choices: ['Menguap','Mencair','Sublimasi','Kondensasi'], answer:2},
-      {q: 'Bagian tanaman yang menyerap air dan mineral dari tanah adalah ...', choices: ['Batang','Daun','Akar','Biji'], answer:2},
-      {q: 'Hukum Newton I (hukum kelembaman) menyatakan bahwa benda akan ...', choices: ['Berubah kecepatan jika ada gaya','Tetap dalam keadaan diam atau bergerak lurus beraturan kecuali ada gaya luar','Memiliki percepatan tetap','Berotasi mengelilingi pusat massa'], answer:1},
-      {q: 'Zat yang menghambat aliran listrik disebut ...', choices: ['Konduktor','Isolator','Semikonduktor','Resistor'], answer:1},
-      {q: 'Fotosintesis terutama terjadi pada bagian tanaman yaitu ...', choices: ['Akar','Batang','Daun','Bunga'], answer:2},
-      {q: 'Siklus darah kecil (sirkulasi paru) bertujuan untuk ...', choices: ['Mendistribusikan nutrisi ke seluruh tubuh','Mengambil oksigen lalu membuang karbon dioksida ke paru','Mengalirkan darah dari jantung ke otot','Mengontrol tekanan darah'], answer:1},
-      {q: 'Suhu normal tubuh manusia kira-kira ...', choices: ['25°C','37°C','45°C','15°C'], answer:1},
-      {q: 'Jenis ion yang bergerak menuju katoda dalam larutan adalah ...', choices: ['Kation (ion positif)','Anion (ion negatif)','Netral','Elektron bebas'], answer:0},
-      {q: 'Contoh organisme produsen dalam ekosistem adalah ...', choices: ['Serangga pemakan daun','Tumbuhan hijau','Microskopik bakteri pengurai','Cacing tanah'], answer:1},
-      {q: 'Alat ukur yang digunakan untuk mengukur besar gaya adalah ...', choices: ['Penggaris','Timbangan','Dinamometer','Termometer'], answer:2},
-      {q: 'Gelombang suara termasuk gelombang jenis ...', choices: ['Transversal','Longitudinal','Elektromagnetik','Stasioner'], answer:1},
-      {q: 'Contoh pemanfaatan energi surya secara langsung adalah ...', choices: ['Panel surya (photovoltaic)','Pembangkit listrik tenaga uap','Baterai','Motor bakar'], answer:0},
-      {q: 'Perubahan iklim global terutama disebabkan oleh peningkatan konsentrasi ...', choices: ['Gas oksigen','Gas nitrogen','Gas rumah kaca (mis. CO2)','Gas helium'], answer:2},
-      {q: 'Jika gaya total pada benda nol, benda berada pada keadaan ...', choices: ['Gerak memutar','Percepatan konstan','Setimbang (diam atau GERAK LURUS BERATUR)','Berubah bentuk'], answer:2},
-      {q: 'Reaksi pembakaran sempurna bahan bakar menghasilkan ...', choices: ['Karbon monoksida','Air dan karbon dioksida','Asam sulfat','Nitrogen oksida'], answer:1},
-      {q: 'Pengertian revolusi pada bumi adalah ...', choices: ['Perputaran bumi pada porosnya','Pergerakan bumi mengelilingi matahari','Perubahan iklim','Gerak rotasi bulan'], answer:1}
-    ];
+  let index = 0;
+  const qBox = document.getElementById("quizBox");
+  const qText = document.getElementById("questionText");
+  const optBox = document.getElementById("options");
+  const prog = document.getElementById("progress");
+  const startBtn = document.getElementById("startBtn");
 
-    // State
-    let state = {idx:0,score:0,correct:0,wrong:0,skip:0, order:[]};
+  function playSound(correct){
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain).connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.value = correct ? 600 : 200;
+    gain.gain.value = 0.2;
+    osc.start();
+    osc.stop(ctx.currentTime + 0.25);
+  }
 
-    // DOM refs
-    const qNumber = document.getElementById('qNumber');
-    const questionText = document.getElementById('questionText');
-    const optionsRoot = document.getElementById('optionsRoot');
-    const progBar = document.getElementById('progBar');
-    const remaining = document.getElementById('remaining');
-    const startBtn = document.getElementById('startBtn');
-    const restartBtn = document.getElementById('restartBtn');
-    const skipBtn = document.getElementById('skipBtn');
-    const miniScore = document.getElementById('miniScore');
-    const qImg = document.getElementById('qImg');
-    const today = document.getElementById('today');
-    const resultModal = document.getElementById('resultModal');
-    const finalScore = document.getElementById('finalScore');
-    const correctCount = document.getElementById('correctCount');
-    const wrongCount = document.getElementById('wrongCount');
-    const skipCount = document.getElementById('skipCount');
-
-    // Audio: generate tones using WebAudio (no external files required)
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playTone(type='right'){
-      try{
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = type === 'right' ? 'sine' : 'sawtooth';
-        o.frequency.value = type === 'right' ? 880 : 220;
-        g.gain.value = 0.0001;
-        o.connect(g); g.connect(audioCtx.destination);
-        // attack
-        g.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 0.01);
-        // decay
-        g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + (type === 'right' ? 0.45 : 0.6));
-        o.start(); o.stop(audioCtx.currentTime + (type === 'right' ? 0.5 : 0.7));
-      }catch(e){console.warn('Audio not supported',e)}
-    }
-
-    // Simple confetti
-    const confCanvas = document.getElementById('confetti');
-    const cctx = confCanvas.getContext('2d');
-    function resizeConf(){confCanvas.width = innerWidth; confCanvas.height = innerHeight}
-    addEventListener('resize', resizeConf);
-    resizeConf();
-
-    const confettiPieces = [];
-    function spawnConfetti(x,y){
-      for(let i=0;i<40;i++){
-        confettiPieces.push({x:x,y:y,vx:(Math.random()-0.5)*8,vy:(Math.random()*-6)-2,rot:Math.random()*360,vr:(Math.random()-0.5)*12,w:6+Math.random()*8,color: `hsl(${Math.floor(Math.random()*360)},70%,60%)`,life:120});
-      }
-    }
-    function confettiLoop(){
-      cctx.clearRect(0,0,confCanvas.width,confCanvas.height);
-      for(let i=confettiPieces.length-1;i>=0;i--){
-        const p = confettiPieces[i];
-        p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.rot += p.vr*0.03; p.life--;
-        cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.rot*Math.PI/180);
-        cctx.fillStyle = p.color; cctx.fillRect(-p.w/2, -p.w/2, p.w, p.w*0.6);
-        cctx.restore();
-        if(p.life<=0 || p.y>confCanvas.height+50) confettiPieces.splice(i,1);
-      }
-      requestAnimationFrame(confettiLoop);
-    }
-    confettiLoop();
-
-    // Utilities
-    function shuffleArray(a){const s = a.slice(); for(let i=s.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[s[i],s[j]]=[s[j],s[i]];}return s}
-
-    function renderQuestion(){
-      const idx = state.order[state.idx];
-      const item = questions[idx];
-      qNumber.textContent = `Soal ${state.idx+1}`;
-      questionText.textContent = item.q;
-      miniScore.textContent = state.score;
-      remaining.textContent = questions.length - state.idx;
-      progBar.style.width = `${((state.idx)/questions.length)*100}%`;
-
-      // image
-      if(item.img){ qImg.style.display='block'; qImg.innerHTML = `<img src="${item.img}" alt="img"/>`; }
-      else{ qImg.style.display='none'; qImg.innerHTML = '' }
-
-      // options
-      optionsRoot.innerHTML = '';
-      item.choices.forEach((c, i)=>{
-        const el = document.createElement('div'); el.className='option'; el.tabIndex=0; el.textContent = c;
-        el.onclick = ()=> selectOption(i, el, item.answer);
-        el.onkeyup = (e)=>{ if(e.key === 'Enter') selectOption(i, el, item.answer) };
-        optionsRoot.appendChild(el);
-      })
-    }
-
-    function selectOption(i, el, correctIdx){
-      // disable clicks
-      if(el.classList.contains('disabled')) return;
-      const options = optionsRoot.querySelectorAll('.option');
-      options.forEach(o=>o.classList.add('disabled'));
-
-      if(i === correctIdx){
-        el.classList.add('correct'); state.score += 10; state.correct++;
-        playTone('right'); spawnConfetti(innerWidth/2, innerHeight/3);
-      } else {
-        el.classList.add('wrong'); state.score -= 3; state.wrong++;
-        playTone('wrong');
-        // highlight correct one
-        const opts = Array.from(optionsRoot.children);
-        if(opts[correctIdx]) opts[correctIdx].classList.add('correct');
-      }
-
-      // small delay then next
-      setTimeout(()=>{
-        state.idx++;
-        if(state.idx >= state.order.length){ showResult(); }
-        else renderQuestion();
-      }, 900);
-    }
-
-    function startQuiz(){
-      // prepare order
-      state.order = shuffleArray(Array.from({length:questions.length}, (_,i)=>i));
-      state.idx = 0; state.score=0; state.correct=0; state.wrong=0; state.skip=0;
-      progBar.style.width = '0%';
-      document.getElementById('miniScore').textContent = '0';
-      renderQuestion();
-    }
-
-    function showResult(){
-      finalScore.textContent = state.score;
-      correctCount.textContent = state.correct;
-      wrongCount.textContent = state.wrong;
-      skipCount.textContent = state.skip;
-      resultModal.classList.add('show');
-      // progress full
-      progBar.style.width = '100%';
-    }
-
-    // UI hooks
-    startBtn.addEventListener('click', ()=>{ startQuiz(); resultModal.classList.remove('show'); });
-    restartBtn.addEventListener('click', ()=>{ startQuiz(); resultModal.classList.remove('show'); });
-    document.getElementById('closeRes').addEventListener('click', ()=>{ resultModal.classList.remove('show'); });
-    document.getElementById('retryRes').addEventListener('click', ()=>{ startQuiz(); resultModal.classList.remove('show'); });
-    document.getElementById('viewResult').addEventListener('click', ()=>{ showResult(); });
-    skipBtn.addEventListener('click', ()=>{
-      state.idx++; state.skip++; if(state.idx >= state.order.length) showResult(); else renderQuestion();
+  function renderQuestion(){
+    const q = questions[index];
+    qText.textContent = q.q;
+    optBox.innerHTML = "";
+    q.a.forEach((ans,i)=>{
+      const b = document.createElement("button");
+      b.textContent = ans;
+      b.onclick = ()=> selectAnswer(i, b);
+      optBox.appendChild(b);
     });
+    prog.textContent = `Soal ${index+1} dari ${questions.length}`;
+  }
 
-    document.getElementById('showKey').addEventListener('click', ()=>{
-      // show kunci singkat di alert (sederhana)
-      const keys = state.order.map((ord,i)=> `${i+1}. ${questions[ord].choices[questions[ord].answer]}` ).join('\n');
-      alert('Kunci jawaban (urutan soal saat ini):\n\n'+keys);
-    });
+  function selectAnswer(i, btn){
+    const correct = questions[index].c;
+    if(i === correct){ btn.classList.add("correct"); playSound(true);} 
+    else { btn.classList.add("wrong"); playSound(false);} 
 
-    // initial today
-    const d = new Date(); today.textContent = d.toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    setTimeout(()=>{
+      index++;
+      if(index < questions.length) renderQuestion();
+      else qText.textContent = "Selesai!";
+    },700);
+  }
 
-    // auto-start for convenience
-    // startQuiz();
-
-    // accessibility: keyboard navigation
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'ArrowRight'){ // skip
-        skipBtn.click();
-      }
-    });
-
-    // small polish: animate background floating shapes via CSS pseudo elements — kept in header as image
-  </script>
+  startBtn.onclick = ()=>{
+    document.querySelector('.question-area').style.display = 'block';
+    renderQuestion();
+  };
+</script>
 </body>
 </html>
