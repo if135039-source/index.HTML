@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quiz IPA - Estetik & Interaktif</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#f6f8ff;
+    --bg2:#fff7fa;
+    --card:#ffffffcc;
+    --accent:#6f87f5;
+    --accent-2:#ff90c1;
+    --muted:#6b7280;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: radial-gradient(1000px 600px at 10% 10%, rgba(111,135,245,0.08), transparent),
+                radial-gradient(800px 500px at 90% 90%, rgba(255,144,193,0.06), transparent),
+                linear-gradient(180deg,var(--bg1),var(--bg2));
+    display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+
+  /* Floating decorative shapes */
+  .decor{position:fixed;z-index:1;pointer-events:none}
+  .decor .blob{position:absolute;border-radius:40%;filter:blur(28px);opacity:0.9}
+  .b1{width:360px;height:240px;left:-80px;top:-50px;background:linear-gradient(135deg,var(--accent),#9fb0ff);}
+  .b2{width:300px;height:200px;right:-60px;bottom:-60px;background:linear-gradient(135deg,var(--accent-2),#ffd0e8);}
+
+  /* Main card */
+  .card{
+    width:100%;max-width:980px;background:var(--card);border-radius:22px;box-shadow:0 12px 40px rgba(20,20,60,0.12);
+    padding:28px;display:grid;grid-template-columns:360px 1fr;gap:28px;position:relative;z-index:10;backdrop-filter: blur(6px);
+  }
+
+  /* Left panel - header & illustration */
+  .panel-left{display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;padding:18px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo .dot{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+  h1{font-size:20px;margin:0}
+  p.lead{color:var(--muted);font-size:14px;text-align:center}
+
+  .illustration{width:220px;height:220px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,0.6),transparent);box-shadow:inset 0 -6px 20px rgba(0,0,0,0.03)}
+  .illus-svg{width:160px;height:160px}
+
+  /* Right panel - quiz area */
+  .panel-right{padding:8px 4px;display:flex;flex-direction:column;gap:12px}
+  .progress{height:10px;background:#f0f2ff;border-radius:999px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%;transition:width .45s cubic-bezier(.2,.9,.2,1)}
+
+  .meta{display:flex;justify-content:space-between;align-items:center}
+  .meta .left{display:flex;gap:10px;align-items:center}
+  .meta .time{background:#fff;padding:8px;border-radius:10px;box-shadow:0 2px 8px rgba(12,15,40,0.04);font-weight:600}
+  .meta .score{color:var(--muted);font-size:13px}
+
+  .question-box{background:linear-gradient(180deg,#ffffff,rgba(255,255,255,0.9));border-radius:14px;padding:18px;min-height:140px;display:flex;flex-direction:column;gap:14px;align-items:flex-start;justify-content:center;box-shadow:0 6px 20px rgba(20,20,60,0.04)}
+  .question-text{font-size:18px;font-weight:600;color:#222}
+  .question-img{width:100%;max-width:380px;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(15,25,60,0.05)}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+  .opt{padding:12px 14px;border-radius:12px;border:1px solid rgba(20,20,60,0.06);background:white;cursor:pointer;font-weight:600;transition:transform .12s ease,box-shadow .12s}
+  .opt:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(20,20,60,0.06)}
+  .opt.disabled{opacity:0.7;pointer-events:none}
+  .opt.correct{background:linear-gradient(90deg,#c8f7d4,#aef0c9);border-color:transparent}
+  .opt.wrong{background:#ffe8ea;border-color:transparent}
+
+  .footer-actions{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:10px 14px;border-radius:12px;border:none;font-weight:700;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(111,135,245,0.12)}
+
+  /* Result modal inside card */
+  .result{display:none;flex-direction:column;gap:12px;align-items:center;padding:18px}
+  .result.show{display:flex}
+  .result h2{margin:0}
+  .badge{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:10px 16px;border-radius:999px;font-weight:700}
+  .share{display:flex;gap:8px}
+
+  /* Responsive */
+  @media (max-width:900px){
+    .card{grid-template-columns:1fr;max-width:760px}
+    .illustration{margin-top:8px}
+    .options{grid-template-columns:1fr}
+  }
+
+  @media (max-width:420px){
+    .card{padding:18px;border-radius:16px}
+    .logo .dot{width:36px;height:36px}
+    h1{font-size:18px}
+    .question-text{font-size:16px}
+  }
+
+</style>
+</head>
+<body>
+  <div class="decor" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+  </div>
+
+  <main class="card" role="main">
+    <section class="panel-left">
+      <div class="logo" aria-hidden>
+        <div class="dot">IPA</div>
+        <div style="text-align:left">
+          <h1>Quiz IPA Interaktif</h1>
+          <p class="lead">Asah pengetahuan sainsmu dengan gambar & soal seru.</p>
+        </div>
+      </div>
+
+      <div class="illustration" aria-hidden>
+        <!-- Simple SVG illustration of a microscope, atom, leaf -->
+        <svg class="illus-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#6f87f5"/><stop offset="1" stop-color="#ff90c1"/></linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#g1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M40 140c15-20 30-30 45-28"/>
+            <path d="M95 110l20-30 30-10"/>
+            <circle cx="60" cy="70" r="18"/>
+            <path d="M70 150c12 10 38 12 58 2"/>
+            <ellipse cx="140" cy="50" rx="25" ry="12"/>
+          </g>
+        </svg>
+      </div>
+
+      <div style="text-align:center;color:var(--muted);font-size:13px">Tips: Jawab jujur, dan lihat penjelasan singkat setelah jawaban.</div>
+
+      <div style="margin-top:12px;display:flex;gap:10px;width:100%">
+        <button class="btn" id="startBtn">Mulai Quiz</button>
+        <button class="btn ghost" id="resetBtn">Reset</button>
+      </div>
+
+    </section>
+
+    <section class="panel-right">
+      <div class="progress" aria-hidden><i id="progressBar"></i></div>
+      <div class="meta">
+        <div class="left">
+          <div style="font-size:13px;color:var(--muted)">Soal <strong id="curr">0</strong>/<span id="total">0</span></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div class="score">Skor: <strong id="score">0</strong></div>
+          <div class="time" id="timer">--:--</div>
+        </div>
+      </div>
+
+      <div class="question-box" id="qbox">
+        <div class="question-text" id="question">Klik "Mulai Quiz" untuk memulai.</div>
+        <div id="imageWrap" style="width:100%;display:flex;justify-content:center"></div>
+
+        <div class="options" id="options"></div>
+
+        <div style="font-size:13px;color:var(--muted);" id="explain"></div>
+
+      </div>
+
+      <div class="footer-actions">
+        <div style="display:flex;gap:10px">
+          <button class="btn ghost" id="prevBtn" disabled>Prev</button>
+          <button class="btn ghost" id="nextBtn" disabled>Next</button>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn ghost" id="showAnswerBtn">Tunjukkan Jawaban</button>
+          <button class="btn" id="submitBtn">Selesai</button>
+        </div>
+      </div>
+
+      <div class="result" id="resultBox" aria-live="polite">
+        <div class="badge" id="finalBadge">-</div>
+        <h2 id="finalTitle">Hasilmu</h2>
+        <p id="finalText">Ringkasan singkat hasil dan saran belajar.</p>
+        <div style="display:flex;gap:8px;">
+          <button class="btn" id="againBtn">Main Lagi</button>
+          <button class="btn ghost" id="downloadBtn">Unduh Hasil</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+<script>
+// DATA SOAL IPA (contoh 8 soal). Gambar disematkan sebagai SVG kecil atau ilustrasi CSS.
+const quiz = [
+  {
+    q: "Apa proses yang mengubah air menjadi uap?",
+    img: `<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#6f87f5" stroke-width="3"><path d="M20 55c4-10 20-12 30-10s20 6 30 2"/><path d="M40 30c0-8 8-16 20-16s20 8 20 16" stroke-linecap="round"/></g></svg>`,
+    opts: ["Kondensasi","Evaporasi","Presipitasi","Sublimasi"],
+    answer: 1,
+    explain: "Evaporasi (penguapan) adalah proses berubahnya zat cair menjadi uap karena pemanasan atau penguapan alami."
+  },
+  {
+    q: "Organisme yang membuat makanannya sendiri disebut...",
+    img: `<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><g fill="#9fe3a3"><rect x="10" y="30" width="60" height="36" rx="8"/></g></svg>`,
+    opts: ["Heterotrof","Autotrof","Saprotrof","Parasitoid"],
+    answer: 1,
+    explain: "Autotrof (mis. tumbuhan hijau) membuat makanannya sendiri melalui fotosintesis."
+  },
+  {
+    q: "Bagian tumbuhan yang menyerap air dan nutrisi adalah...",
+    img: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg"><g stroke="#6f87f5" stroke-width="3" fill="none"><path d="M30 20v30c0 0 8 6 16 6s16-6 16-6v-30"/></g></svg>`,
+    opts: ["Batang","Daun","Akar","Bunga"],
+    answer: 2,
+    explain: "Akar berfungsi menyerap air dan mineral dari tanah."
+  },
+  {
+    q: "Satuan untuk mengukur massa adalah...",
+    img: `<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg"><g stroke="#6f87f5" stroke-width="3" fill="none"><rect x="30" y="20" width="60" height="40" rx="6"/></g></svg>`,
+    opts: ["Meter","Liter","Gram","Kelvin"],
+    answer: 2,
+    explain: "Massa biasanya diukur menggunakan gram (g) atau kilogram (kg)."
+  },
+  {
+    q: "Apa yang terjadi saat listrik mengalir melalui kawat?",
+    img: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg"><path d="M10 60h120" stroke="#ff90c1" stroke-width="4" stroke-linecap="round"/></svg>`,
+    opts: ["Arus listrik bergerak","Benda menjadi magnet","Suhu turun drastis","Warna berubah"],
+    answer: 0,
+    explain: "Arus listrik adalah pergerakan muatan listrik melalui penghantar seperti kawat."
+  },
+  {
+    q: "Ciri-ciri makhluk hidup antara lain...",
+    img: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="40" r="20" stroke="#6f87f5" stroke-width="3" fill="#fff7f8"/></svg>`,
+    opts: ["Bisa bergerak, tumbuh, bereproduksi","Hanya bisa hidup di air","Selalu ada sayap","Tidak memerlukan energi"],
+    answer: 0,
+    explain: "Makhluk hidup memiliki ciri seperti bergerak, tumbuh, bernapas, bereproduksi, dan memerlukan energi."
+  },
+  {
+    q: "Gaya tarik bumi yang membuat benda jatuh ke tanah disebut...",
+    img: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg"><g stroke="#6f87f5" stroke-width="3"><circle cx="70" cy="40" r="18"/></g></svg>`,
+    opts: ["Gesekan","Gravitasi","Gaya sentrifugal","Tegangan"],
+    answer: 1,
+    explain: "Gravitasi adalah gaya tarik antara massa yang menyebabkan benda jatuh ke permukaan bumi."
+  },
+  {
+    q: "Zat yang membantu proses pencernaan pada manusia adalah...",
+    img: `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg"><path d="M20 50c20-10 60-10 80 0" stroke="#6f87f5" stroke-width="3" fill="none"/></svg>`,
+    opts: ["Enzim","Air murni","Oksigen murni","Pasir"],
+    answer: 0,
+    explain: "Enzim adalah molekul protein yang mempercepat reaksi kimia dalam tubuh termasuk pencernaan."
+  }
+];
+
+// State
+let current = 0;
+let score = 0;
+let answered = Array(quiz.length).fill(null);
+let startTime = null;
+let timerInterval = null;
+
+// DOM
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+const currEl = document.getElementById('curr');
+const totalEl = document.getElementById('total');
+const scoreEl = document.getElementById('score');
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const imageWrap = document.getElementById('imageWrap');
+const progressBar = document.getElementById('progressBar');
+const timerEl = document.getElementById('timer');
+const explainEl = document.getElementById('explain');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+const showAnswerBtn = document.getElementById('showAnswerBtn');
+const resultBox = document.getElementById('resultBox');
+const finalBadge = document.getElementById('finalBadge');
+const finalTitle = document.getElementById('finalTitle');
+const finalText = document.getElementById('finalText');
+const againBtn = document.getElementById('againBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+// Init
+function init(){
+  totalEl.textContent = quiz.length;
+  resetState();
+}
+
+function resetState(){
+  current = 0; score = 0; answered = Array(quiz.length).fill(null);
+  scoreEl.textContent = score;
+  currEl.textContent = current+1;
+  progressBar.style.width = `${(current/quiz.length)*100}%`;
+  explainEl.textContent = '';
+  resultBox.classList.remove('show');
+  document.getElementById('qbox').style.display = 'block';
+  document.getElementById('options').style.pointerEvents = 'auto';
+  timerEl.textContent = '--:--';
+  clearInterval(timerInterval);
+}
+
+function startQuiz(){
+  resetState();
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 500);
+  loadQuestion(current);
+}
+
+function updateTimer(){
+  const diff = Math.floor((Date.now()-startTime)/1000);
+  const mm = String(Math.floor(diff/60)).padStart(2,'0');
+  const ss = String(diff%60).padStart(2,'0');
+  timerEl.textContent = `${mm}:${ss}`;
+}
+
+function loadQuestion(i){
+  const item = quiz[i];
+  currEl.textContent = i+1;
+  progressBar.style.width = `${((i)/quiz.length)*100}%`;
+  questionEl.textContent = item.q;
+  imageWrap.innerHTML = item.img ? `<div class="question-img">${item.img}</div>` : '';
+
+  // options
+  optionsEl.innerHTML = '';
+  item.opts.forEach((o,idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerText = o;
+    btn.onclick = ()=>selectOption(i, idx, btn);
+    if(answered[i] !== null){
+      btn.classList.add('disabled');
+      if(answered[i] === idx){
+        btn.classList.add(answered[i] === item.answer ? 'correct' : 'wrong');
+      }
+    }
+    optionsEl.appendChild(btn);
+  });
+
+  // explain
+  explainEl.textContent = answered[i] === null ? '' : quiz[i].explain;
+
+  prevBtn.disabled = (i===0);
+  nextBtn.disabled = (i===quiz.length-1);
+}
+
+function selectOption(qIdx,optIdx,btnEl){
+  if(answered[qIdx] !== null) return; // already answered
+  answered[qIdx] = optIdx;
+  const correct = quiz[qIdx].answer;
+  if(optIdx === correct){ score += 10; scoreEl.textContent = score; btnEl.classList.add('correct'); }
+  else { btnEl.classList.add('wrong');
+    // highlight correct option
+    const opts = optionsEl.querySelectorAll('.opt');
+    if(opts[correct]) opts[correct].classList.add('correct');
+  }
+  explainEl.textContent = quiz[qIdx].explain;
+
+  // disable all option buttons
+  optionsEl.querySelectorAll('.opt').forEach(x=>x.classList.add('disabled'));
+}
+
+prevBtn.addEventListener('click',()=>{ if(current>0){ current--; loadQuestion(current);} });
+nextBtn.addEventListener('click',()=>{ if(current<quiz.length-1){ current++; loadQuestion(current);} });
+startBtn.addEventListener('click',()=>{ startQuiz(); startBtn.blur(); });
+resetBtn.addEventListener('click',()=>{ if(confirm('Reset quiz? Semua jawaban akan hilang.')) init(); });
+
+showAnswerBtn.addEventListener('click',()=>{
+  // reveal answers for current question
+  const c = quiz[current];
+  const opts = optionsEl.querySelectorAll('.opt');
+  opts.forEach((el,idx)=>{
+    el.classList.add('disabled');
+    if(idx===c.answer) el.classList.add('correct');
+    else if(answered[current]===idx) el.classList.add('wrong');
+  });
+  explainEl.textContent = c.explain;
+});
+
+submitBtn.addEventListener('click',()=>{
+  clearInterval(timerInterval);
+  showResult();
+});
+
+againBtn.addEventListener('click',()=>{ init(); });
+
+downloadBtn.addEventListener('click',()=>{
+  const data = {
+    score, total: quiz.length, correctCount: answered.filter((a,idx)=>a===quiz[idx].answer).length,
+    timeTakenSec: Math.floor((Date.now()-startTime)/1000)
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'hasil_quiz_ipa.json'; a.click(); URL.revokeObjectURL(url);
+});
+
+function showResult(){
+  const correctCount = answered.filter((a,idx)=>a===quiz[idx].answer).length;
+  resultBox.classList.add('show');
+  document.getElementById('qbox').style.display = 'none';
+  finalBadge.textContent = `${score} pts`;
+  finalTitle.textContent = `Kamu menjawab ${correctCount} dari ${quiz.length} benar`;
+  const t = Math.floor((Date.now()-startTime)/1000);
+  finalText.textContent = `Waktu: ${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')} — Skor total ${score}. Latihan rutin bisa meningkatkan pemahaman IPAmu!`;
+}
+
+// keyboard accessible shortkeys
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowRight') nextBtn.click();
+  if(e.key==='ArrowLeft') prevBtn.click();
+  if(e.key==='Enter') submitBtn.click();
+});
+
+// initial
+init();
+
+</script>
+</body>
+</html>
