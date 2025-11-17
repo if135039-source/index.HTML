@@ -3,44 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personality Quiz Lengkap</title>
+<title>Personality Quiz Estetik</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
         font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, #b8e8ff, #e3d7ff);
         height: 100vh;
+        overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        background: linear-gradient(135deg, #ffe3ff, #d3e8ff);
+        position: relative;
     }
+
+    /* --- Elemen Latar Lucu (awan, bintang, bubble) --- */
+
+    .cloud, .star, .bubble {
+        position: absolute;
+        opacity: 0.7;
+        animation: float 6s infinite ease-in-out alternate;
+    }
+
+    @keyframes float {
+        from { transform: translateY(0px); }
+        to { transform: translateY(-25px); }
+    }
+
+    .cloud {
+        width: 150px;
+        height: 90px;
+        background: white;
+        border-radius: 50%;
+        filter: blur(2px);
+    }
+
+    .star {
+        width: 15px;
+        height: 15px;
+        background: #fff7b0;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #fff7b0;
+    }
+
+    .bubble {
+        width: 25px;
+        height: 25px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 50%;
+        backdrop-filter: blur(3px);
+    }
+
+    /* --- Container utama quiz --- */
 
     .container {
         width: 100%;
-        max-width: 600px;
-        background: white;
+        max-width: 640px;
+        background: rgba(255,255,255,0.85);
         padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        animation: fadeIn 0.7s;
+        border-radius: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        animation: fadeIn 0.8s;
+        position: relative;
+        z-index: 10;
+        backdrop-filter: blur(5px);
     }
 
     @keyframes fadeIn {
-        from {opacity: 0; transform: translateY(20px);}
-        to {opacity: 1; transform: translateY(0);}
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
         margin-bottom: 20px;
         font-size: 24px;
         text-align: center;
+        color: #6f5eff;
     }
 
     button {
@@ -50,7 +90,7 @@
         border: none;
         background: #8ba3ff;
         color: white;
-        border-radius: 12px;
+        border-radius: 15px;
         font-size: 16px;
         cursor: pointer;
         transition: 0.2s;
@@ -58,6 +98,7 @@
 
     button:hover {
         background: #6f87f5;
+        transform: scale(1.03);
     }
 
     p {
@@ -68,11 +109,12 @@
 
     @media (max-width: 600px) {
         .container {
-            padding: 20px;
+            padding: 22px;
         }
+
         button {
+            padding: 14px;
             font-size: 15px;
-            padding: 13px;
         }
     }
 </style>
@@ -80,10 +122,26 @@
 
 <body>
 
+<!-- CLOUDS -->
+<div class="cloud" style="top: 5%; left: 10%; animation-duration: 7s;"></div>
+<div class="cloud" style="top: 15%; right: 8%; width: 120px; height: 70px; animation-duration: 9s;"></div>
+<div class="cloud" style="bottom: 10%; left: 5%; width: 180px; height: 100px; animation-duration: 6s;"></div>
+
+<!-- STARS -->
+<div class="star" style="top: 20%; left: 40%;"></div>
+<div class="star" style="top: 30%; right: 30%;"></div>
+<div class="star" style="bottom: 25%; left: 60%;"></div>
+<div class="star" style="bottom: 20%; right: 20%;"></div>
+
+<!-- BUBBLES -->
+<div class="bubble" style="top: 50%; left: 20%; animation-duration: 5s;"></div>
+<div class="bubble" style="bottom: 30%; right: 40%; animation-duration: 7s;"></div>
+<div class="bubble" style="bottom: 15%; left: 50%; animation-duration: 6s;"></div>
+
+<!-- QUIZ CONTAINER -->
 <div class="container" id="quizContainer">
 
     <h2 id="question">Loading...</h2>
-
     <div id="answers"></div>
 
 </div>
@@ -147,7 +205,7 @@ const questions = [
 ];
 
 let index = 0;
-let score = { "Enerjik": 0, "Tenang": 0, "Kreatif": 0, "Logis": 0, "Humoris": 0 };
+let score = { Enerjik: 0, Tenang: 0, Kreatif: 0, Logis: 0, Humoris: 0 };
 
 function loadQuestion() {
     const q = questions[index];
@@ -166,28 +224,22 @@ function loadQuestion() {
 
 function selectAnswer(type) {
     score[type]++;
-
     index++;
-    if (index < questions.length) {
-        loadQuestion();
-    } else {
-        showResult();
-    }
+    if (index < questions.length) loadQuestion();
+    else showResult();
 }
 
 function showResult() {
     const container = document.getElementById("quizContainer");
 
-    let finalType = Object.keys(score).reduce((a, b) => 
-        score[a] > score[b] ? a : b
-    );
-    
+    let finalType = Object.keys(score).reduce((a, b) => score[a] > score[b] ? a : b);
+
     const descriptions = {
-        "Enerjik": "Kamu penuh semangat, aktif, dan suka tantangan! ⚡🔥",
-        "Tenang": "Kamu kalem, stabil, dan penuh ketenangan. 🌿💙",
-        "Kreatif": "Kamu unik, imajinatif, dan penuh ide menarik. 🎨🌈",
-        "Logis": "Kamu realistis, analitis, dan suka hal terstruktur. 🧠📘",
-        "Humoris": "Kamu ceria, fun, dan selalu membawa tawa. 😂✨"
+        Enerjik: "Kamu penuh semangat, aktif, dan suka tantangan! ⚡🔥",
+        Tenang: "Kamu kalem, stabil, dan penuh ketenangan. 🌿💙",
+        Kreatif: "Kamu unik, imajinatif, dan penuh ide menarik. 🎨🌈",
+        Logis: "Kamu realistis, analitis, dan suka hal terstruktur. 🧠📘",
+        Humoris: "Kamu ceria, fun, dan selalu membawa tawa. 😂✨"
     };
 
     container.innerHTML = `
