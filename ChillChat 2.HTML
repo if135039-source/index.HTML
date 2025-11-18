@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChillChat Anonim + AI</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #fff;
+        }
+
+        header {
+            background: #1f1f1f;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        #room-select, #apikey-area {
+            padding: 15px;
+            text-align: center;
+        }
+
+        select, input {
+            padding: 10px;
+            width: 90%;
+            max-width: 350px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 10px;
+        }
+
+        #chat-box {
+            height: 60vh;
+            overflow-y: auto;
+            padding: 15px;
+            background: #0d0d0d;
+            border-top: 1px solid #222;
+        }
+
+        .msg {
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user {
+            background: #222;
+            border-right: 4px solid #555;
+            margin-left: auto;
+        }
+
+        .bot {
+            background: linear-gradient(135deg, #5566ff, #3344cc);
+            border-left: 4px solid #99aaff;
+        }
+
+        /* WhatsApp typing indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            background: #333366;
+            padding: 10px 14px;
+            border-radius: 10px;
+            width: fit-content;
+            margin-bottom: 10px;
+            gap: 6px;
+            opacity: 0.8;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1.4s infinite both;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0% { opacity: .3; }
+            20% { opacity: 1; }
+            100% { opacity: .3; }
+        }
+
+        #input-area {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            background: #1a1a1a;
+            gap: 10px;
+        }
+
+        #message {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        #send-btn {
+            padding: 12px 20px;
+            background: #4caf50;
+            border: none;
+            border-radius: 8px";
+            font-size: 16px";
+            cursor: pointer";
+            color: #fff";
+        }
+
+        #send-btn:hover {
+            background: #43a047;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>ChillChat Anonim + AI</header>
+
+<div id="apikey-area">
+    <input id="apikey" type="password" placeholder="Masukkan OpenAI API Key di sini..." />
+</div>
+
+<div id="room-select">
+    <select id="room">
+        <option value="">— Pilih Mood Room —</option>
+        <option value="happy">😊 Happy Room</option>
+        <option value="sad">😢 Sad Room</option>
+        <option value="vent">💬 Curhat / Vent</option>
+        <option value="random">🎲 Random Room</option>
+        <option value="bot">🤖 AnonBot AI (GPT)</option>
+    </select>
+</div>
+
+<div id="chat-box"></div>
+
+<div id="input-area">
+    <input type="text" id="message" placeholder="Ketik pesan anonim…" />
+    <button id="send-btn">Kirim</button>
+</div>
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+    const roomSelect = document.getElementById("room");
+    const apikeyInput = document.getElementById("apikey");
+    const messageInput = document.getElementById("message");
+
+    let currentRoom = null;
+
+    // =============================
+    // STORAGE
+    // =============================
+    function loadMessages() {
+        const data = JSON.parse(localStorage.getItem("chillchat") || "{}");
+        return data[currentRoom] || [];
+    }
+
+    function saveMessages(list) {
+        const data = JSON.parse(localStorage.getItem("chillchat") || "{}");
+        data[currentRoom] = list;
+        localStorage.setItem("chillchat", JSON.stringify(data));
+    }
+
+    // =============================
+    // RENDER CHAT
+    // =============================
+    function renderChat() {
+        chatBox.innerHTML = "";
+        const msgs = loadMessages();
+
+        msgs.forEach(m => {
+            const div = document.createElement("div");
+
+            if (m.startsWith("[BOT]")) {
+                div.textContent = m.replace("[BOT]", "");
+                div.className = "msg bot";
+            } else {
+                div.textContent = m;
+                div.className = "msg user";
+            }
+
+            chatBox.appendChild(div);
+        });
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // =============================
+    // TYPING INDICATOR
+    // =============================
+    function showTyping() {
+        const typing = document.createElement("div");
+        typing.id = "typing";
+        typing.className = "typing-indicator bot";
+        typing.innerHTML = `
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        `;
+        chatBox.appendChild(typing);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTyping() {
+        const el = document.getElementById("typing");
+        if (el) el.remove();
+    }
+
+    // =============================
+    // STREAM TEXT TYPEWRITER
+    // =============================
+    async function streamText(div, text, speed = 12) {
+        div.textContent = "";
+        for (let i = 0; i < text.length; i++) {
+            div.textContent += text[i];
+            await new Promise(r => setTimeout(r, speed));
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+
+    // =============================
+    // @AI DETECTION
+    // =============================
+    function isMentioned(text) {
+        return text.toLowerCase().startsWith("@ai");
+    }
+
+    // =============================
+    // ROOM PERSONA
+    // =============================
+    function getRoomInstruction(room) {
+        switch(room) {
+            case "happy": return "Balas dengan mood ceria dan positif.";
+            case "sad": return "Balas dengan empati dan lembut.";
+            case "vent": return "Dengarkan dan balas dengan penuh pengertian.";
+            case "random": return "Balas santai, lucu, dan bebas.";
+            case "bot": return "Balas netral dan informatif.";
+            default: return "";
+        }
+    }
+
+    // =============================
+    // OPENAI API
+    // =============================
+    async function callOpenAI(prompt) {
+        const key = apikeyInput.value.trim();
+        const persona = getRoomInstruction(currentRoom);
+
+        try {
+            const res = await fetch("https://api.openai.com/v1/responses", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${key}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-4.1-mini",
+                    input: `${persona}\nUser: ${prompt}`
+                })
+            });
+
+            const data = await res.json();
+            if (data.error) return "⚠️ API Error: " + data.error.message;
+
+            return data.output[0].content[0].text;
+
+        } catch (e) {
+            return "⚠️ Error: " + e.message;
+        }
+    }
+
+    // =============================
+    // ROOM CHANGE
+    // =============================
+    roomSelect.addEventListener("change", () => {
+        currentRoom = roomSelect.value;
+        if (!currentRoom) return;
+        renderChat();
+    });
+
+    // =============================
+    // SEND MESSAGE
+    // =============================
+    document.getElementById("send-btn").addEventListener("click", async () => {
+        if (!currentRoom) {
+            alert("Pilih Mood Room dulu!");
+            return;
+        }
+
+        const text = messageInput.value.trim();
+        if (!text) return;
+        messageInput.value = "";
+
+        const msgs = loadMessages();
+        msgs.push(text);
+        saveMessages(msgs);
+        renderChat();
+
+        // BOT hanya balas jika pakai @ai
+        if (isMentioned(text)) {
+
+            showTyping();
+
+            // Delay natural 0.8–1.8 detik
+            await new Promise(r => setTimeout(r, 800 + Math.random() * 1000));
+
+            const cleaned = text.replace("@ai", "").trim();
+            const reply = await callOpenAI(cleaned);
+
+            removeTyping();
+
+            // STREAMING BALASAN
+            const botDiv = document.createElement("div");
+            botDiv.className = "msg bot";
+            chatBox.appendChild(botDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            await streamText(botDiv, reply);
+
+            msgs.push("[BOT]" + reply);
+            saveMessages(msgs);
+        }
+    });
+
+</script>
+
+</body>
+</html>
