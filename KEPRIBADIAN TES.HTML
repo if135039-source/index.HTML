@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tes Kepribadian — Estetik & Informatif</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Poppins",sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(135deg,#ffefef,#e8f0ff);
+    padding:24px;
+  }
+
+  /* container */
+  .card{
+    width:100%;
+    max-width:720px;
+    background:rgba(255,255,255,0.9);
+    border-radius:18px;
+    padding:26px;
+    box-shadow:0 10px 30px rgba(29,31,41,0.08);
+    position:relative;
+    overflow:hidden;
+  }
+
+  h1{font-size:20px;color:#4b3bff;text-align:center;margin-bottom:12px}
+  p.lead{color:#333;margin-bottom:18px;text-align:center}
+  .intro-text{font-size:15px;color:#444;line-height:1.45;margin-bottom:18px}
+
+  /* progress */
+  .progress-wrap{height:10px;background:rgba(0,0,0,0.06);border-radius:999px;overflow:hidden;margin:12px 0}
+  .progress{height:100%;width:0%;background:linear-gradient(90deg,#7fa9ff,#a08bff);transition:width .4s ease}
+
+  /* question */
+  #question{font-size:18px;color:#222;margin-bottom:12px;text-align:center}
+  #answers{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  button.answer{
+    display:block;padding:12px;border-radius:12px;border:none;cursor:pointer;
+    background:linear-gradient(180deg,#ffffff,#f3f7ff);
+    box-shadow:0 6px 14px rgba(79,84,255,0.06);
+    font-size:14px;color:#1b1b1b;text-align:left;
+    transition:transform .14s ease, box-shadow .14s ease;
+  }
+  button.answer:hover{transform:translateY(-4px);box-shadow:0 10px 20px rgba(79,84,255,0.12)}
+  .small{font-size:13px;color:#666;margin-top:6px}
+
+  /* footer controls */
+  .controls{display:flex;gap:12px;margin-top:16px;align-items:center;justify-content:center}
+  button.round{padding:10px 14px;border-radius:999px;border:none;background:#6f87f5;color:#fff;cursor:pointer}
+  button.ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:10px 14px;border-radius:12px;cursor:pointer}
+
+  /* result */
+  .result{padding:10px 6px}
+  .dominant{font-size:20px;color:#4b3bff;margin:6px 0;text-align:center}
+  .breakdown{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .bar-wrap{display:flex;align-items:center;gap:12px}
+  .label{width:100px;font-size:14px}
+  .bar{flex:1;height:10px;background:#eee;border-radius:999px;overflow:hidden}
+  .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd37f,#ff9fb1);transition:width .5s ease}
+
+  .desc{margin-top:12px;color:#333;line-height:1.5}
+  .tips{margin-top:12px;display:grid;gap:8px}
+  .tip{background:#f7f7ff;padding:10px;border-radius:10px;border-left:4px solid #a59bff}
+
+  /* intro overlay (start screen) */
+  .overlay{position:absolute;inset:0;background:linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,248,255,0.9));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px}
+  .overlay p{max-width:520px;text-align:center;color:#333;margin-bottom:14px}
+  .start-btn{padding:12px 20px;border-radius:12px;border:none;background:#6f87f5;color:white;font-weight:600;cursor:pointer;box-shadow:0 8px 28px rgba(79,84,255,0.12)}
+  .muted{font-size:13px;color:#666;margin-top:8px}
+
+  @media (max-width:600px){
+    #answers{grid-template-columns:1fr}
+    .label{width:90px;font-size:13px}
+    .overlay p{font-size:14px}
+  }
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+
+    <div class="overlay" id="intro">
+      <h1>Tes Kepribadian Singkat</h1>
+      <p>
+        Tes ini membantu kamu memahami karakter dasar (Enerjik, Tenang, Kreatif, Logis, Humoris)
+        berdasarkan pilihan gaya hidup & respons sehari-hari. Tidak ada jawaban benar atau salah —
+        ini hanya gambaran untuk membantu refleksi diri dan memberi saran praktis.
+      </p>
+      <p class="muted">Durasi: ~1–2 menit — jawablah apa yang paling mendekati kebiasaanmu.</p>
+      <button class="start-btn" id="startBtn">Mulai Tes</button>
+    </div>
+
+    <h1>Tes Kepribadian</h1>
+    <p class="lead">Jawab cepat dan jujur — pilih yang paling menggambarkanmu.</p>
+
+    <div class="progress-wrap" aria-hidden="true">
+      <div class="progress" id="progress"></div>
+    </div>
+    <div id="qmeta" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="small" id="qcount">Soal 0 / 0</div>
+      <div class="small" id="qhint">Pilih jawaban yang paling sesuai</div>
+    </div>
+
+    <div id="question">Memuat...</div>
+    <div id="answers"></div>
+
+    <div class="controls" id="controls" style="display:none">
+      <button class="ghost" id="prevBtn">Kembali</button>
+      <button class="round" id="nextBtn">Lewat</button>
+    </div>
+
+    <!-- results area (hidden until done) -->
+    <div id="results" style="display:none" class="result"></div>
+  </div>
+
+<script>
+/* Soal - disederhanakan & dibuat lebih bervariasi secara bahasa agar tidak membosankan */
+const questions = [
+  {
+    q: "Di acara kumpul-kumpul, peranmu biasanya...",
+    options:[
+      {text:"Menjadi penggerak, ajak orang ngobrol atau main", type:"Enerjik"},
+      {text:"Menonton dan menikmati suasana dari pinggir", type:"Tenang"},
+      {text:"Mencari momen untuk foto/ide kreatif", type:"Kreatif"},
+      {text:"Bikin lelucon atau komentar lucu biar cair", type:"Humoris"}
+    ]
+  },
+  {
+    q: "Kalau punya waktu luang seharian, kamu akan:",
+    options:[
+      {text:"Jalan-jalan, cari pengalaman baru", type:"Enerjik"},
+      {text:"Istirahat total, recharge tenaga", type:"Tenang"},
+      {text:"Berkarya: gambar, bikin konten, musik", type:"Kreatif"},
+      {text:"Mengerjakan teka-teki atau belajar hal baru", type:"Logis"}
+    ]
+  },
+  {
+    q: "Musik yang bikin mood paling pas untukmu adalah:",
+    options:[
+      {text:"Tempo cepat yang semangat", type:"Enerjik"},
+      {text:"Lagu santai yang menenangkan", type:"Tenang"},
+      {text:"Eksperimental/indie yang unik", type:"Kreatif"},
+      {text:"Lagu lucu yang ringan dan ceria", type:"Humoris"}
+    ]
+  },
+  {
+    q: "Saat ada masalah mendadak, respons pertamamu:",
+    options:[
+      {text:"Langsung ambil tindakan", type:"Enerjik"},
+      {text:"Tenang, tarik napas dulu", type:"Tenang"},
+      {text:"Cari solusi out-of-the-box", type:"Kreatif"},
+      {text:"Analisa langkah demi langkah", type:"Logis"}
+    ]
+  },
+  {
+    q: "Ketika canggung di grup, kamu biasanya:",
+    options:[
+      {text:"Buat suasana jadi lebih hidup", type:"Enerjik"},
+      {text:"Tetap tenang dan observan", type:"Tenang"},
+      {text:"Sampaikan candaan halus", type:"Humoris"},
+      {text:"Arahkan pembicaraan ke topik yang jelas", type:"Logis"}
+    ]
+  },
+  {
+    q: "Ciri yang paling cocok menggambarkanmu:",
+    options:[
+      {text:"Aktif dan penuh energi", type:"Enerjik"},
+      {text:"Kalem dan stabil", type:"Tenang"},
+      {text:"Penuh imajinasi dan ide", type:"Kreatif"},
+      {text:"Cerdas, suka berpikir, atau lucu", type:"Logis"} // gabungkan Logis/Humoris di opsi agar bervariasi
+    ]
+  }
+];
+
+/* inisialisasi score (pastikan semua tipe tercakup) */
+let index = 0;
+let answersCount = questions.length;
+let score = { Enerjik:0, Tenang:0, Kreatif:0, Logis:0, Humoris:0 };
+let userAnswers = []; // menyimpan tipe yang dipilih tiap soal
+
+/* DOM */
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const progressEl = document.getElementById("progress");
+const qcountEl = document.getElementById("qcount");
+const intro = document.getElementById("intro");
+const startBtn = document.getElementById("startBtn");
+const resultsEl = document.getElementById("results");
+const controls = document.getElementById("controls");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+/* On start */
+startBtn.addEventListener("click", ()=>{
+  intro.style.display = "none";
+  index = 0;
+  resetState();
+  renderQuestion();
+});
+
+/* render question */
+function renderQuestion(){
+  const q = questions[index];
+  questionEl.innerText = q.q;
+  answersEl.innerHTML = "";
+  q.options.forEach((opt, i)=>{
+    const b = document.createElement("button");
+    b.className = "answer";
+    b.innerHTML = `<div style="font-weight:600">${opt.text}</div><div class="small">Pilihan ${i+1}</div>`;
+    b.onclick = ()=>selectAnswer(opt.type);
+    answersEl.appendChild(b);
+  });
+
+  // update progress
+  const pct = Math.round((index / answersCount) * 100);
+  progressEl.style.width = pct + "%";
+  qcountEl.innerText = `Soal ${index+1} / ${answersCount}`;
+
+  // controls
+  controls.style.display = "flex";
+  prevBtn.style.visibility = index>0 ? "visible" : "hidden";
+}
+
+/* handle selection */
+function selectAnswer(type){
+  // simpan jawaban (untuk memungkinkan "Kembali" nanti)
+  userAnswers[index] = type;
+  // update score (recompute from userAnswers to keep consistent)
+  recomputeScoresFromAnswers();
+  // next
+  index++;
+  if(index < answersCount){
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+/* recompute scores from userAnswers array */
+function recomputeScoresFromAnswers(){
+  // reset
+  score = { Enerjik:0, Tenang:0, Kreatif:0, Logis:0, Humoris:0 };
+  userAnswers.forEach(t => {
+    if(t && score.hasOwnProperty(t)) score[t]++;
+  });
+}
+
+/* prev / next buttons for navigation (next just skips, prev allows change) */
+prevBtn.addEventListener("click", ()=>{
+  if(index>0){
+    index--;
+    renderQuestion();
+  }
+});
+nextBtn.addEventListener("click", ()=>{
+  // skip this question (count as no selection) — but we allow skip only if userAnswers present move forward
+  userAnswers[index] = userAnswers[index] || null;
+  index++;
+  if(index < answersCount) renderQuestion();
+  else showResult();
+});
+
+/* show final result: compute percentages, dominant type, descriptions and tips */
+function showResult(){
+  // ensure score sync
+  recomputeScoresFromAnswers();
+
+  // compute percentages
+  const totals = Object.values(score).reduce((a,b)=>a+b,0) || 1;
+  let percents = {};
+  for(const k in score){
+    percents[k] = Math.round((score[k] / totals) * 100);
+  }
+
+  // find dominant (highest percent). If tie choose one with highest raw count.
+  let dominant = Object.keys(score).reduce((a,b)=>{
+    if(score[a] === score[b]) return a; // keep first in case of tie
+    return score[a] > score[b] ? a : b;
+  });
+
+  // friendly descriptions + tips/solusi
+  const details = {
+    Enerjik:{
+      desc: "Kamu tipe yang berenergi, berinisiatif, dan suka bergerak. Orang lain sering melihatmu sebagai pemacu semangat.",
+      tips:[
+        "Salurkan energi ke proyek yang bermakna agar tidak cepat lelah.",
+        "Belajar memberi jeda: atur waktu istirahat supaya burn-out tidak datang.",
+        "Gunakan sifatmu untuk memimpin tim kecil atau kegiatan praktis."
+      ]
+    },
+    Tenang:{
+      desc: "Kamu kalem, bijak, dan stabil. Ketenanganmu jadi nilai saat situasi menegangkan.",
+      tips:[
+        "Coba luaskan zona nyaman sedikit demi sedikit untuk kesempatan baru.",
+        "Bagikan ketenanganmu dengan teman yang butuh pendengar.",
+        "Gunakan rutinitas mindfulness untuk menjaga kestabilan emosi."
+      ]
+    },
+    Kreatif:{
+      desc: "Kamu penuh imajinasi, sering punya perspektif unik dan ide-ide orisinal.",
+      tips:[
+        "Catat ide spontan agar tidak lupa dan kembangkan secara berkala.",
+        "Kolaborasi dengan orang yang dapat mengeksekusi ide (organisir atau teknis).",
+        "Sediakan waktu terstruktur untuk eksperimen agar kreativitas produktif."
+      ]
+    },
+    Logis:{
+      desc: "Kamu terstruktur, analitis, dan suka menyelesaikan masalah dengan logika.",
+      tips:[
+        "Jaga keseimbangan: jangan biarkan analisis menghambat tindakan.",
+        "Terapkan metode prioritas untuk keputusan cepat.",
+        "Belajar komunikasi emosional jika ingin mendekatkan diri dengan orang yang sensitif."
+      ]
+    },
+    Humoris:{
+      desc: "Kamu ceria dan membawa keceriaan. Humormu menyatukan suasana dan mempermudah interaksi.",
+      tips:[
+        "Perhatikan konteks agar humor tetap nyaman untuk semua orang.",
+        "Salurkan sisi lucumu ke konten kreatif atau hiburan ringan.",
+        "Gunakan empati saat bercanda agar tidak menyinggung."
+      ]
+    }
+  };
+
+  // build result HTML
+  let html = `
+    <div style="text-align:center">
+      <h2>Hasil Tes</h2>
+      <div class="dominant">Tipe Dominan: <strong>${dominant}</strong></div>
+      <p class="small">Perhitungan persentase berdasarkan pilihanmu (lebih tinggi = lebih mendekati karakter tersebut).</p>
+    </div>
+
+    <div class="breakdown" aria-hidden="false">`;
+
+  // breakdown bars
+  for(const k of ["Enerjik","Tenang","Kreatif","Logis","Humoris"]){
+    html += `
+      <div class="bar-wrap">
+        <div class="label">${k}</div>
+        <div class="bar"><i id="bar-${k}"></i></div>
+        <div style="width:46px;text-align:right;font-weight:600">${percents[k]}%</div>
+      </div>
+    `;
+  }
+
+  html += `</div>`;
+
+  // description + tips for dominant and also a short note about next steps
+  html += `
+    <div class="desc">
+      <h3 style="margin-top:12px">Penjelasan untuk ${dominant}</h3>
+      <p>${details[dominant].desc}</p>
+
+      <div style="margin-top:10px">
+        <h4>Tips & Solusi</h4>
+        <div class="tips">`;
+  details[dominant].tips.forEach(t => {
+    html += `<div class="tip">${t}</div>`;
+  });
+  html += `</div></div>`;
+
+  // suggestions to develop other sisi
+  html += `<div style="margin-top:12px">
+      <h4>Saran singkat untuk keseimbangan</h4>
+      <ul style="margin-left:18px;color:#444">
+        <li>Periksa area yang nilainya rendah — coba latihan kecil untuk memperkuatnya.</li>
+        <li>Gabungkan kelebihanmu (mis. kreativitas + struktur) untuk hasil optimal.</li>
+      </ul>
+    </div>`;
+
+  html += `<div style="display:flex;gap:8px;margin-top:14px;justify-content:center">
+      <button class="start-btn" id="retry" style="padding:10px 14px;border-radius:12px;border:none;background:#6f87f5;color:#fff">Ulangi Tes</button>
+      <button class="ghost" id="backHome" style="padding:10px 14px;border-radius:12px">Kembali ke Awal</button>
+    </div>`;
+
+  resultsEl.innerHTML = html;
+  resultsEl.style.display = "block";
+
+  // hide quiz area visuals
+  questionEl.style.display = "none";
+  answersEl.style.display = "none";
+  controls.style.display = "none";
+  document.getElementById("qmeta").style.display = "none";
+  document.querySelector(".progress-wrap").style.display = "none";
+
+  // animate bars after short delay
+  setTimeout(()=>{
+    for(const k of Object.keys(percents)){
+      const el = document.getElementById("bar-"+k);
+      if(el) el.style.width = percents[k] + "%";
+    }
+  },100);
+
+  // event listeners for retry / back
+  document.getElementById("retry").onclick = ()=>{
+    // reset everything
+    index = 0;
+    userAnswers = [];
+    score = { Enerjik:0, Tenang:0, Kreatif:0, Logis:0, Humoris:0 };
+    resultsEl.style.display = "none";
+    questionEl.style.display = "";
+    answersEl.style.display = "";
+    document.getElementById("qmeta").style.display = "";
+    document.querySelector(".progress-wrap").style.display = "";
+    renderQuestion();
+  };
+  document.getElementById("backHome").onclick = ()=>{
+    // show intro overlay again
+    resultsEl.style.display = "none";
+    questionEl.style.display = "";
+    answersEl.style.display = "";
+    document.getElementById("qmeta").style.display = "";
+    document.querySelector(".progress-wrap").style.display = "";
+    intro.style.display = "";
+    // reset
+    index = 0;
+    userAnswers = [];
+    score = { Enerjik:0, Tenang:0, Kreatif:0, Logis:0, Humoris:0 };
+  };
+}
+
+/* reset visual state */
+function resetState(){
+  resultsEl.style.display = "none";
+  questionEl.style.display = "";
+  answersEl.style.display = "";
+  controls.style.display = "flex";
+  document.getElementById("qmeta").style.display = "";
+  document.querySelector(".progress-wrap").style.display = "";
+  progressEl.style.width = "0%";
+  qcountEl.innerText = `Soal 1 / ${answersCount}`;
+}
+
+/* initial load (disabled until start) */
+questionEl.innerText = "Tekan 'Mulai Tes' untuk memulai.";
+answersEl.innerHTML = "";
+controls.style.display = "none";
+</script>
+</body>
+</html>
