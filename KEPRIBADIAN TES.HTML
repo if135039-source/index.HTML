@@ -124,55 +124,148 @@ const questions = [
   {
     q: "Di acara kumpul-kumpul, peranmu biasanya...",
     options:[
-      {text:"Menjadi penggerak, ajak orang ngobrol atau main", type:"Enerjik"},
-      {text:"Menonton dan menikmati suasana dari pinggir", type:"Tenang"},
-      {text:"Mencari momen untuk foto/ide kreatif", type:"Kreatif"},
-      {text:"Bikin lelucon atau komentar lucu biar cair", type:"Humoris"}
+      {text:"Mengajak orang ngobrol / memulai aktivitas", type:"Enerjik"},
+      {text:"Mengamati dan menikmati suasana", type:"Tenang"},
+      {text:"Membuat momen kreatif (foto/ide unik)", type:"Kreatif"},
+      {text:"Bikin suasana cair dengan humor", type:"Humoris"}
     ]
   },
   {
     q: "Kalau punya waktu luang seharian, kamu akan:",
     options:[
       {text:"Jalan-jalan, cari pengalaman baru", type:"Enerjik"},
-      {text:"Istirahat total, recharge tenaga", type:"Tenang"},
-      {text:"Berkarya: gambar, bikin konten, musik", type:"Kreatif"},
-      {text:"Mengerjakan teka-teki atau belajar hal baru", type:"Logis"}
+      {text:"Istirahat total untuk recharge", type:"Tenang"},
+      {text:"Berkarya: desain, musik, konten, dll.", type:"Kreatif"},
+      {text:"Belajar/riset sesuatu yang menarik", type:"Logis"}
     ]
   },
   {
-    q: "Musik yang bikin mood paling pas untukmu adalah:",
+    q: "Musik yang paling cocok dengan mood kamu:",
     options:[
-      {text:"Tempo cepat yang semangat", type:"Enerjik"},
-      {text:"Lagu santai yang menenangkan", type:"Tenang"},
-      {text:"Eksperimental/indie yang unik", type:"Kreatif"},
-      {text:"Lagu lucu yang ringan dan ceria", type:"Humoris"}
+      {text:"Beat cepat yang nge-push energi", type:"Enerjik"},
+      {text:"Lofi/chill yang menenangkan", type:"Tenang"},
+      {text:"Indie/eksperimental yang unik", type:"Kreatif"},
+      {text:"Lagu ringan & lucu", type:"Humoris"}
     ]
   },
   {
-    q: "Saat ada masalah mendadak, respons pertamamu:",
+    q: "Saat ada masalah mendadak, hal pertama yang kamu lakukan:",
     options:[
-      {text:"Langsung ambil tindakan", type:"Enerjik"},
-      {text:"Tenang, tarik napas dulu", type:"Tenang"},
-      {text:"Cari solusi out-of-the-box", type:"Kreatif"},
-      {text:"Analisa langkah demi langkah", type:"Logis"}
+      {text:"Gerak cepat menyelesaikan masalah", type:"Enerjik"},
+      {text:"Menenangkan diri dulu", type:"Tenang"},
+      {text:"Mencari solusi out-of-the-box", type:"Kreatif"},
+      {text:"Menganalisa tahap demi tahap", type:"Logis"}
     ]
   },
   {
-    q: "Ketika canggung di grup, kamu biasanya:",
+    q: "Ketika suasana canggung di grup, kamu biasanya:",
     options:[
-      {text:"Buat suasana jadi lebih hidup", type:"Enerjik"},
-      {text:"Tetap tenang dan observan", type:"Tenang"},
-      {text:"Sampaikan candaan halus", type:"Humoris"},
-      {text:"Arahkan pembicaraan ke topik yang jelas", type:"Logis"}
+      {text:"Menghidupkan suasana", type:"Enerjik"},
+      {text:"Diam dan mengamati", type:"Tenang"},
+      {text:"Melontarkan candaan halus", type:"Humoris"},
+      {text:"Mengalihkan ke topik yang jelas", type:"Logis"}
     ]
   },
   {
-    q: "Ciri yang paling cocok menggambarkanmu:",
+    q: "Ciri yang paling mewakilkanmu:",
     options:[
-      {text:"Aktif dan penuh energi", type:"Enerjik"},
+      {text:"Aktif dan inisiatif", type:"Enerjik"},
       {text:"Kalem dan stabil", type:"Tenang"},
-      {text:"Penuh imajinasi dan ide", type:"Kreatif"},
-      {text:"Cerdas, suka berpikir, atau lucu", type:"Logis"} // gabungkan Logis/Humoris di opsi agar bervariasi
+      {text:"Penuh ide dan imajinasi", type:"Kreatif"},
+      {text:"Terstruktur dan analitis", type:"Logis"}
+    ]
+  },
+
+  /* ---------------------- Pertanyaan Baru ---------------------- */
+
+  {
+    q: "Ketika bekerja dalam tim, kamu cenderung:",
+    options:[
+      {text:"Mengambil peran pemimpin", type:"Enerjik"},
+      {text:"Menjadi penyeimbang yang menenangkan", type:"Tenang"},
+      {text:"Menawarkan ide-ide unik", type:"Kreatif"},
+      {text:"Mengatur alur & logika kerja", type:"Logis"}
+    ]
+  },
+  {
+    q: "Bagaimana kamu mengambil keputusan penting?",
+    options:[
+      {text:"Cepat, berdasarkan intuisi & momentum", type:"Enerjik"},
+      {text:"Pelan tapi mantap setelah tenang", type:"Tenang"},
+      {text:"Membayangkan banyak kemungkinan kreatif", type:"Kreatif"},
+      {text:"Menganalisa data dan risiko", type:"Logis"}
+    ]
+  },
+  {
+    q: "Saat stres, kamu biasanya:",
+    options:[
+      {text:"Melakukan aktivitas fisik atau bergerak", type:"Enerjik"},
+      {text:"Menarik diri untuk menenangkan pikiran", type:"Tenang"},
+      {text:"Menyalurkan lewat karya/ide", type:"Kreatif"},
+      {text:"Membuat rencana untuk mengurai masalah", type:"Logis"}
+    ]
+  },
+  {
+    q: "Orang lain sering menilai kamu sebagai:",
+    options:[
+      {text:"Pemberi semangat", type:"Enerjik"},
+      {text:"Penenang suasana", type:"Tenang"},
+      {text:"Orang unik & penuh inspirasi", type:"Kreatif"},
+      {text:"Pemikir yang logis", type:"Logis"}
+    ]
+  },
+  {
+    q: "Saat ada proyek baru, kamu lebih suka:",
+    options:[
+      {text:"Langsung mulai tanpa banyak teori", type:"Enerjik"},
+      {text:"Rencanakan dengan tenang & stabil", type:"Tenang"},
+      {text:"Eksperimen & eksplor gaya baru", type:"Kreatif"},
+      {text:"Menganalisa struktur dan detail", type:"Logis"}
+    ]
+  },
+  {
+    q: "Cara kamu memahami seseorang biasanya lewat:",
+    options:[
+      {text:"Energi dan bahasa tubuhnya", type:"Enerjik"},
+      {text:"Perasaan & suasana hati", type:"Tenang"},
+      {text:"Gaya bicara serta kreativitasnya", type:"Kreatif"},
+      {text:"Pemikiran, pola ucapan, logikanya", type:"Logis"}
+    ]
+  },
+  {
+    q: "Hal yang paling bikin kamu termotivasi:",
+    options:[
+      {text:"Tantangan & keseruan baru", type:"Enerjik"},
+      {text:"Hidup yang damai & stabil", type:"Tenang"},
+      {text:"Kebebasan buat berkreasi", type:"Kreatif"},
+      {text:"Pemahaman & hasil yang jelas", type:"Logis"}
+    ]
+  },
+  {
+    q: "Dalam komunikasi sehari-hari kamu cenderung:",
+    options:[
+      {text:"Langsung to the point", type:"Enerjik"},
+      {text:"Lembut dan penuh empati", type:"Tenang"},
+      {text:"Ekspresif & penuh warna", type:"Kreatif"},
+      {text:"Teratur & terstruktur", type:"Logis"}
+    ]
+  },
+  {
+    q: "Saat bekerja di bawah tekanan:",
+    options:[
+      {text:"Adrenalinmu naik dan makin semangat", type:"Enerjik"},
+      {text:"Tetap tenang & stabil", type:"Tenang"},
+      {text:"Ide-ide spontan biasanya bermunculan", type:"Kreatif"},
+      {text:"Menggunakan logika untuk memecah masalah", type:"Logis"}
+    ]
+  },
+  {
+    q: "Mana yang paling bikin kamu tidak nyaman?",
+    options:[
+      {text:"Rutinitas yang terlalu membosankan", type:"Enerjik"},
+      {text:"Lingkungan yang terlalu ramai & kacau", type:"Tenang"},
+      {text:"Aturan yang terlalu ketat", type:"Kreatif"},
+      {text:"Situasi yang tidak jelas / tidak terstruktur", type:"Logis"}
     ]
   }
 ];
