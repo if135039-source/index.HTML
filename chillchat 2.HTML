@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChillChat Anonim + AI</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #fff;
+        }
+
+        header {
+            background: #1f1f1f;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        #room-select, #apikey-area {
+            padding: 15px;
+            text-align: center;
+        }
+
+        select, input {
+            padding: 10px;
+            width: 90%;
+            max-width: 350px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 10px;
+        }
+
+        #chat-box {
+            height: 60vh;
+            overflow-y: auto;
+            padding: 15px;
+            background: #0d0d0d;
+            border-top: 1px solid #222;
+        }
+
+        .msg {
+            padding: 10px 14px;
+            background: #222;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .bot {
+            background: #333366;
+        }
+
+        #input-area {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            background: #1a1a1a;
+            gap: 10px;
+        }
+
+        #message {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        #send-btn {
+            padding: 12px 20px;
+            background: #4caf50;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        #send-btn:hover {
+            background: #43a047;
+        }
+    </style>
+</head>
+<body>
+
+<header>ChillChat Anonim + AI</header>
+
+<div id="apikey-area">
+    <input id="apikey" type="password" placeholder="Masukkan OpenAI API Key di sini..." />
+</div>
+
+<div id="room-select">
+    <select id="room">
+        <option value="">— Pilih Mood Room —</option>
+        <option value="happy">😊 Happy Room</option>
+        <option value="sad">😢 Sad Room</option>
+        <option value="vent">💬 Curhat / Vent</option>
+        <option value="random">🎲 Random Room</option>
+        <option value="bot">🤖 AnonBot AI (GPT)</option>
+    </select>
+</div>
+
+<div id="chat-box"></div>
+
+<div id="input-area">
+    <input type="text" id="message" placeholder="Ketik pesan anonim…" />
+    <button id="send-btn">Kirim</button>
+</div>
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+    const roomSelect = document.getElementById("room");
+    const apikeyInput = document.getElementById("apikey");
+    const messageInput = document.getElementById("message");
+
+    let currentRoom = null;
+
+    function loadMessages() {
+        const data = JSON.parse(localStorage.getItem("chillchat") || "{}");
+        return data[currentRoom] || [];
+    }
+
+    function saveMessages(msgList) {
+        const data = JSON.parse(localStorage.getItem("chillchat") || "{}");
+        data[currentRoom] = msgList;
+        localStorage.setItem("chillchat", JSON.stringify(data));
+    }
+
+    function renderChat() {
+        chatBox.innerHTML = "";
+        const msgs = loadMessages();
+        msgs.forEach(m => {
+            const div = document.createElement("div");
+            div.classList.add("msg");
+            if (m.startsWith("[BOT]")) div.classList.add("bot");
+            div.textContent = m.replace("[BOT]", "");
+            chatBox.appendChild(div);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // === OPENAI API CALL ===
+    async function callOpenAI(prompt) {
+        const key = apikeyInput.value.trim();
+        if (!key) return "❗ Masukkan API Key dulu di atas.";
+
+        try {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + key
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini", 
+                    messages: [
+                        { role: "system", content: "Kamu adalah AnonBot, AI yang ramah dan anonim." },
+                        { role: "user", content: prompt }
+                    ]
+                })
+            });
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+
+        } catch (e) {
+            return "⚠️ Error: " + e.message;
+        }
+    }
+
+    // Room change
+    roomSelect.addEventListener("change", () => {
+        currentRoom = roomSelect.value;
+        if (!currentRoom) return;
+        renderChat();
+    });
+
+    // Send message
+    document.getElementById("send-btn").addEventListener("click", async () => {
+        if (!currentRoom) {
+            alert("Pilih Mood Room dulu!");
+            return;
+        }
+
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        const msgs = loadMessages();
+        msgs.push(text);
+        saveMessages(msgs);
+        messageInput.value = "";
+        renderChat();
+
+        // AI Reply only in bot room
+        if (currentRoom === "bot") {
+            const reply = await callOpenAI(text);
+            msgs.push("[BOT]" + reply);
+            saveMessages(msgs);
+            renderChat();
+        }
+    });
+</script>
+
+</body>
+</html>
