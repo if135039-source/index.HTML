@@ -1,153 +1,236 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kalkulator Kesehatan</title>
+import React, { useEffect, useRef, useState } from "react";
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+/**
+ * ChillChat — Single-file React component
+ * - TailwindCSS utility classes assumed available in the project
+ * - Exports a default React component that you can drop into a page
+ * - Features: aesthetic UI, non-"alay" friendly responses, varied replies,
+ *   typing indicator, subtle sound, localStorage history, responsive layout.
+ *
+ * How to use:
+ *  - Ensure TailwindCSS is installed in your project.
+ *  - Import and render <ChillChatApp /> in your app.
+ */
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #ffcce6;
-        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 24 24' fill='%23ff4da6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 21s-6.716-4.567-10-9.8C-1.279 7.6 1.543 2 6.25 2 9.021 2 12 4.5 12 4.5S14.979 2 17.75 2C22.457 2 25.279 7.6 22 11.2 18.716 16.433 12 21 12 21z'/%3E%3C/svg%3E");
-        background-size: 80px;
-        background-repeat: repeat;
-        padding: 20px;
-    }
+const BOT_NAME = "ChillChat";
 
-    .container {
-        max-width: 500px;
-        margin: auto;
-        padding: 20px;
-        border-radius: 20px;
-        background: white;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
+// A palette of response templates that avoid 'alay' style and keep a chill tone.
+// Each entry can be a string or a function that returns a string to allow variability.
+const RESPONSE_TEMPLATES = [
+  (ctx) => `Sip — ${ctx.summary}. Ada yang mau kamu tambahin? 😊`,
+  (ctx) => `Noted. Kalau gitu, menurutku ${ctx.suggestion}.`,
+  (ctx) => `Oke — aku paham. Kalau butuh opsi lain aku bantu lagi ya.`,
+  () => `Mantap. Mau lanjut ngobrol tentang hal lain atau santai-santai aja?`,
+  () => `Keren. Aku suka ide itu — seru juga kalau ditambahin sedikit twist.`,
+  (ctx) => `Ngerti. Ringkasnya: ${ctx.summary}. Gimana menurut kamu?`,
+  () => `Asik! Aku bakal keep it casual — santai tapi berkesan.`,
+  () => `Kalau mau, aku bisa bikin versi yang lebih singkat atau lebih panjang.`,
+  () => `Setuju — simple, rapi, dan enak dibaca.`,
+];
 
-    input {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-    }
-
-    button {
-        width: 100%;
-        padding: 12px;
-        background: #ff4da6;
-        border: none;
-        color: white;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 10px;
-    }
-
-    button:hover {
-        background: #ff1a8c;
-    }
-
-    .result {
-        margin-top: 15px;
-        padding: 15px;
-        border-radius: 10px;
-        background: #fbe6f3;
-    }
-
-    h2 {
-        text-align: center;
-        color: #ff1a8c;
-    }
-</style>
-</head>
-
-<body>
-
-<div class="container">
-    <h2>Kalkulator Kesehatan</h2>
-
-    <label>Berat Badan (kg)</label>
-    <input type="number" id="bb">
-
-    <label>Tinggi Badan (cm)</label>
-    <input type="number" id="tb">
-
-    <label>Umur (tahun)</label>
-    <input type="number" id="umur">
-
-    <button onclick="hitung()">Hitung</button>
-
-    <div class="result" id="hasil"></div>
-
-    <canvas id="chartHasil" style="margin-top:20px;"></canvas>
-</div>
-
-<script>
-function hitung() {
-    let bb = parseFloat(document.getElementById("bb").value);
-    let tb = parseFloat(document.getElementById("tb").value) / 100; 
-    let umur = parseFloat(document.getElementById("umur").value);
-
-    if (!bb || !tb || !umur) {
-        document.getElementById("hasil").innerHTML = 
-            "<b>Mohon isi semua data.</b>";
-        return;
-    }
-
-    let bmi = bb / (tb * tb);
-    let kategori = "";
-    let saran = "";
-
-    if (bmi < 18.5) {
-        kategori = "Kurus";
-        saran = "Perbanyak makan protein, karbo sehat, dan susu.";
-    } else if (bmi < 25) {
-        kategori = "Normal";
-        saran = "Pertahankan pola makan seimbang dan minum air cukup.";
-    } else if (bmi < 30) {
-        kategori = "Berlebih";
-        saran = "Kurangi gula/tepung, perbanyak buah dan sayur.";
-    } else {
-        kategori = "Obesitas";
-        saran = "Konsultasikan pola makan, hindari gorengan dan junk food.";
-    }
-
-    let rataRata = (bb + tb*100 + umur) / 3;
-
-    document.getElementById("hasil").innerHTML = `
-        <b>Hasil Perhitungan:</b><br>
-        BMI: ${bmi.toFixed(2)} <br>
-        Kategori: <b>${kategori}</b> <br><br>
-        <b>Saran Makanan:</b> ${saran}<br><br>
-        <b>Nilai Rata-rata Data:</b> ${rataRata.toFixed(2)}
-    `;
-
-    // Grafik
-    if (window.grafikHasil) {
-        window.grafikHasil.destroy();
-    }
-
-    let ctx = document.getElementById("chartHasil").getContext("2d");
-    window.grafikHasil = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: ["Berat", "Tinggi(cm)", "Umur"],
-            datasets: [{
-                label: "Nilai Input",
-                data: [bb, tb*100, umur]
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } }
-        }
-    });
+// Small helper to create a varied response context from user's text
+function buildContextFrom(message) {
+  // naive summary: take first 6 words
+  const words = message.trim().split(/\s+/);
+  const summary = words.slice(0, 8).join(" ") + (words.length > 8 ? "..." : "");
+  // a tiny suggestion generator
+  const suggestion = words.length > 2 ? `coba tambah ${words[1]}` : "coba dikembangkan";
+  return { summary, suggestion };
 }
-</script>
 
-</body>
-</html>
+function pickResponse(message) {
+  const ctx = buildContextFrom(message);
+  const choice = RESPONSE_TEMPLATES[Math.floor(Math.random() * RESPONSE_TEMPLATES.length)];
+  try {
+    return typeof choice === "function" ? choice(ctx) : choice;
+  } catch (e) {
+    return "Sip — noted.";
+  }
+}
+
+// subtle click sound using WebAudio API (no external files)
+function playClick() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.value = 880; // gentle click frequency
+    g.gain.value = 0.02; // very subtle
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+    setTimeout(() => {
+      o.stop();
+      ctx.close();
+    }, 25);
+  } catch (e) {
+    // ignore if audio not allowed
+  }
+}
+
+export default function ChillChatApp() {
+  const [messages, setMessages] = useState(() => {
+    try {
+      const raw = localStorage.getItem("chillchat_history_v1");
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [tone, setTone] = useState("chill"); // placeholder for future tones
+  const refEnd = useRef(null);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem("chillchat_history_v1", JSON.stringify(messages));
+    if (refEnd.current) refEnd.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // handle sending a message
+  async function sendMessage(text) {
+    if (!text.trim()) return;
+    playClick();
+    const userMsg = {
+      id: Date.now() + "_u",
+      who: "you",
+      text: text.trim(),
+      ts: new Date().toISOString(),
+    };
+    setMessages((m) => [...m, userMsg]);
+    setInput("");
+
+    // bot "typing" simulation with varied delay to avoid monotony
+    const delay = 600 + Math.min(1800, text.length * 30 + Math.random() * 800);
+    setIsTyping(true);
+    await new Promise((res) => setTimeout(res, delay));
+
+    const botText = pickResponse(text);
+    const botMsg = {
+      id: Date.now() + "_b",
+      who: BOT_NAME,
+      text: botText,
+      ts: new Date().toISOString(),
+    };
+    setIsTyping(false);
+    setMessages((m) => [...m, botMsg]);
+  }
+
+  function handleSubmit(e) {
+    e && e.preventDefault();
+    sendMessage(input);
+  }
+
+  function clearHistory() {
+    if (confirm("Hapus riwayat obrolan?")) {
+      localStorage.removeItem("chillchat_history_v1");
+      setMessages([]);
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] to-[#07102a] p-4">
+      <div className="w-full max-w-3xl bg-[rgba(255,255,255,0.02)] backdrop-blur-md border border-white/6 rounded-2xl shadow-2xl overflow-hidden">
+        {/* Header */}
+        <header className="flex items-center justify-between p-4 border-b border-white/6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold text-lg shadow-lg">CC</div>
+            <div>
+              <h1 className="text-white text-xl font-semibold">ChillChat</h1>
+              <p className="text-sm text-white/60">ngobrol santai — rapi, enak, nggak alay</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <select
+              className="bg-transparent text-white/80 text-sm p-2 rounded-md border border-white/6"
+              value={tone}
+              onChange={(e) => setTone(e.target.value)}
+            >
+              <option value="chill">Chill</option>
+              <option value="concise">Singkat</option>
+              <option value="detailed">Rinci</option>
+            </select>
+            <button onClick={clearHistory} className="text-sm text-white/70 px-3 py-2 rounded-md border border-white/6 hover:bg-white/2">
+              Hapus
+            </button>
+          </div>
+        </header>
+
+        {/* Messages area */}
+        <main className="p-4 h-[60vh] md:h-[70vh] overflow-y-auto" style={{ scrollbarGutter: 'stable' }}>
+          <div className="flex flex-col gap-4">
+            {messages.length === 0 && (
+              <div className="text-center mt-12 text-white/60">
+                <p className="text-lg font-medium">Halo 👋</p>
+                <p className="text-sm mt-2">Mulai obrolan yang santai — aku jawabnya nggak alay, nggak monoton.</p>
+              </div>
+            )}
+
+            {messages.map((m) => (
+              <div key={m.id} className={`flex ${m.who === 'you' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`${m.who === 'you' ? 'bg-white/6 text-white' : 'bg-gradient-to-br from-[#111827] to-[#0b2940] text-white/95'} max-w-[78%] p-3 rounded-2xl shadow-md`}
+                     style={{ animation: 'fadeIn 240ms ease' }}>
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap">{m.text}</div>
+                  <div className="text-[10px] text-white/40 mt-2 text-right">{new Date(m.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                </div>
+              </div>
+            ))}
+
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-gradient-to-br from-[#0b2940] to-[#07304a] text-white max-w-[60%] p-3 rounded-2xl shadow-md animate-pulse">
+                  <div className="flex gap-2 items-center">
+                    <div className="w-2 h-2 rounded-full bg-white/80 animate-bounce" />
+                    <div className="w-2 h-2 rounded-full bg-white/60 animate-bounce delay-75" />
+                    <div className="w-2 h-2 rounded-full bg-white/40 animate-bounce delay-150" />
+                    <div className="text-sm text-white/70 ml-3">{BOT_NAME} lagi ngetik...</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div ref={refEnd} />
+          </div>
+        </main>
+
+        {/* Input area */}
+        <form onSubmit={handleSubmit} className="p-4 border-t border-white/6 flex gap-3 items-center">
+          <button type="button" onClick={() => { if (inputRef.current) { inputRef.current.focus(); } }} className="p-2 rounded-md bg-white/3 border border-white/6">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white/80" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2.003 5.884l8 4.8a1 1 0 0 0 .994 0l8-4.8A1 1 0 0 0 18 4H2a1 1 0 0 0-.997 1.884z" />
+              <path d="M18 8.118l-8 4.8a3 3 0 0 1-2.988 0l-8-4.8V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118z" />
+            </svg>
+          </button>
+
+          <input
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ketik sesuatu... (mis. minta saran, minta tolong bikin teks, atau sekadar ngobrol)"
+            className="flex-1 bg-transparent outline-none placeholder:text-white/40 text-white p-3 rounded-xl border border-white/6"
+            aria-label="Pesan"
+          />
+
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg hover:opacity-95"
+          >
+            Kirim
+          </button>
+        </form>
+
+      </div>
+    </div>
+  );
+}
+
+/* Extra: small CSS animations (if using Tailwind, these can also be moved to tailwind config) */
+
+/* Add this to a global CSS file if you want smoother text fade-in:
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+*/
