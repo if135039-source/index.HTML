@@ -16,6 +16,7 @@
     justify-content:center;
     background: linear-gradient(135deg,#ffefef,#e8f0ff);
     padding:24px;
+    flex-direction:column;
   }
 
   .card{
@@ -36,12 +37,15 @@
     height:10px;background:rgba(0,0,0,0.06);border-radius:999px;
     overflow:hidden;margin:12px 0
   }
+
   .progress{
     height:100%;width:0%;background:linear-gradient(90deg,#7fa9ff,#a08bff);
     transition:width .4s ease
   }
 
-  #question{font-size:18px;color:#222;margin-bottom:12px;text-align:center}
+  #question{
+    font-size:18px;color:#222;margin-bottom:12px;text-align:center
+  }
 
   #answers{
     display:grid;grid-template-columns:repeat(2,1fr);gap:10px
@@ -54,6 +58,7 @@
     font-size:14px;color:#1b1b1b;text-align:left;
     transition:transform .14s ease, box-shadow .14s ease;
   }
+
   button.answer:hover{
     transform:translateY(-4px);
     box-shadow:0 10px 20px rgba(79,84,255,0.12)
@@ -65,10 +70,12 @@
     display:flex;gap:12px;margin-top:16px;
     align-items:center;justify-content:center
   }
+
   button.round{
     padding:10px 14px;border-radius:999px;border:none;
     background:#6f87f5;color:#fff;cursor:pointer
   }
+
   button.ghost{
     background:transparent;border:1px solid rgba(0,0,0,0.06);
     padding:10px 14px;border-radius:12px;cursor:pointer
@@ -80,6 +87,7 @@
   .breakdown{
     display:flex;flex-direction:column;gap:10px;margin-top:12px
   }
+
   .bar-wrap{display:flex;align-items:center;gap:12px}
   .label{width:100px;font-size:14px}
 
@@ -87,6 +95,7 @@
     flex:1;height:10px;background:#eee;border-radius:999px;
     overflow:hidden
   }
+
   .bar > i{
     display:block;height:100%;width:0;
     background:linear-gradient(90deg,#ffd37f,#ff9fb1);
@@ -94,7 +103,11 @@
   }
 
   .desc{margin-top:12px;color:#333;line-height:1.5}
-  .tips{margin-top:12px;display:grid;gap:8px}
+
+  .tips{
+    margin-top:12px;display:grid;gap:8px
+  }
+
   .tip{
     background:#f7f7ff;padding:10px;border-radius:10px;
     border-left:4px solid #a59bff
@@ -104,13 +117,21 @@
     position:absolute;inset:0;
     background:linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,248,255,0.9));
     display:flex;flex-direction:column;align-items:center;
-    justify-content:center;padding:26px
+    justify-content:center;padding:26px;text-align:center
   }
 
   .start-btn{
     padding:12px 20px;border-radius:12px;border:none;
     background:#6f87f5;color:white;font-weight:600;cursor:pointer;
     box-shadow:0 8px 28px rgba(79,84,255,0.12)
+  }
+
+  footer{
+    margin-top:26px;
+    text-align:center;
+    font-size:14px;
+    color:#555;
+    opacity:0.8;
   }
 
   @media (max-width:600px){
@@ -121,20 +142,20 @@
 </head>
 
 <body>
+
 <div class="card" id="card">
 
   <div class="overlay" id="intro">
     <h1>Tes Kepribadian Remaja</h1>
     <p>
-      Tes ini dirancang khusus untuk remaja 15–17 tahun untuk memahami suasana hati, 
-      tingkat kepercayaan diri, kecemasan sosial, overthinking, dan tipe kepribadian yang dominan.
+      Tes ini dirancang untuk remaja 15–17 tahun agar lebih memahami suasana hati, 
+      rasa percaya diri, kecemasan sosial, overthinking, dan kepribadian dominan.
     </p>
-    <p class="muted">Jawab jujur agar hasilnya akurat.</p>
     <button class="start-btn" id="startBtn">Mulai Tes</button>
   </div>
 
   <h1>Tes Kepribadian</h1>
-  <p class="lead">Pilih jawaban yang paling mendekati dirimu.</p>
+  <p class="lead">Pilih jawaban yang paling menggambarkan dirimu.</p>
 
   <div class="progress-wrap">
     <div class="progress" id="progress"></div>
@@ -157,19 +178,21 @@
 
 </div>
 
-
+<footer>
+  oleh <strong>Sillu dan Intan</strong><br>
+  SMAN KABUH JOMBANG | 2025
+</footer>
 
 
 <script>
 
-/* -------------------------
-   DAFTAR PERTANYAAN (26 SOAL)
-----------------------------*/
+/* ============================
+    DAFTAR PERTANYAAN (26 SOAL)
+=============================*/
 
 const questions = [
 
-  /* ====== 6 pertanyaan lama ====== */
-
+  /* ===== 6 SOAL LAMA ===== */
   {
     q: "Di acara kumpul-kumpul, peranmu biasanya...",
     options:[
@@ -179,6 +202,7 @@ const questions = [
       {text:"Membuat candaan mencairkan suasana", type:"Humoris"}
     ]
   },
+
   {
     q: "Kalau punya waktu luang seharian, kamu akan:",
     options:[
@@ -188,6 +212,7 @@ const questions = [
       {text:"Belajar hal baru / teka-teki", type:"Logis"}
     ]
   },
+
   {
     q: "Musik yang paling menggambarkanmu:",
     options:[
@@ -197,6 +222,7 @@ const questions = [
       {text:"Lucu, fun, atau ringan", type:"Humoris"}
     ]
   },
+
   {
     q: "Ketika ada masalah tiba-tiba, kamu:",
     options:[
@@ -206,6 +232,7 @@ const questions = [
       {text:"Analisa langkah-langkahnya", type:"Logis"}
     ]
   },
+
   {
     q: "Ketika canggung di grup, kamu:",
     options:[
@@ -215,6 +242,7 @@ const questions = [
       {text:"Arahkan topik pembicaraan", type:"Logis"}
     ]
   },
+
   {
     q: "Ciri yang paling cocok untukmu:",
     options:[
@@ -225,7 +253,10 @@ const questions = [
     ]
   },
 
-  /* ====== 20 pertanyaan baru khusus remaja ====== */
+
+  /* ======================================
+       20 SOAL BARU — REMAJA 15–17 TAHUN
+  ====================================== */
 
   {
     q: "Mood kamu sering berubah tiba-tiba?",
@@ -236,6 +267,7 @@ const questions = [
       {text:"Tidak pernah", type:"Enerjik"}
     ]
   },
+
   {
     q: "Saat mood turun, kamu butuh waktu lama untuk pulih?",
     options:[
@@ -426,13 +458,13 @@ const questions = [
     ]
   }
 
-]; // END QUESTIONS
+]; // END OF QUESTIONS
 
 
 
-/* -------------------------
-   LOGIKA QUIZ (TIDAK DIUBAH)
-----------------------------*/
+/* ===========================
+      LOGIKA QUIZ
+=============================*/
 
 let index = 0;
 let answersCount = questions.length;
@@ -495,6 +527,7 @@ function recomputeScores(){
 prevBtn.onclick = ()=>{
   if(index>0){ index--; renderQuestion(); }
 }
+
 nextBtn.onclick = ()=>{
   userAnswers[index]=userAnswers[index]||null;
   index++;
@@ -547,6 +580,7 @@ function showResult(){
     <h4 style="margin-top:10px">Tips & Solusi</h4>
     <div class="tips">
   `;
+
   details[dominant].tips.forEach(t=>{
     html+=`<div class="tip">${t}</div>`;
   });
@@ -569,6 +603,7 @@ function showResult(){
   controls.style.display="none";
   document.querySelector(".progress-wrap").style.display="none";
   document.getElementById("qmeta").style.display="none";
+
 
   setTimeout(()=>{
     for(const k in perc){
