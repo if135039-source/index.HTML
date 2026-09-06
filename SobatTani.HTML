@@ -1,214 +1,109 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TabaccoCare - Pendeteksi & Manajemen Tembakau</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f8f1;color:#203528}
-header{background:linear-gradient(135deg,#276749,#48a868);color:white;padding:28px 7%;border-radius:0 0 28px 28px}
-header h1{margin:0 0 7px;font-size:34px}header p{margin:0;opacity:.9}
-.container{max-width:1100px;margin:25px auto;padding:0 18px}
-nav{display:flex;gap:8px;overflow:auto;margin-bottom:20px}
-nav button{border:0;background:white;padding:12px 17px;border-radius:20px;cursor:pointer;white-space:nowrap;color:#276749;font-weight:bold}
-nav button.active{background:#276749;color:white}
-.card{background:white;border-radius:20px;padding:22px;margin-bottom:18px;box-shadow:0 5px 20px #173b2412}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.stat{padding:20px;border-radius:18px;background:#edf7ee}.stat b{font-size:27px;display:block;margin-top:8px}
-input,select{width:100%;padding:12px;border:1px solid #d5dfd6;border-radius:12px;margin:7px 0 14px;font-size:15px}
-button.primary{background:#276749;color:white;border:0;padding:13px 18px;border-radius:12px;font-weight:bold;cursor:pointer}
-button.secondary{background:#e7f3e8;color:#276749;border:0;padding:12px 16px;border-radius:12px;font-weight:bold;cursor:pointer}
-.scan{border:2px dashed #8ab995;border-radius:18px;padding:35px;text-align:center;background:#f7fcf7}
-.scan input{display:none}.result{margin-top:15px;padding:18px;border-radius:15px;background:#edf7ee;display:none}
-.badge{display:inline-block;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold;background:#dff3e3;color:#24643b}
-.task{display:flex;justify-content:space-between;gap:10px;align-items:center;border-left:5px solid #48a868;padding:13px;background:#f8fbf8;border-radius:10px;margin:9px 0}
-.small{font-size:13px;color:#64756a}.hidden{display:none}
-footer{text-align:center;padding:30px;color:#718075}
-</style>
-</head>
-<body>
-<header>
-  <h1>🌿 TabaccoCare</h1>
-  <p>Pendeteksi & Manajemen Tembakau berbasis AI</p>
-</header>
+import 'package:flutter/material.dart';
 
-<div class="container">
-<nav>
- <button class="active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
- <button onclick="showPage('scan',this)">📸 Scan AI</button>
- <button onclick="showPage('calendar',this)">📅 Kalender</button>
- <button onclick="showPage('calculator',this)">🧪 Kalkulator</button>
- <button onclick="showPage('community',this)">👨‍🌾 Komunitas</button>
-</nav>
-
-<section id="dashboard">
- <div class="card">
-  <h2>Selamat datang, Petani! 👋</h2>
-  <p>Atur data lahan untuk mendapatkan estimasi fase tanaman dan jadwal budidaya.</p>
-  <div class="grid">
-   <div><label>Luas lahan (m²)</label><input id="land" type="number" placeholder="Contoh: 1000"></div>
-   <div><label>Tanggal mulai tanam</label><input id="plantDate" type="date"></div>
-  </div>
-  <button class="primary" onclick="saveFarm()">Simpan Data Lahan</button>
- </div>
- <div class="grid">
-  <div class="stat">🌱 Umur tanaman<b id="age">-</b><span class="small">berdasarkan tanggal tanam</span></div>
-  <div class="stat">🌿 Fase pertumbuhan<b id="phase">-</b><span class="small">estimasi awal</span></div>
-  <div class="stat">❤️ Status terakhir<b id="health">Belum scan</b><span class="small">hasil pemindaian</span></div>
- </div>
- <div class="card">
-  <h2>📌 Jadwal berikutnya</h2>
-  <div id="nextTask">Masukkan tanggal tanam untuk membuat jadwal.</div>
- </div>
-</section>
-
-<section id="scan" class="hidden">
- <div class="card">
-  <h2>📸 Pemindai Kamera AI</h2>
-  <p>Ambil foto daun yang jelas. Prototype ini mensimulasikan hasil AI; aplikasi produksi perlu model computer vision terlatih.</p>
-  <div class="scan">
-   <label for="leafPhoto" class="primary" style="display:inline-block;cursor:pointer">📷 Pilih / Ambil Foto Daun</label>
-   <input id="leafPhoto" type="file" accept="image/*" capture="environment" onchange="scanLeaf(event)">
-   <div id="preview"></div>
-  </div>
-  <div id="scanResult" class="result"></div>
- </div>
-</section>
-
-<section id="calendar" class="hidden">
- <div class="card">
-  <h2>📅 Kalender Budidaya</h2>
-  <p>Jadwal contoh berdasarkan umur tanaman. Sesuaikan dengan varietas, kondisi lahan, dan arahan penyuluh pertanian.</p>
-  <div id="calendarList"></div>
- </div>
-</section>
-
-<section id="calculator" class="hidden">
- <div class="card">
-  <h2>🧪 Kalkulator Kebutuhan Larutan</h2>
-  <p>Untuk keamanan, gunakan dosis yang tercantum pada label produk yang terdaftar dan ikuti petunjuk penyuluh. Kalkulator ini hanya membantu menghitung volume berdasarkan luas lahan.</p>
-  <label>Luas lahan (m²)</label><input id="calcArea" type="number" placeholder="1000">
-  <label>Volume semprot acuan (L/100 m²)</label><input id="waterRate" type="number" value="10">
-  <button class="primary" onclick="calcWater()">Hitung Volume Air</button>
-  <div id="calcResult" class="result"></div>
- </div>
- <div class="card">
-  <h2>🔎 Rekomendasi Penanganan</h2>
-  <div class="grid">
-   <div><b>Hama serangga</b><p>Identifikasi spesies terlebih dahulu. Gunakan produk terdaftar sesuai label dan utamakan pengendalian terpadu.</p></div>
-   <div><b>Gejala mirip virus</b><p>Periksa tanaman sekitar dan konsultasikan dengan penyuluh. Sanitasi dan pengendalian vektor dapat menjadi bagian dari PHT.</p></div>
-   <div><b>Bercak daun</b><p>Dokumentasikan gejala dan kondisi cuaca sebelum menentukan perlakuan.</p></div>
-  </div>
- </div>
-</section>
-
-<section id="community" class="hidden">
- <div class="card">
-  <h2>👨‍🌾 Komunitas Petani</h2>
-  <p>Tempat berbagi pengalaman budidaya dan kondisi tanaman.</p>
-  <input id="postText" placeholder="Tulis pengalaman atau pertanyaan...">
-  <button class="primary" onclick="addPost()">Kirim Postingan</button>
-  <div id="posts" style="margin-top:18px"></div>
- </div>
-</section>
-
-<footer>TabaccoCare • Prototype aplikasi edukasi & manajemen budidaya</footer>
-</div>
-
-<script>
-const pages=['dashboard','scan','calendar','calculator','community'];
-function showPage(id,btn){
- pages.forEach(p=>document.getElementById(p).classList.toggle('hidden',p!==id));
- document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
- if(id==='calendar') renderCalendar();
+void main() {
+  runApp(const TabaccoCareApp());
 }
-function saveFarm(){
- const d=document.getElementById('plantDate').value;
- const a=document.getElementById('land').value;
- if(!d){alert('Masukkan tanggal mulai tanam.');return}
- localStorage.setItem('farm',JSON.stringify({date:d,area:a}));
- updateFarm();
- alert('Data lahan tersimpan.');
-}
-function getAge(){
- const f=JSON.parse(localStorage.getItem('farm')||'{}');
- if(!f.date)return null;
- return Math.max(0,Math.floor((new Date()-new Date(f.date+'T00:00:00'))/86400000));
-}
-function phase(age){
- if(age<0)return '-';
- if(age<=21)return 'Pembibitan';
- if(age<=70)return 'Vegetatif';
- if(age<=100)return 'Pematangan';
- return 'Menjelang/Panen';
-}
-function updateFarm(){
- const f=JSON.parse(localStorage.getItem('farm')||'{}'), a=getAge();
- if(!a && a!==0)return;
- document.getElementById('age').textContent=a+' hari';
- document.getElementById('phase').textContent=phase(a);
- document.getElementById('land').value=f.area||'';
- document.getElementById('plantDate').value=f.date||'';
- document.getElementById('nextTask').innerHTML='<b>'+nextTask(a)+'</b><br><span class="small">Jadwal adalah contoh dan perlu disesuaikan dengan kondisi lapangan.</span>';
-}
-function nextTask(a){
- if(a<=21)return 'Pantau bibit, kelembapan media, dan pertumbuhan awal.';
- if(a<=35)return 'Monitoring hama/penyakit dan kondisi gulma.';
- if(a<=60)return 'Pemeliharaan vegetatif dan pemantauan kebutuhan nutrisi.';
- if(a<=80)return 'Evaluasi perkembangan daun dan persiapan fase berikutnya.';
- if(a<=100)return 'Pemantauan kematangan dan kesiapan panen sesuai varietas.';
- return 'Evaluasi panen dan pencatatan hasil produksi.';
-}
-function scanLeaf(e){
- const file=e.target.files[0]; if(!file)return;
- const url=URL.createObjectURL(file);
- document.getElementById('preview').innerHTML='<img src="'+url+'" style="max-width:100%;max-height:260px;margin-top:18px;border-radius:15px">';
- const age=getAge();
- // Simulasi hasil AI untuk prototype
- setTimeout(()=>{
-  const healthy=Math.random()>.35;
-  const r=document.getElementById('scanResult'); r.style.display='block';
-  if(healthy){
-   r.innerHTML='<span class="badge">SEHAT</span><h3>🌿 Daun tampak sehat</h3><p>Estimasi umur: <b>'+(age??'-')+' hari</b> • Fase: <b>'+phase(age??-1)+'</b></p><p>Catatan: hasil ini adalah simulasi. Sistem nyata harus menggunakan model AI terlatih dan validasi lapangan.</p>';
-   document.getElementById('health').textContent='Sehat';
-  }else{
-   r.innerHTML='<span class="badge">PERLU PEMERIKSAAN</span><h3>🔎 Ada pola yang perlu diperiksa</h3><p>Prototype tidak menetapkan diagnosis penyakit dari foto secara nyata.</p><p><b>Tindakan:</b> ambil foto lebih dekat, periksa beberapa tanaman, dan konsultasikan gejala kepada penyuluh. Hindari penyemprotan tanpa identifikasi dan petunjuk label.</p>';
-   document.getElementById('health').textContent='Perlu pemeriksaan';
+
+class TabaccoCareApp extends StatelessWidget {
+  const TabaccoCareApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'TabaccoCare',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        useMaterial3: true,
+      ),
+      home: const CameraScanScreen(),
+    );
   }
- },700);
 }
-function calcWater(){
- const area=Number(document.getElementById('calcArea').value), rate=Number(document.getElementById('waterRate').value);
- if(!area||!rate){alert('Isi luas lahan dan volume acuan.');return}
- const liters=area/100*rate;
- const r=document.getElementById('calcResult');r.style.display='block';
- r.innerHTML='<b>Perkiraan volume air: '+liters.toFixed(1)+' L</b><p class="small">Ini bukan rekomendasi dosis pestisida. Dosis produk harus mengikuti label resmi.</p>';
+
+class CameraScanScreen extends StatefulWidget {
+  const CameraScanScreen({super.key});
+
+  @override
+  State<CameraScanScreen> createState() => _CameraScanScreenState();
 }
-function renderCalendar(){
- const a=getAge(); const box=document.getElementById('calendarList');
- if(a===null){box.innerHTML='<p>Masukkan tanggal tanam di Dashboard terlebih dahulu.</p>';return}
- const items=[
-  [7,'Monitoring awal dan kondisi kelembapan'],
-  [21,'Evaluasi fase pembibitan'],
-  [35,'Monitoring hama, penyakit, dan gulma'],
-  [50,'Pemantauan pertumbuhan vegetatif'],
-  [70,'Evaluasi perkembangan tanaman'],
-  [85,'Persiapan menuju fase panen sesuai varietas'],
-  [100,'Evaluasi kematangan dan panen sesuai kondisi tanaman']
- ];
- box.innerHTML=items.map(x=>'<div class="task"><span><b>Hari ke-'+x[0]+'</b><br>'+x[1]+'</span><span class="badge">'+(a>=x[0]?'Lewat':'Mendatang')+'</span></div>').join('');
+
+class _CameraScanScreenState extends State<CameraScanScreen> {
+  bool _isAnalyzing = false;
+  String? _result;
+
+  void _scanLeaf() async {
+    setState(() {
+      _isAnalyzing = true;
+    });
+
+    // Simulasi integrasi Model Tensorflow Lite / Firebase Cloud Vision
+    await Future.delayed(const Duration(seconds: 2));
+
+    setState(() {
+      _isAnalyzing = false;
+      _result = "Penyakit Detected: Hama Ulat Grayak (Spodoptera litura)\n"
+                "Rekomendasi: Semprot Insektisida Emamektin Benzoat.\n"
+                "Estimasi Fase: Vegetatif II (32 HST)";
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('TabaccoCare AI Scanner'),
+        backgroundColor: Colors.green[800],
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          stretch: StretchMode.stroke,
+          children: [
+            Container(
+              height: 300,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.green, width: 2),
+              ),
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.camera_alt, size: 64, color: Colors.green),
+                    SizedBox(height: 8),
+                    Text("Arahkan Kamera ke Daun Tembakau"),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: _isAnalyzing ? null : _scanLeaf,
+              icon: const Icon(Icons.search),
+              label: Text(_isAnalyzing ? "Menganalisis..." : "Pindai Kesehatan Daun"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[700],
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (_result != null)
+              Card(
+                color: Colors.green[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    _result!,
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
-function addPost(){
- const t=document.getElementById('postText').value.trim();if(!t)return;
- const posts=JSON.parse(localStorage.getItem('posts')||'[]');posts.unshift(t);localStorage.setItem('posts',JSON.stringify(posts));
- document.getElementById('postText').value='';renderPosts();
-}
-function renderPosts(){
- const posts=JSON.parse(localStorage.getItem('posts')||'[]');
- document.getElementById('posts').innerHTML=posts.map((p,i)=>'<div class="task"><span>👨‍🌾 <b>Petani</b><br>'+escapeHtml(p)+'</span></div>').join('');
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-updateFarm();renderPosts();
-</script>
-</body>
-</html>
