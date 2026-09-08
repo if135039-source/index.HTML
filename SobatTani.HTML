@@ -1,522 +1,102 @@
-// ==========================================
-// 🎮 ECOMAGGOT - GAME SYSTEM
-// ==========================================
-
-// Data pemain
-let player = {
-    name: "Eco Farmer",
-    points: 0,
-    level: 1,
-    totalWaste: 0,
-    streak: 0,
-    rewards: []
-};
-
-// Daftar level
-const levels = [
-    {
-        level: 1,
-        name: "Petani Pemula 🌱",
-        required: 0
-    },
-    {
-        level: 2,
-        name: "Pengumpul Limbah ♻️",
-        required: 100
-    },
-    {
-        level: 3,
-        name: "Peternak Maggot 🐛",
-        required: 300
-    },
-    {
-        level: 4,
-        name: "Petani Hijau 🌿",
-        required: 600
-    },
-    {
-        level: 5,
-        name: "Eco Hero 🏆",
-        required: 1000
-    }
-];
-
-// ==========================================
-// 💾 LOAD DATA
-// ==========================================
-
-function loadGame() {
-    const savedData = localStorage.getItem("ecoMaggotGame");
-
-    if (savedData) {
-        player = JSON.parse(savedData);
-    }
-
-    updateDisplay();
-}
-
-// ==========================================
-// 💾 SAVE DATA
-// ==========================================
-
-function saveGame() {
-    localStorage.setItem(
-        "ecoMaggotGame",
-        JSON.stringify(player)
-    );
-}
-
-// ==========================================
-// 🪙 TAMBAH POIN
-// ==========================================
-
-function addPoints(amount, reason = "Misi selesai!") {
-
-    player.points += amount;
-
-    showNotification(
-        `🎉 +${amount} Eco-Points!<br>${reason}`
-    );
-
-    checkLevel();
-
-    saveGame();
-    updateDisplay();
-}
-
-// ==========================================
-// ♻️ SETOR LIMBAH
-// ==========================================
-
-function submitWaste() {
-
-    const input = document.getElementById("wasteInput");
-
-    if (!input) return;
-
-    const waste = Number(input.value);
-
-    if (waste <= 0 || isNaN(waste)) {
-        alert("Masukkan jumlah limbah yang benar!");
-        return;
-    }
+<div class="game">
 
-    // 1 kg = 10 poin
-    const points = waste * 10;
+    <h1>🌱 EcoMaggot</h1>
 
-    player.totalWaste += waste;
+    <h2 id="level">
+        Level 1
+    </h2>
 
-    addPoints(
-        points,
-        `Kamu berhasil menyelamatkan ${waste} kg limbah dari pembakaran! ♻️`
-    );
+    <h3 id="levelName">
+        Petani Pemula 🌱
+    </h3>
 
-    input.value = "";
+    <p>
+        🪙 Eco-Points:
+        <strong id="points">0</strong>
+    </p>
 
-    updateWaste();
-}
+    <p>
+        ♻️ Limbah terkumpul:
+        <strong id="totalWaste">0 kg</strong>
+    </p>
 
-// ==========================================
-// 🐛 RAWAT MAGGOT
-// ==========================================
+    <div class="progress">
+        <div id="levelProgress"></div>
+    </div>
 
-function careMaggot() {
 
-    addPoints(
-        30,
-        "Maggot BSF berhasil dirawat! 🐛"
-    );
+    <h2>🎯 Misi Hari Ini</h2>
 
-    completeMission("maggot");
-}
+    <div id="mission-waste">
+        ♻️ Setor limbah
+        <br>
 
-// ==========================================
-// 🌱 RAWAT TANAMAN
-// ==========================================
+        <input
+            type="number"
+            id="wasteInput"
+            placeholder="Jumlah kg"
+        >
 
-function carePlant() {
+        <button onclick="submitWaste()">
+            Setor Limbah
+        </button>
+    </div>
 
-    addPoints(
-        20,
-        "Tanamanmu tumbuh dengan baik! 🌱"
-    );
+    <br>
 
-    completeMission("plant");
-}
+    <div id="mission-maggot">
+        🐛 Rawat Maggot
 
-// ==========================================
-// 🎯 MISI
-// ==========================================
-
-const missions = {
-    waste: false,
-    maggot: false,
-    plant: false
-};
-
-function completeMission(type) {
-
-    missions[type] = true;
-
-    const mission = document.getElementById(
-        "mission-" + type
-    );
-
-    if (mission) {
-        mission.classList.add("completed");
-        mission.innerHTML = "✅ Misi selesai!";
-    }
-
-    checkAllMissions();
-}
-
-// ==========================================
-// 🏆 BONUS MISI HARIAN
-// ==========================================
-
-function checkAllMissions() {
-
-    if (
-        missions.waste &&
-        missions.maggot &&
-        missions.plant
-    ) {
+        <button onclick="careMaggot()">
+            Selesaikan
+        </button>
+    </div>
 
-        addPoints(
-            50,
-            "🎁 Semua misi harian selesai! Bonus 50 poin!"
-        );
+    <br>
 
-        missions.waste = false;
-        missions.maggot = false;
-        missions.plant = false;
-    }
-}
+    <div id="mission-plant">
+        🌱 Rawat Tanaman
 
-// ==========================================
-// 📈 CEK LEVEL
-// ==========================================
+        <button onclick="carePlant()">
+            Selesaikan
+        </button>
+    </div>
 
-function checkLevel() {
 
-    let newLevel = 1;
+    <h2>🎁 Reward</h2>
 
-    levels.forEach(item => {
+    <button onclick="redeemReward(1)">
+        🏅 Badge — 100 Poin
+    </button>
 
-        if (player.points >= item.required) {
-            newLevel = item.level;
-        }
+    <button onclick="redeemReward(2)">
+        🌱 Bibit — 250 Poin
+    </button>
 
-    });
+    <button onclick="redeemReward(3)">
+        🐛 Maggot — 500 Poin
+    </button>
 
-    if (newLevel > player.level) {
+    <button onclick="redeemReward(4)">
+        💧 Pupuk — 750 Poin
+    </button>
 
-        player.level = newLevel;
+    <button onclick="redeemReward(5)">
+        🏆 Eco Hero — 1000 Poin
+    </button>
 
-        const currentLevel =
-            levels.find(
-                item => item.level === newLevel
-            );
+</div>
 
-        showLevelUp(
-            currentLevel.name
-        );
-    }
-}
 
-// ==========================================
-// 🎁 REWARD
-// ==========================================
+<div id="notification"></div>
 
-const rewards = [
-    {
-        id: 1,
-        name: "Badge Eco Beginner 🏅",
-        price: 100
-    },
-    {
-        id: 2,
-        name: "Bibit Tanaman 🌱",
-        price: 250
-    },
-    {
-        id: 3,
-        name: "Maggot BSF 🐛",
-        price: 500
-    },
-    {
-        id: 4,
-        name: "Pupuk Organik 💧",
-        price: 750
-    },
-    {
-        id: 5,
-        name: "Badge Eco Hero 🏆",
-        price: 1000
-    }
-];
 
-// ==========================================
-// 💰 TUKAR REWARD
-// ==========================================
+<div id="levelUpPopup">
 
-function redeemReward(id) {
+    <h1>🎉 LEVEL UP!</h1>
 
-    const reward = rewards.find(
-        item => item.id === id
-    );
+    <p id="newLevel"></p>
 
-    if (!reward) return;
+</div>
 
-    if (player.points < reward.price) {
-
-        showNotification(
-            "❌ Eco-Points kamu belum cukup!"
-        );
-
-        return;
-    }
-
-    player.points -= reward.price;
-
-    player.rewards.push({
-        name: reward.name,
-        date: new Date().toLocaleDateString()
-    });
-
-    showNotification(
-        `🎁 Reward berhasil ditukar!<br>${reward.name}`
-    );
-
-    saveGame();
-    updateDisplay();
-}
-
-// ==========================================
-// 📊 UPDATE TAMPILAN
-// ==========================================
-
-function updateDisplay() {
-
-    const pointsElement =
-        document.getElementById("points");
-
-    const levelElement =
-        document.getElementById("level");
-
-    const levelNameElement =
-        document.getElementById("levelName");
-
-    const wasteElement =
-        document.getElementById("totalWaste");
-
-    if (pointsElement) {
-        pointsElement.innerText =
-            player.points;
-    }
-
-    if (levelElement) {
-        levelElement.innerText =
-            "Level " + player.level;
-    }
-
-    if (levelNameElement) {
-
-        const currentLevel =
-            levels.find(
-                item => item.level === player.level
-            );
-
-        levelNameElement.innerText =
-            currentLevel.name;
-    }
-
-    if (wasteElement) {
-        wasteElement.innerText =
-            player.totalWaste + " kg";
-    }
-
-    updateProgress();
-}
-
-// ==========================================
-// 📊 PROGRESS LEVEL
-// ==========================================
-
-function updateProgress() {
-
-    const progress =
-        document.getElementById("levelProgress");
-
-    if (!progress) return;
-
-    const current =
-        levels.find(
-            item => item.level === player.level
-        );
-
-    const next =
-        levels.find(
-            item => item.level === player.level + 1
-        );
-
-    if (!next) {
-
-        progress.style.width = "100%";
-        return;
-    }
-
-    const progressValue =
-        (
-            (player.points - current.required) /
-            (next.required - current.required)
-        ) * 100;
-
-    progress.style.width =
-        Math.min(progressValue, 100) + "%";
-}
-
-// ==========================================
-// 🔔 NOTIFIKASI
-// ==========================================
-
-function showNotification(message) {
-
-    const notification =
-        document.getElementById(
-            "notification"
-        );
-
-    if (!notification) {
-        alert(message.replace("<br>", "\n"));
-        return;
-    }
-
-    notification.innerHTML = message;
-
-    notification.classList.add("show");
-
-    setTimeout(() => {
-
-        notification.classList.remove("show");
-
-    }, 3000);
-}
-
-// ==========================================
-// 🆙 LEVEL UP
-// ==========================================
-
-function showLevelUp(levelName) {
-
-    const popup =
-        document.getElementById(
-            "levelUpPopup"
-        );
-
-    if (!popup) {
-        alert(
-            `🎉 LEVEL UP!\n\nSekarang kamu adalah ${levelName}`
-        );
-        return;
-    }
-
-    const title =
-        document.getElementById(
-            "newLevel"
-        );
-
-    if (title) {
-        title.innerText =
-            levelName;
-    }
-
-    popup.classList.add("show");
-
-    setTimeout(() => {
-
-        popup.classList.remove("show");
-
-    }, 4000);
-}
-
-// ==========================================
-// 🌟 BONUS LOGIN HARIAN
-// ==========================================
-
-function dailyBonus() {
-
-    const today =
-        new Date().toLocaleDateString();
-
-    const lastLogin =
-        localStorage.getItem(
-            "ecoMaggotLastLogin"
-        );
-
-    if (lastLogin !== today) {
-
-        addPoints(
-            20,
-            "Bonus login harian! 🌞"
-        );
-
-        localStorage.setItem(
-            "ecoMaggotLastLogin",
-            today
-        );
-    }
-}
-
-// ==========================================
-// ♻️ UPDATE JUMLAH LIMBAH
-// ==========================================
-
-function updateWaste() {
-
-    const waste =
-        document.getElementById(
-            "totalWaste"
-        );
-
-    if (waste) {
-
-        waste.innerText =
-            player.totalWaste + " kg";
-    }
-}
-
-// ==========================================
-// 🔄 RESET GAME
-// ==========================================
-
-function resetGame() {
-
-    const confirmReset =
-        confirm(
-            "Yakin ingin menghapus semua progress?"
-        );
-
-    if (!confirmReset) return;
-
-    localStorage.removeItem(
-        "ecoMaggotGame"
-    );
-
-    location.reload();
-}
-
-// ==========================================
-// 🚀 MULAI GAME
-// ==========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        loadGame();
-
-        dailyBonus();
-
-    }
-);
+<script src="script.js"></script>
