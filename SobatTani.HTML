@@ -1,109 +1,522 @@
-import 'package:flutter/material.dart';
+// ==========================================
+// 🎮 ECOMAGGOT - GAME SYSTEM
+// ==========================================
 
-void main() {
-  runApp(const TabaccoCareApp());
+// Data pemain
+let player = {
+    name: "Eco Farmer",
+    points: 0,
+    level: 1,
+    totalWaste: 0,
+    streak: 0,
+    rewards: []
+};
+
+// Daftar level
+const levels = [
+    {
+        level: 1,
+        name: "Petani Pemula 🌱",
+        required: 0
+    },
+    {
+        level: 2,
+        name: "Pengumpul Limbah ♻️",
+        required: 100
+    },
+    {
+        level: 3,
+        name: "Peternak Maggot 🐛",
+        required: 300
+    },
+    {
+        level: 4,
+        name: "Petani Hijau 🌿",
+        required: 600
+    },
+    {
+        level: 5,
+        name: "Eco Hero 🏆",
+        required: 1000
+    }
+];
+
+// ==========================================
+// 💾 LOAD DATA
+// ==========================================
+
+function loadGame() {
+    const savedData = localStorage.getItem("ecoMaggotGame");
+
+    if (savedData) {
+        player = JSON.parse(savedData);
+    }
+
+    updateDisplay();
 }
 
-class TabaccoCareApp extends StatelessWidget {
-  const TabaccoCareApp({super.key});
+// ==========================================
+// 💾 SAVE DATA
+// ==========================================
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TabaccoCare',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        useMaterial3: true,
-      ),
-      home: const CameraScanScreen(),
+function saveGame() {
+    localStorage.setItem(
+        "ecoMaggotGame",
+        JSON.stringify(player)
     );
-  }
 }
 
-class CameraScanScreen extends StatefulWidget {
-  const CameraScanScreen({super.key});
+// ==========================================
+// 🪙 TAMBAH POIN
+// ==========================================
 
-  @override
-  State<CameraScanScreen> createState() => _CameraScanScreenState();
+function addPoints(amount, reason = "Misi selesai!") {
+
+    player.points += amount;
+
+    showNotification(
+        `🎉 +${amount} Eco-Points!<br>${reason}`
+    );
+
+    checkLevel();
+
+    saveGame();
+    updateDisplay();
 }
 
-class _CameraScanScreenState extends State<CameraScanScreen> {
-  bool _isAnalyzing = false;
-  String? _result;
+// ==========================================
+// ♻️ SETOR LIMBAH
+// ==========================================
 
-  void _scanLeaf() async {
-    setState(() {
-      _isAnalyzing = true;
+function submitWaste() {
+
+    const input = document.getElementById("wasteInput");
+
+    if (!input) return;
+
+    const waste = Number(input.value);
+
+    if (waste <= 0 || isNaN(waste)) {
+        alert("Masukkan jumlah limbah yang benar!");
+        return;
+    }
+
+    // 1 kg = 10 poin
+    const points = waste * 10;
+
+    player.totalWaste += waste;
+
+    addPoints(
+        points,
+        `Kamu berhasil menyelamatkan ${waste} kg limbah dari pembakaran! ♻️`
+    );
+
+    input.value = "";
+
+    updateWaste();
+}
+
+// ==========================================
+// 🐛 RAWAT MAGGOT
+// ==========================================
+
+function careMaggot() {
+
+    addPoints(
+        30,
+        "Maggot BSF berhasil dirawat! 🐛"
+    );
+
+    completeMission("maggot");
+}
+
+// ==========================================
+// 🌱 RAWAT TANAMAN
+// ==========================================
+
+function carePlant() {
+
+    addPoints(
+        20,
+        "Tanamanmu tumbuh dengan baik! 🌱"
+    );
+
+    completeMission("plant");
+}
+
+// ==========================================
+// 🎯 MISI
+// ==========================================
+
+const missions = {
+    waste: false,
+    maggot: false,
+    plant: false
+};
+
+function completeMission(type) {
+
+    missions[type] = true;
+
+    const mission = document.getElementById(
+        "mission-" + type
+    );
+
+    if (mission) {
+        mission.classList.add("completed");
+        mission.innerHTML = "✅ Misi selesai!";
+    }
+
+    checkAllMissions();
+}
+
+// ==========================================
+// 🏆 BONUS MISI HARIAN
+// ==========================================
+
+function checkAllMissions() {
+
+    if (
+        missions.waste &&
+        missions.maggot &&
+        missions.plant
+    ) {
+
+        addPoints(
+            50,
+            "🎁 Semua misi harian selesai! Bonus 50 poin!"
+        );
+
+        missions.waste = false;
+        missions.maggot = false;
+        missions.plant = false;
+    }
+}
+
+// ==========================================
+// 📈 CEK LEVEL
+// ==========================================
+
+function checkLevel() {
+
+    let newLevel = 1;
+
+    levels.forEach(item => {
+
+        if (player.points >= item.required) {
+            newLevel = item.level;
+        }
+
     });
 
-    // Simulasi integrasi Model Tensorflow Lite / Firebase Cloud Vision
-    await Future.delayed(const Duration(seconds: 2));
+    if (newLevel > player.level) {
 
-    setState(() {
-      _isAnalyzing = false;
-      _result = "Penyakit Detected: Hama Ulat Grayak (Spodoptera litura)\n"
-                "Rekomendasi: Semprot Insektisida Emamektin Benzoat.\n"
-                "Estimasi Fase: Vegetatif II (32 HST)";
-    });
-  }
+        player.level = newLevel;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TabaccoCare AI Scanner'),
-        backgroundColor: Colors.green[800],
-        foregroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          stretch: StretchMode.stroke,
-          children: [
-            Container(
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.green, width: 2),
-              ),
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.camera_alt, size: 64, color: Colors.green),
-                    SizedBox(height: 8),
-                    Text("Arahkan Kamera ke Daun Tembakau"),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _isAnalyzing ? null : _scanLeaf,
-              icon: const Icon(Icons.search),
-              label: Text(_isAnalyzing ? "Menganalisis..." : "Pindai Kesehatan Daun"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[700],
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-            ),
-            const SizedBox(height: 20),
-            if (_result != null)
-              Card(
-                color: Colors.green[50],
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    _result!,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
+        const currentLevel =
+            levels.find(
+                item => item.level === newLevel
+            );
+
+        showLevelUp(
+            currentLevel.name
+        );
+    }
 }
+
+// ==========================================
+// 🎁 REWARD
+// ==========================================
+
+const rewards = [
+    {
+        id: 1,
+        name: "Badge Eco Beginner 🏅",
+        price: 100
+    },
+    {
+        id: 2,
+        name: "Bibit Tanaman 🌱",
+        price: 250
+    },
+    {
+        id: 3,
+        name: "Maggot BSF 🐛",
+        price: 500
+    },
+    {
+        id: 4,
+        name: "Pupuk Organik 💧",
+        price: 750
+    },
+    {
+        id: 5,
+        name: "Badge Eco Hero 🏆",
+        price: 1000
+    }
+];
+
+// ==========================================
+// 💰 TUKAR REWARD
+// ==========================================
+
+function redeemReward(id) {
+
+    const reward = rewards.find(
+        item => item.id === id
+    );
+
+    if (!reward) return;
+
+    if (player.points < reward.price) {
+
+        showNotification(
+            "❌ Eco-Points kamu belum cukup!"
+        );
+
+        return;
+    }
+
+    player.points -= reward.price;
+
+    player.rewards.push({
+        name: reward.name,
+        date: new Date().toLocaleDateString()
+    });
+
+    showNotification(
+        `🎁 Reward berhasil ditukar!<br>${reward.name}`
+    );
+
+    saveGame();
+    updateDisplay();
+}
+
+// ==========================================
+// 📊 UPDATE TAMPILAN
+// ==========================================
+
+function updateDisplay() {
+
+    const pointsElement =
+        document.getElementById("points");
+
+    const levelElement =
+        document.getElementById("level");
+
+    const levelNameElement =
+        document.getElementById("levelName");
+
+    const wasteElement =
+        document.getElementById("totalWaste");
+
+    if (pointsElement) {
+        pointsElement.innerText =
+            player.points;
+    }
+
+    if (levelElement) {
+        levelElement.innerText =
+            "Level " + player.level;
+    }
+
+    if (levelNameElement) {
+
+        const currentLevel =
+            levels.find(
+                item => item.level === player.level
+            );
+
+        levelNameElement.innerText =
+            currentLevel.name;
+    }
+
+    if (wasteElement) {
+        wasteElement.innerText =
+            player.totalWaste + " kg";
+    }
+
+    updateProgress();
+}
+
+// ==========================================
+// 📊 PROGRESS LEVEL
+// ==========================================
+
+function updateProgress() {
+
+    const progress =
+        document.getElementById("levelProgress");
+
+    if (!progress) return;
+
+    const current =
+        levels.find(
+            item => item.level === player.level
+        );
+
+    const next =
+        levels.find(
+            item => item.level === player.level + 1
+        );
+
+    if (!next) {
+
+        progress.style.width = "100%";
+        return;
+    }
+
+    const progressValue =
+        (
+            (player.points - current.required) /
+            (next.required - current.required)
+        ) * 100;
+
+    progress.style.width =
+        Math.min(progressValue, 100) + "%";
+}
+
+// ==========================================
+// 🔔 NOTIFIKASI
+// ==========================================
+
+function showNotification(message) {
+
+    const notification =
+        document.getElementById(
+            "notification"
+        );
+
+    if (!notification) {
+        alert(message.replace("<br>", "\n"));
+        return;
+    }
+
+    notification.innerHTML = message;
+
+    notification.classList.add("show");
+
+    setTimeout(() => {
+
+        notification.classList.remove("show");
+
+    }, 3000);
+}
+
+// ==========================================
+// 🆙 LEVEL UP
+// ==========================================
+
+function showLevelUp(levelName) {
+
+    const popup =
+        document.getElementById(
+            "levelUpPopup"
+        );
+
+    if (!popup) {
+        alert(
+            `🎉 LEVEL UP!\n\nSekarang kamu adalah ${levelName}`
+        );
+        return;
+    }
+
+    const title =
+        document.getElementById(
+            "newLevel"
+        );
+
+    if (title) {
+        title.innerText =
+            levelName;
+    }
+
+    popup.classList.add("show");
+
+    setTimeout(() => {
+
+        popup.classList.remove("show");
+
+    }, 4000);
+}
+
+// ==========================================
+// 🌟 BONUS LOGIN HARIAN
+// ==========================================
+
+function dailyBonus() {
+
+    const today =
+        new Date().toLocaleDateString();
+
+    const lastLogin =
+        localStorage.getItem(
+            "ecoMaggotLastLogin"
+        );
+
+    if (lastLogin !== today) {
+
+        addPoints(
+            20,
+            "Bonus login harian! 🌞"
+        );
+
+        localStorage.setItem(
+            "ecoMaggotLastLogin",
+            today
+        );
+    }
+}
+
+// ==========================================
+// ♻️ UPDATE JUMLAH LIMBAH
+// ==========================================
+
+function updateWaste() {
+
+    const waste =
+        document.getElementById(
+            "totalWaste"
+        );
+
+    if (waste) {
+
+        waste.innerText =
+            player.totalWaste + " kg";
+    }
+}
+
+// ==========================================
+// 🔄 RESET GAME
+// ==========================================
+
+function resetGame() {
+
+    const confirmReset =
+        confirm(
+            "Yakin ingin menghapus semua progress?"
+        );
+
+    if (!confirmReset) return;
+
+    localStorage.removeItem(
+        "ecoMaggotGame"
+    );
+
+    location.reload();
+}
+
+// ==========================================
+// 🚀 MULAI GAME
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadGame();
+
+        dailyBonus();
+
+    }
+);
