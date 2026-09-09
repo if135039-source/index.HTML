@@ -1,1930 +1,992 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>EcoMaggot - Smart Farming</title>
-
-<style>
-
-/* ================= RESET ================= */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-    background:#f3f8f4;
-    color:#173d28;
-    line-height:1.6;
-}
-
-/* ================= HEADER ================= */
-
-header{
-    background:linear-gradient(135deg,#126b3b,#38ad62);
-    color:white;
-    padding:15px 6%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    position:sticky;
-    top:0;
-    z-index:1000;
-    box-shadow:0 3px 15px rgba(0,0,0,0.1);
-}
-
-.logo{
-    font-size:25px;
-    font-weight:bold;
-}
-
-.logo span{
-    color:#e4ff73;
-}
-
-nav{
-    display:flex;
-    gap:5px;
-}
-
-nav button{
-    border:none;
-    background:transparent;
-    color:white;
-    padding:10px 13px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-nav button:hover{
-    background:rgba(255,255,255,0.18);
-}
-
-/* ================= CONTAINER ================= */
-
-.container{
-    width:92%;
-    max-width:1200px;
-    margin:25px auto;
-}
-
-.page{
-    display:none;
-}
-
-.page.active{
-    display:block;
-}
-
-/* ================= HERO ================= */
-
-.hero{
-    background:linear-gradient(135deg,#126b3b,#49ba70);
-    color:white;
-    padding:32px;
-    border-radius:25px;
-    margin-bottom:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
-}
-
-.hero h1{
-    font-size:31px;
-    margin-bottom:10px;
-}
-
-.hero p{
-    line-height:1.7;
-}
-
-/* ================= CARD ================= */
-
-.card{
-    background:white;
-    padding:23px;
-    border-radius:20px;
-    box-shadow:0 4px 18px rgba(0,0,0,0.07);
-}
-
-.section{
-    margin-top:25px;
-}
-
-.section h2{
-    margin-bottom:15px;
-}
-
-/* ================= PROFILE ================= */
-
-.profile{
-    background:white;
-    padding:24px;
-    border-radius:22px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.06);
-}
-
-.profileInfo{
-    display:flex;
-    align-items:center;
-    gap:18px;
-}
-
-.avatar{
-    width:75px;
-    height:75px;
-    background:#dff4e5;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:40px;
-}
-
-.profileName{
-    font-size:22px;
-    font-weight:bold;
-}
-
-.profileStatus{
-    color:#19894c;
-    margin-top:5px;
-}
-
-/* ================= WALLET ================= */
-
-.wallet{
-    background:linear-gradient(135deg,#ffd95b,#efa800);
-    padding:20px;
-    border-radius:18px;
-    min-width:230px;
-    color:#5b4300;
-}
-
-.wallet h3{
-    margin-bottom:8px;
-}
-
-.coin{
-    font-size:30px;
-    font-weight:bold;
-}
-
-/* ================= STAT ================= */
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-    margin-top:20px;
-}
-
-.stat{
-    font-size:29px;
-    font-weight:bold;
-    color:#18874a;
-    margin-top:8px;
-}
-
-/* ================= BUTTON ================= */
-
-.mainButton{
-    width:100%;
-    padding:17px;
-    margin-top:20px;
-    border:none;
-    border-radius:17px;
-    background:linear-gradient(135deg,#108348,#36bd69);
-    color:white;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:0.2s;
-}
-
-.mainButton:hover{
-    transform:translateY(-2px);
-    box-shadow:0 5px 15px rgba(0,0,0,0.12);
-}
-
-.smallButton{
-    border:none;
-    background:#19894c;
-    color:white;
-    padding:10px 15px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.smallButton:hover{
-    background:#126b3b;
-}
-
-/* ================= FORM ================= */
-
-label{
-    font-weight:bold;
-    display:block;
-    margin-top:5px;
-}
-
-input,
-select{
-    width:100%;
-    padding:13px;
-    border:1px solid #ccd6ce;
-    border-radius:10px;
-    margin-top:7px;
-    margin-bottom:15px;
-    font-size:15px;
-    outline:none;
-}
-
-input:focus,
-select:focus{
-    border-color:#19894c;
-}
-
-/* ================= FOTO ================= */
-
-.photo{
-    width:100%;
-    max-height:300px;
-    object-fit:cover;
-    border-radius:15px;
-    display:none;
-    margin-bottom:15px;
-}
-
-/* ================= AI ================= */
-
-.aiBox{
-    background:#edf9f0;
-    padding:22px;
-    border-radius:18px;
-    margin-top:18px;
-    display:none;
-    border:1px solid #d6eedc;
-}
-
-.aiTitle{
-    color:#126b3b;
-    margin-bottom:15px;
-}
-
-.resultRow{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    padding:10px 0;
-    border-bottom:1px solid #d7e9dc;
-}
-
-.resultRow:last-child{
-    border-bottom:none;
-}
-
-/* ================= REWARD ================= */
-
-.reward{
-    background:#f1f8f3;
-    padding:17px;
-    border-radius:15px;
-    margin-top:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-}
-
-.reward h3{
-    margin-bottom:3px;
-}
-
-/* ================= DAMPAK ================= */
-
-.impact{
-    text-align:center;
-}
-
-.impactIcon{
-    font-size:35px;
-}
-
-.process{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    padding:17px;
-    background:#f3f8f4;
-    border-radius:15px;
-    margin-top:10px;
-}
-
-.processIcon{
-    font-size:32px;
-    min-width:45px;
-    text-align:center;
-}
-
-/* ================= RIWAYAT ================= */
-
-.historyItem{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px;
-    background:#f4f8f5;
-    border-radius:13px;
-    margin-top:10px;
-}
-
-.historyType{
-    font-weight:bold;
-    color:#18874a;
-}
-
-/* ================= NOTICE ================= */
-
-.notice{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    background:#173d28;
-    color:white;
-    padding:16px 20px;
-    border-radius:13px;
-    opacity:0;
-    transform:translateY(100px);
-    transition:0.4s;
-    z-index:2000;
-    box-shadow:0 5px 20px rgba(0,0,0,0.2);
-}
-
-.notice.show{
-    opacity:1;
-    transform:translateY(0);
-}
-
-/* ================= FOOTER ================= */
-
-footer{
-    text-align:center;
-    padding:35px 20px;
-    color:#718078;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:800px){
-
-    header{
-        flex-direction:column;
-        gap:10px;
-    }
-
-    nav{
-        width:100%;
-        overflow-x:auto;
-        justify-content:center;
-    }
-
-    nav button{
-        white-space:nowrap;
-    }
-
-    .profile{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .wallet{
-        width:100%;
-    }
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .hero h1{
-        font-size:25px;
-    }
-
-    .reward{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .smallButton{
-        width:100%;
-    }
-
-    .resultRow{
-        flex-direction:column;
-        gap:3px;
-    }
-}
-
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>EcoFarm Connect 🌱</title>
+    <!-- Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #f0f4f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* ----- MAIN APP CONTAINER (Mobile-first) ----- */
+        .app {
+            max-width: 420px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 36px 36px 24px 24px;
+            box-shadow: 0 20px 60px rgba(0, 30, 10, 0.15);
+            overflow: hidden;
+            padding: 20px 18px 30px;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #2d6a4f, #1b4332);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(45, 106, 79, 0.3);
+            flex-shrink: 0;
+        }
+
+        .user-info h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1b2e1f;
+            letter-spacing: -0.2px;
+        }
+
+        .user-info .level-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2d6a4f;
+            background: #e8f5ed;
+            padding: 4px 12px 4px 8px;
+            border-radius: 30px;
+            margin-top: 2px;
+            width: fit-content;
+        }
+
+        .level-badge i {
+            font-size: 14px;
+            color: #f5b342;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            color: #2d4a3a;
+            font-size: 20px;
+        }
+
+        .header-right i {
+            cursor: pointer;
+            transition: 0.2s;
+            background: #f0f7f2;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-right i:hover {
+            background: #d4e8da;
+        }
+
+        /* ----- XP BAR ----- */
+        .xp-section {
+            background: #f7fbf8;
+            padding: 14px 16px;
+            border-radius: 20px;
+            margin-bottom: 18px;
+            border: 1px solid #e0ebe2;
+        }
+
+        .xp-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2d5a3d;
+            margin-bottom: 4px;
+        }
+
+        .xp-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #dce8df;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            width: 78%;
+            background: linear-gradient(90deg, #2d6a4f, #52b788);
+            border-radius: 20px;
+            transition: width 0.4s;
+        }
+
+        /* ----- COIN WALLET (Dompet Koin) ----- */
+        .wallet-card {
+            background: linear-gradient(145deg, #1b4332, #2d6a4f);
+            border-radius: 28px;
+            padding: 20px 22px;
+            color: white;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 24px rgba(27, 67, 50, 0.3);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wallet-left .label {
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .wallet-left .coin-amount {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .coin-amount i {
+            font-size: 28px;
+            color: #ffd966;
+        }
+
+        .wallet-stats {
+            display: flex;
+            gap: 18px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .wallet-stats span {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wallet-stats i {
+            font-size: 13px;
+        }
+
+        .wallet-right .btn-setor {
+            background: #ffd966;
+            border: none;
+            color: #1b4332;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 12px 22px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(255, 217, 102, 0.4);
+            transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .wallet-right .btn-setor:hover {
+            transform: scale(1.02);
+            background: #ffe28a;
+        }
+
+        .wallet-right .btn-setor i {
+            font-size: 18px;
+        }
+
+        /* ----- AI / SETOR LIMBAH MODAL (hidden by default) ----- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 32px;
+            padding: 24px 22px 28px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+            animation: modalPop 0.25s ease;
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-box h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1b2e1f;
+            margin-bottom: 6px;
+        }
+
+        .modal-box .sub {
+            font-size: 14px;
+            color: #4a6b55;
+            margin-bottom: 18px;
+        }
+
+        .camera-preview {
+            background: #e8f0ea;
+            border-radius: 20px;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #2d6a4f;
+            margin-bottom: 16px;
+            color: #1b4332;
+            font-weight: 600;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .camera-preview i {
+            font-size: 48px;
+            color: #2d6a4f;
+            opacity: 0.6;
+        }
+
+        .camera-preview .ai-tag {
+            background: #2d6a4f;
+            color: white;
+            font-size: 11px;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1b3a27;
+            min-width: 70px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1.5px solid #d0e0d4;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            background: #f7fbf8;
+            outline: none;
+            transition: 0.2s;
+            min-width: 80px;
+        }
+
+        .input-group input:focus {
+            border-color: #2d6a4f;
+            background: white;
+        }
+
+        .nilai-box {
+            background: #f0f7f2;
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 14px 0;
+            font-weight: 600;
+            font-size: 15px;
+            border: 1px solid #d4e8da;
+        }
+
+        .nilai-box span:last-child {
+            color: #1b4332;
+            font-size: 20px;
+        }
+
+        .school-option {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 14px 0;
+        }
+
+        .school-option button {
+            flex: 1;
+            padding: 10px 6px;
+            border: 2px solid #d0e0d4;
+            border-radius: 16px;
+            background: white;
+            font-weight: 600;
+            font-size: 12px;
+            color: #1b3a27;
+            cursor: pointer;
+            transition: 0.2s;
+            min-width: 100px;
+        }
+
+        .school-option button.active {
+            border-color: #2d6a4f;
+            background: #e8f5ed;
+        }
+
+        .school-option button i {
+            margin-right: 6px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-batal {
+            background: #eef3ef;
+            color: #2d4a3a;
+        }
+
+        .btn-kirim {
+            background: #2d6a4f;
+            color: white;
+            box-shadow: 0 4px 14px rgba(45, 106, 79, 0.3);
+        }
+
+        .btn-kirim:hover {
+            background: #1b4a37;
+        }
+
+        /* ----- ACTIVITY FEED ----- */
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0 12px;
+        }
+
+        .section-title h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1b2e1f;
+        }
+
+        .section-title a {
+            font-size: 12px;
+            color: #2d6a4f;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #f7fbf8;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 8px;
+            border: 1px solid #e8f0ea;
+        }
+
+        .activity-item .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .icon-circle.green {
+            background: #d4e8da;
+            color: #1b4332;
+        }
+        .icon-circle.gold {
+            background: #fef3d7;
+            color: #b47d2e;
+        }
+        .icon-circle.blue {
+            background: #d7eaf0;
+            color: #1a5f6b;
+        }
+
+        .activity-item .desc {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1b2e1f;
+        }
+
+        .activity-item .desc small {
+            display: block;
+            font-weight: 400;
+            color: #5a7a68;
+            font-size: 11px;
+        }
+
+        .activity-item .coin-change {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .coin-change.plus {
+            color: #2d6a4f;
+        }
+        .coin-change.minus {
+            color: #b34343;
+        }
+
+        /* ----- SCHOOL COLLAB ----- */
+        .school-card {
+            background: linear-gradient(145deg, #e8f5ed, #dce8df);
+            border-radius: 20px;
+            padding: 16px 18px;
+            margin: 14px 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #bdd6c4;
+        }
+
+        .school-card i {
+            font-size: 32px;
+            color: #1b4332;
+        }
+
+        .school-card .info {
+            flex: 1;
+        }
+
+        .school-card .info strong {
+            font-size: 15px;
+            color: #1b2e1f;
+        }
+
+        .school-card .info span {
+            font-size: 13px;
+            color: #2d5a3d;
+            display: block;
+        }
+
+        .status-badge {
+            background: #2d6a4f;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 30px;
+        }
+
+        /* ----- REWARD CATALOG ----- */
+        .reward-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .reward-item {
+            background: #f7fbf8;
+            border: 1px solid #e0ebe2;
+            border-radius: 18px;
+            padding: 14px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .reward-item:hover {
+            background: #e8f5ed;
+            transform: translateY(-2px);
+        }
+
+        .reward-item i {
+            font-size: 28px;
+            color: #2d6a4f;
+            margin-bottom: 4px;
+        }
+
+        .reward-item .name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #1b2e1f;
+        }
+
+        .reward-item .price {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2d6a4f;
+            background: #dce8df;
+            padding: 2px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* ----- FOOTER ----- */
+        .footer-note {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 11px;
+            color: #6a8a78;
+            border-top: 1px solid #e0ebe2;
+            padding-top: 18px;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-note i {
+            color: #2d6a4f;
+        }
+
+        /* ----- RESPONSIVE TWEAKS ----- */
+        @media (max-width: 400px) {
+            .wallet-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .wallet-right .btn-setor {
+                justify-content: center;
+                width: 100%;
+            }
+            .reward-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .school-option button {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* small extra */
+        .text-muted {
+            color: #4a6b55;
+        }
+        .mt-1 {
+            margin-top: 6px;
+        }
+        .mb-1 {
+            margin-bottom: 6px;
+        }
+        .flex {
+            display: flex;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .w-full {
+            width: 100%;
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- ================= HEADER ================= -->
-
-<header>
-
-<div class="logo">
-🌱 Eco<span>Maggot</span>
-</div>
-
-<nav>
-
-<button onclick="page('dashboard')">
-🏠 Dashboard
-</button>
-
-<button onclick="page('setor')">
-♻️ Setor Limbah
-</button>
-
-<button onclick="page('reward')">
-🎁 Eco-Reward
-</button>
-
-<button onclick="page('dampak')">
-🌍 Dampak
-</button>
-
-</nav>
-
-</header>
-
-
-<div class="container">
-
-
-<!-- ================================================= -->
-<!-- DASHBOARD -->
-<!-- ================================================= -->
-
-<section id="dashboard" class="page active">
-
-<div class="hero">
-
-<h1>
-🌱 Selamat Datang di EcoMaggot
-</h1>
-
-<p>
-EcoMaggot membantu petani mengubah limbah pertanian
-menjadi sumber daya yang bermanfaat melalui
-pengolahan maggot BSF dan pupuk organik.
-</p>
-
-</div>
-
-
-<!-- PROFILE -->
-
-<div class="profile">
-
-<div class="profileInfo">
-
-<div class="avatar">
-👨‍🌾
-</div>
-
-<div>
-
-<div class="profileName" id="nama">
-Nama Petani
-</div>
-
-<div class="profileStatus">
-🌱 Petani Mitra EcoMaggot
-</div>
-
-<small>
-Mengubah limbah menjadi nilai
-</small>
-
-</div>
-
-</div>
-
-
-<div class="wallet">
-
-<h3>
-🪙 DOMPET ECO-COIN
-</h3>
-
-<div class="coin">
-<span id="coin">0</span>
-</div>
-
-Eco-Coin
-
-</div>
-
-</div>
-
-
-<!-- STATISTIK -->
-
-<div class="grid">
-
-<div class="card">
-
-<h3>
-♻️ Total Limbah
-</h3>
-
-<div class="stat">
-<span id="statWaste">0</span> kg
-</div>
-
-<small>
-Total limbah yang telah disetorkan
-</small>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-🪙 Eco-Coin
-</h3>
-
-<div class="stat">
-<span id="statCoin">0</span>
-</div>
-
-<small>
-Insentif dari setoran limbah
-</small>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-📦 Jumlah Setoran
-</h3>
-
-<div class="stat">
-<span id="statDeposit">0</span>
-</div>
-
-<small>
-Total transaksi setoran
-</small>
-
-</div>
-
-</div>
-
-
-<button
-class="mainButton"
-onclick="page('setor')">
-
-♻️ SETOR LIMBAH SEKARANG
-
-</button>
-
-
-<!-- INFO -->
-
-<div class="section">
-
-<h2>
-💡 Tentang EcoMaggot
-</h2>
-
-<div class="card">
-
-<p>
-EcoMaggot merupakan sistem pengelolaan limbah
-pertanian yang menghubungkan petani dengan
-proses pengolahan limbah organik menjadi
-pakan maggot BSF dan pupuk organik.
-</p>
-
-<br>
-
-<p>
-Petani cukup mencatat dan menyetorkan limbah
-melalui aplikasi. Sebagai bentuk apresiasi,
-petani memperoleh Eco-Coin yang dapat
-ditukarkan dengan produk hasil pengolahan.
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================================================= -->
-<!-- SETOR LIMBAH -->
-<!-- ================================================= -->
-
-<section id="setor" class="page">
-
-<div class="hero">
-
-<h1>
-♻️ Setor Limbah
-</h1>
-
-<p>
-Masukkan data limbah pertanian untuk mendapatkan
-estimasi nilai dan Eco-Coin.
-</p>
-
-</div>
-
-
-<div class="card">
-
-<label>
-Nama Petani
-</label>
-
-<input
-id="inputNama"
-type="text"
-placeholder="Masukkan nama petani"
->
-
-
-<label>
-Jenis Limbah
-</label>
-
-<select id="jenis">
-
-<option value="sayuran">
-🥬 Sayuran Busuk
-</option>
-
-<option value="buah">
-🍌 Kulit / Sisa Buah
-</option>
-
-<option value="jerami">
-🌾 Jerami
-</option>
-
-<option value="jagung">
-🌽 Sisa Jagung
-</option>
-
-<option value="lainnya">
-♻️ Limbah Organik Lainnya
-</option>
-
-</select>
-
-
-<label>
-Berat Limbah (kg)
-</label>
-
-<input
-id="berat"
-type="number"
-min="0.1"
-step="0.1"
-placeholder="Contoh: 10"
->
-
-
-<label>
-📷 Foto Limbah
-</label>
-
-<input
-id="foto"
-type="file"
-accept="image/*"
-capture="environment"
-onchange="previewFoto(event)"
->
-
-
-<img
-id="preview"
-class="photo"
-alt="Preview limbah"
->
-
-
-<button
-class="mainButton"
-onclick="analisis()">
-
-🤖 ANALISIS LIMBAH
-
-</button>
-
-
-<!-- HASIL AI -->
-
-<div
-id="hasil"
-class="aiBox"
->
-
-<h2 class="aiTitle">
-🤖 Hasil Analisis EcoMaggot
-</h2>
-
-
-<div class="resultRow">
-
-<span>
-Jenis Limbah
-</span>
-
-<b id="hasilJenis">
--
-</b>
-
-</div>
-
-
-<div class="resultRow">
-
-<span>
-Berat Limbah
-</span>
-
-<b>
-<span id="hasilBerat">0</span> kg
-</b>
-
-</div>
-
-
-<div class="resultRow">
-
-<span>
-Estimasi Nilai Limbah
-</span>
-
-<b>
-Rp<span id="harga">0</span>
-</b>
-
-</div>
-
-
-<div class="resultRow">
-
-<span>
-Eco-Coin Diperoleh
-</span>
-
-<b>
-+<span id="hasilCoin">0</span> 🪙
-</b>
-
-</div>
-
-
-<br>
-
-
-<div class="card">
-
-<h3>
-🔄 Potensi Pengolahan
-</h3>
-
-<br>
-
-<p>
-🐛 Limbah dapat dimanfaatkan sebagai
-<b>media pakan maggot BSF</b>.
-</p>
-
-<br>
-
-<p>
-🌱 Hasil pengolahan dapat menghasilkan
-<b>pupuk organik</b> yang dapat dimanfaatkan
-kembali untuk pertanian.
-</p>
-
-</div>
-
-
-<button
-class="mainButton"
-onclick="konfirmasi()">
-
-✅ KONFIRMASI SETORAN
-
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================================================= -->
-<!-- REWARD -->
-<!-- ================================================= -->
-
-<section id="reward" class="page">
-
-<div class="hero">
-
-<h1>
-🎁 Eco-Reward
-</h1>
-
-<p>
-Eco-Coin yang diperoleh dari setoran limbah
-dapat digunakan untuk mendapatkan produk
-hasil pengolahan EcoMaggot.
-</p>
-
-</div>
-
-
-<div class="card">
-
-<h2>
-🪙 Saldo Eco-Coin:
-<span id="rewardCoin">0</span>
-</h2>
-
-
-<div class="reward">
-
-<div>
-
-<h3>
-🐛 Pakan Maggot
-</h3>
-
-<small>
-Produk pakan hasil pengolahan limbah
-</small>
-
-<br>
-
-<b>
-500 Eco-Coin
-</b>
-
-</div>
-
-
-<button
-class="smallButton"
-onclick="tukar(500,'Pakan Maggot')">
-
-Tukar
-
-</button>
-
-</div>
-
-
-<div class="reward">
-
-<div>
-
-<h3>
-🌱 Pupuk Organik Cair
-</h3>
-
-<small>
-Pupuk hasil pengolahan limbah organik
-</small>
-
-<br>
-
-<b>
-750 Eco-Coin
-</b>
-
-</div>
-
-
-<button
-class="smallButton"
-onclick="tukar(750,'Pupuk Organik Cair')">
-
-Tukar
-
-</button>
-
-</div>
-
-
-<div class="reward">
-
-<div>
-
-<h3>
-🌾 Paket Pupuk Pertanian
-</h3>
-
-<small>
-Paket pupuk untuk membantu kebutuhan pertanian
-</small>
-
-<br>
-
-<b>
-1500 Eco-Coin
-</b>
-
-</div>
-
-
-<button
-class="smallButton"
-onclick="tukar(1500,'Paket Pupuk Pertanian')">
-
-Tukar
-
-</button>
-
-</div>
-
-</div>
-
-
-<div class="section">
-
-<div class="card">
-
-<h2>
-ℹ️ Sistem Eco-Coin
-</h2>
-
-<br>
-
-<p>
-Eco-Coin diberikan sebagai bentuk insentif
-atas limbah organik yang disetorkan.
-Semakin banyak limbah yang berhasil dikelola,
-semakin besar nilai insentif yang diperoleh.
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================================================= -->
-<!-- DAMPAK -->
-<!-- ================================================= -->
-
-<section id="dampak" class="page">
-
-<div class="hero">
-
-<h1>
-🌍 Dampak EcoMaggot
-</h1>
-
-<p>
-Mengubah limbah pertanian menjadi sumber daya
-yang bermanfaat bagi lingkungan dan petani.
-</p>
-
-</div>
-
-
-<!-- IMPACT STAT -->
-
-<div class="grid">
-
-<div class="card impact">
-
-<div class="impactIcon">
-♻️
-</div>
-
-<h3>
-Limbah Terkelola
-</h3>
-
-<div class="stat">
-<span id="dampakWaste">0</span> kg
-</div>
-
-</div>
-
-
-<div class="card impact">
-
-<div class="impactIcon">
-🐛
-</div>
-
-<h3>
-Potensi Pakan Maggot
-</h3>
-
-<div class="stat">
-<span id="maggot">0</span> kg
-</div>
-
-</div>
-
-
-<div class="card impact">
-
-<div class="impactIcon">
-🌱
-</div>
-
-<h3>
-Potensi Pupuk Organik
-</h3>
-
-<div class="stat">
-<span id="pupuk">0</span> kg
-</div>
-
-</div>
-
-</div>
-
-
-<!-- PROCESS -->
-
-<div class="section">
-
-<h2>
-🔄 Proses Eco-Bioproduction
-</h2>
-
-<div class="card">
-
-
-<div class="process">
-
-<div class="processIcon">
-👨‍🌾
-</div>
-
-<div>
-
-<b>
-1. Petani
-</b>
-
-<br>
-
-<small>
-Mengumpulkan limbah pertanian organik.
-</small>
-
-</div>
-
-</div>
-
-
-<div class="process">
-
-<div class="processIcon">
-📱
-</div>
-
-<div>
-
-<b>
-2. EcoMaggot
-</b>
-
-<br>
-
-<small>
-Mencatat dan mengelola data setoran limbah.
-</small>
-
-</div>
-
-</div>
-
-
-<div class="process">
-
-<div class="processIcon">
-🏫
-</div>
-
-<div>
-
-<b>
-3. Pengolahan
-</b>
-
-<br>
-
-<small>
-Limbah diproses melalui kegiatan pengolahan
-berbasis maggot BSF dan pupuk organik.
-</small>
-
-</div>
-
-</div>
-
-
-<div class="process">
-
-<div class="processIcon">
-🐛
-</div>
-
-<div>
-
-<b>
-4. Maggot BSF
-</b>
-
-<br>
-
-<small>
-Limbah organik dimanfaatkan dalam proses
-budidaya maggot.
-</small>
-
-</div>
-
-</div>
-
-
-<div class="process">
-
-<div class="processIcon">
-🌱
-</div>
-
-<div>
-
-<b>
-5. Pupuk Organik
-</b>
-
-<br>
-
-<small>
-Hasil sampingan dapat dimanfaatkan
-kembali untuk pertanian.
-</small>
-
-</div>
-
-</div>
-
-
-<div class="process">
-
-<div class="processIcon">
-🎁
-</div>
-
-<div>
-
-<b>
-6. Manfaat Kembali
-</b>
-
-<br>
-
-<small>
-Petani dapat memperoleh produk hasil
-pengolahan melalui sistem Eco-Reward.
-</small>
-
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<!-- RIWAYAT -->
-
-<div class="section">
-
-<h2>
-📋 Riwayat Setoran
-</h2>
-
-<div class="card">
-
-<div id="riwayat">
-
-<p>
-Belum ada riwayat setoran.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-</div>
-
-
-<!-- ================================================= -->
-<!-- FOOTER -->
-<!-- ================================================= -->
-
-<footer>
-
-🌱 <b>EcoMaggot</b>
-
-<br>
-
-Mengubah Limbah Menjadi Nilai
-
-<br><br>
-
-<small>
-Proyek Inovasi Teknologi & Lingkungan
-</small>
-
-</footer>
-
-
-<!-- NOTIFICATION -->
-
-<div
-id="notice"
-class="notice">
-
-Berhasil!
-
-</div>
-
-
-<!-- ================================================= -->
-<!-- JAVASCRIPT -->
-<!-- ================================================= -->
-
-<script>
-
-/* =================================================
-   DATA
-================================================= */
-
-let data =
-JSON.parse(
-    localStorage.getItem("EcoMaggot")
-)
-||
-{
-    nama:"",
-    limbah:0,
-    coin:0,
-    setoran:0,
-    riwayat:[]
-};
-
-
-/* =================================================
-   DATA SEMENTARA
-================================================= */
-
-let pendingWeight = 0;
-let pendingCoin = 0;
-let pendingPrice = 0;
-let pendingJenis = "";
-
-
-/* =================================================
-   HARGA PROTOTYPE LIMBAH
-================================================= */
-
-const harga = {
-
-    sayuran:500,
-
-    buah:600,
-
-    jerami:300,
-
-    jagung:450,
-
-    lainnya:300
-
-};
-
-
-/* =================================================
-   NAMA JENIS LIMBAH
-================================================= */
-
-const namaJenis = {
-
-    sayuran:"🥬 Sayuran Busuk",
-
-    buah:"🍌 Kulit / Sisa Buah",
-
-    jerami:"🌾 Jerami",
-
-    jagung:"🌽 Sisa Jagung",
-
-    lainnya:"♻️ Limbah Organik Lainnya"
-
-};
-
-
-/* =================================================
-   PINDAH HALAMAN
-================================================= */
-
-function page(id){
-
-    document
-    .querySelectorAll(".page")
-    .forEach(function(x){
-
-        x.classList.remove("active");
-
-    });
-
-
-    const target =
-    document.getElementById(id);
-
-
-    if(target){
-
-        target.classList.add("active");
-
-    }
-
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-
-    update();
-
-}
-
-
-/* =================================================
-   UPDATE DATA
-================================================= */
-
-function update(){
-
-    /* NAMA */
-
-    document.getElementById("nama").innerText =
-    data.nama || "Nama Petani";
-
-
-    /* COIN */
-
-    document.getElementById("coin").innerText =
-    data.coin.toLocaleString("id-ID");
-
-
-    document.getElementById("statCoin").innerText =
-    data.coin.toLocaleString("id-ID");
-
-
-    document.getElementById("rewardCoin").innerText =
-    data.coin.toLocaleString("id-ID");
-
-
-    /* LIMBAH */
-
-    document.getElementById("statWaste").innerText =
-    data.limbah.toFixed(1);
-
-
-    document.getElementById("statDeposit").innerText =
-    data.setoran;
-
-
-    /* DAMPAK */
-
-    document.getElementById("dampakWaste").innerText =
-    data.limbah.toFixed(1);
-
-
-    /*
-       PERHITUNGAN PROTOTYPE
-
-       70% = potensi biomassa maggot
-       30% = potensi pupuk
-
-       Angka ini hanya simulasi prototype.
-    */
-
-    document.getElementById("maggot").innerText =
-    (data.limbah * 0.7).toFixed(1);
-
-
-    document.getElementById("pupuk").innerText =
-    (data.limbah * 0.3).toFixed(1);
-
-
-    /* ISI NAMA FORM */
-
-    document.getElementById("inputNama").value =
-    data.nama || "";
-
-
-    /* RIWAYAT */
-
-    tampilkanRiwayat();
-
-
-    /* SIMPAN */
-
-    localStorage.setItem(
-        "EcoMaggot",
-        JSON.stringify(data)
-    );
-
-}
-
-
-/* =================================================
-   PREVIEW FOTO
-================================================= */
-
-function previewFoto(event){
-
-    const file =
-    event.target.files[0];
-
-
-    if(!file){
-
-        return;
-
-    }
-
-
-    const img =
-    document.getElementById("preview");
-
-
-    img.src =
-    URL.createObjectURL(file);
-
-
-    img.style.display =
-    "block";
-
-}
-
-
-/* =================================================
-   ANALISIS ECO-AI
-================================================= */
-
-function analisis(){
-
-    const nama =
-    document
-    .getElementById("inputNama")
-    .value
-    .trim();
-
-
-    const jenis =
-    document
-    .getElementById("jenis")
-    .value;
-
-
-    const berat =
-    parseFloat(
-        document
-        .getElementById("berat")
-        .value
-    );
-
-
-    /* VALIDASI NAMA */
-
-    if(nama === ""){
-
-        alert(
-            "Silakan masukkan nama petani."
-        );
-
-        return;
-
-    }
-
-
-    /* VALIDASI BERAT */
-
-    if(!berat || berat <= 0){
-
-        alert(
-            "Masukkan berat limbah terlebih dahulu."
-        );
-
-        return;
-
-    }
-
-
-    /* SIMPAN NAMA */
-
-    data.nama =
-    nama;
-
-
-    /* DATA SEMENTARA */
-
-    pendingWeight =
-    berat;
-
-
-    pendingJenis =
-    jenis;
-
-
-    pendingPrice =
-    berat * harga[jenis];
-
-
-    /*
-       10 Eco-Coin per kg
-       hanya sebagai aturan prototype.
-    */
-
-    pendingCoin =
-    Math.round(
-        berat * 10
-    );
-
-
-    /* HASIL */
-
-    document
-    .getElementById("hasilJenis")
-    .innerText =
-    namaJenis[jenis];
-
-
-    document
-    .getElementById("hasilBerat")
-    .innerText =
-    berat;
-
-
-    document
-    .getElementById("harga")
-    .innerText =
-    pendingPrice.toLocaleString("id-ID");
-
-
-    document
-    .getElementById("hasilCoin")
-    .innerText =
-    pendingCoin;
-
-
-    document
-    .getElementById("hasil")
-    .style.display =
-    "block";
-
-
-    notifikasi(
-        "🤖 Analisis limbah selesai!"
-    );
-
-
-    update();
-
-}
-
-
-/* =================================================
-   KONFIRMASI SETORAN
-================================================= */
-
-function konfirmasi(){
-
-    if(pendingWeight <= 0){
-
-        return;
-
-    }
-
-
-    /* TAMBAH DATA */
-
-    data.limbah +=
-    pendingWeight;
-
-
-    data.coin +=
-    pendingCoin;
-
-
-    data.setoran++;
-
-
-    /* RIWAYAT */
-
-    data.riwayat.unshift({
-
-        jenis:pendingJenis,
-
-        namaJenis:namaJenis[pendingJenis],
-
-        berat:pendingWeight,
-
-        coin:pendingCoin,
-
-        harga:pendingPrice,
-
-        tanggal:new Date().toLocaleString(
-            "id-ID"
-        )
-
-    });
-
-
-    /* SIMPAN */
-
-    localStorage.setItem(
-        "EcoMaggot",
-        JSON.stringify(data)
-    );
-
-
-    /* UPDATE */
-
-    update();
-
-
-    /* NOTIFIKASI */
-
-    notifikasi(
-        "✅ Setoran berhasil! +" +
-        pendingCoin +
-        " Eco-Coin"
-    );
-
-
-    /* RESET */
-
-    document
-    .getElementById("hasil")
-    .style.display =
-    "none";
-
-
-    document
-    .getElementById("berat")
-    .value =
-    "";
-
-
-    document
-    .getElementById("foto")
-    .value =
-    "";
-
-
-    document
-    .getElementById("preview")
-    .style.display =
-    "none";
-
-
-    pendingWeight =
-    0;
-
-
-    pendingCoin =
-    0;
-
-
-    pendingPrice =
-    0;
-
-
-    pendingJenis =
-    "";
-
-
-    /* KEMBALI KE DASHBOARD */
-
-    setTimeout(function(){
-
-        page("dashboard");
-
-    },1000);
-
-}
-
-
-/* =================================================
-   TUKAR REWARD
-================================================= */
-
-function tukar(
-    hargaReward,
-    namaReward
-){
-
-    if(data.coin < hargaReward){
-
-        notifikasi(
-            "❌ Eco-Coin belum cukup."
-        );
-
-        return;
-
-    }
-
-
-    const konfirmasiTukar =
-    confirm(
-        "Tukarkan " +
-        hargaReward +
-        " Eco-Coin dengan " +
-        namaReward +
-        "?"
-    );
-
-
-    if(!konfirmasiTukar){
-
-        return;
-
-    }
-
-
-    data.coin -=
-    hargaReward;
-
-
-    update();
-
-
-    notifikasi(
-        "🎁 " +
-        namaReward +
-        " berhasil ditukarkan!"
-    );
-
-}
-
-
-/* =================================================
-   RIWAYAT SETORAN
-================================================= */
-
-function tampilkanRiwayat(){
-
-    const container =
-    document.getElementById("riwayat");
-
-
-    if(!data.riwayat ||
-       data.riwayat.length === 0){
-
-        container.innerHTML =
-        "<p>Belum ada riwayat setoran.</p>";
-
-        return;
-
-    }
-
-
-    container.innerHTML = "";
-
-
-    data.riwayat
-    .slice(0,10)
-    .forEach(function(item){
-
-        const div =
-        document.createElement("div");
-
-
-        div.className =
-        "historyItem";
-
-
-        div.innerHTML = `
-
-            <div>
-
-                <div class="historyType">
-                    ${item.namaJenis}
+    <div class="app" id="app">
+
+        <!-- ========== HEADER ========== -->
+        <div class="header">
+            <div class="header-left">
+                <div class="avatar">S</div>
+                <div class="user-info">
+                    <h2>Pak Slamet Riyadi</h2>
+                    <div class="level-badge">
+                        <i class="fas fa-leaf"></i> Level 3 · Petani Madya
+                    </div>
                 </div>
+            </div>
+            <div class="header-right">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
 
-                <small>
-                    ${item.tanggal}
-                </small>
+        <!-- ========== XP BAR ========== -->
+        <div class="xp-section">
+            <div class="xp-label">
+                <span>🏅 Menuju Level 4 (Petani Utama)</span>
+                <span>1.200 / 1.500 XP</span>
+            </div>
+            <div class="xp-bar-bg">
+                <div class="xp-bar-fill" style="width: 78%;"></div>
+            </div>
+        </div>
 
+        <!-- ========== WALLET (Dompet Koin) ========== -->
+        <div class="wallet-card">
+            <div class="wallet-left">
+                <div class="label">💰 Dompet Koin</div>
+                <div class="coin-amount">
+                    <i class="fas fa-coins"></i> 1.450
+                </div>
+                <div class="wallet-stats">
+                    <span><i class="fas fa-trash-alt"></i> 127 Kg</span>
+                    <span><i class="fas fa-tree"></i> 3 Pohon</span>
+                    <span><i class="fas fa-seedling"></i> 4x Pupuk</span>
+                </div>
+            </div>
+            <div class="wallet-right">
+                <button class="btn-setor" id="openModalBtn">
+                    <i class="fas fa-camera"></i> SETOR LIMBAH
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== ACTIVITY FEED ========== -->
+        <div class="section-title">
+            <h4>🔥 Aktivitas Terakhir</h4>
+            <a href="#">Lihat semua</a>
+        </div>
+
+        <div class="activity-item">
+            <div class="icon-circle green"><i class="fas fa-upload"></i></div>
+            <div class="desc">
+                Setor 5 Kg Sayuran Busuk
+                <small>2 jam lalu · SMA Negeri 1</small>
+            </div>
+            <div class="coin-change plus">+250</div>
+        </div>
+
+        <div class="activity-item">
+            <div class="icon-circle gold"><i class="fas fa-exchange-alt"></i></div>
+            <div class="desc">
+                Tukar Pupuk Organik Cair
+                <small>Kemarin · 1 Liter</small>
+            </div>
+            <div class="coin-change minus">-150</div>
+        </div>
+
+        <div class="activity-item">
+            <div class="icon-circle blue"><i class="fas fa-seedling"></i></div>
+            <div class="desc">
+                Panen Maggot Batch #12
+                <small>3 hari lalu · 20 Kg pakan</small>
+            </div>
+            <div class="coin-change plus">+180</div>
+        </div>
+
+        <!-- ========== SCHOOL COLLABORATION ========== -->
+        <div class="section-title" style="margin-top: 18px;">
+            <h4>🤝 Kerjasama Sekolah</h4>
+        </div>
+
+        <div class="school-card">
+            <i class="fas fa-school"></i>
+            <div class="info">
+                <strong>SMA Negeri 1</strong>
+                <span>Karang Taruna · OSIS</span>
+                <span style="font-size:12px; margin-top:2px;">
+                    <i class="fas fa-clock"></i> Proses Fermentasi Maggot
+                </span>
+            </div>
+            <div class="status-badge">Siap 3 hari</div>
+        </div>
+
+        <!-- ========== REWARD CATALOG ========== -->
+        <div class="section-title">
+            <h4>🛒 Tukar Poin (Reward)</h4>
+            <a href="#">Semua</a>
+        </div>
+
+        <div class="reward-grid">
+            <div class="reward-item">
+                <i class="fas fa-drumstick-bite"></i>
+                <div class="name">Pakan Maggot</div>
+                <div class="price">🪙 500</div>
+            </div>
+            <div class="reward-item">
+                <i class="fas fa-tint"></i>
+                <div class="name">Pupuk Organik</div>
+                <div class="price">🪙 150</div>
+            </div>
+            <div class="reward-item">
+                <i class="fas fa-seedling"></i>
+                <div class="name">Bibit Unggul</div>
+                <div class="price">🪙 200</div>
+            </div>
+        </div>
+
+        <!-- ========== FOOTER ========== -->
+        <div class="footer-note">
+            <i class="fas fa-recycle"></i> EcoFarm Connect · Ubah Limbah Jadi Nilai
+            <br><span style="font-size:10px;">Dukung Petani & Generasi Muda</span>
+        </div>
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- ========== MODAL SETOR LIMBAH (dengan AI preview) ========== -->
+    <!-- ============================================================== -->
+    <div class="modal-overlay" id="setorModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-camera" style="color:#2d6a4f;"></i> Setor Limbah</h3>
+            <div class="sub">📸 Foto sampah organikmu, AI akan mendeteksi nilainya</div>
+
+            <!-- AI Camera Preview -->
+            <div class="camera-preview" id="cameraPreview">
+                <i class="fas fa-image"></i>
+                <span>Klik untuk ambil foto</span>
+                <span class="ai-tag"><i class="fas fa-microchip"></i> AI siap mendeteksi</span>
             </div>
 
-            <div style="text-align:right">
-
-                <b>
-                    ${item.berat} kg
-                </b>
-
-                <br>
-
-                <small>
-                    +${item.coin} 🪙
-                </small>
-
+            <!-- AI Detection Result (simulasi) -->
+            <div style="background:#eaf3ed; border-radius:14px; padding:8px 14px; font-size:13px; font-weight:500; margin-bottom:6px;">
+                🤖 <strong>AI Mendeteksi:</strong> 5 Kg Sayuran & 2 Kg Jerami
             </div>
 
-        `;
+            <!-- Input berat -->
+            <div class="input-group">
+                <label>Berat (Kg)</label>
+                <input type="number" id="weightInput" value="7" step="0.5" min="1" />
+            </div>
 
+            <!-- Nilai / Harga (Dinamis) -->
+            <div class="nilai-box">
+                <span>💎 Nilai Limbah</span>
+                <span id="nilaiDisplay">🪙 250 Eco-Coins</span>
+            </div>
 
-        container.appendChild(div);
+            <!-- Pilihan Sekolah -->
+            <label style="font-weight:600; font-size:14px; color:#1b3a27;">Pilih Tujuan:</label>
+            <div class="school-option">
+                <button class="active" id="school1"><i class="fas fa-school"></i> SMA N 1</button>
+                <button id="school2"><i class="fas fa-school"></i> SMA N 2</button>
+                <button id="school3"><i class="fas fa-truck"></i> Antar Sendiri</button>
+            </div>
 
-    });
+            <!-- Tombol Aksi -->
+            <div class="modal-actions">
+                <button class="btn-batal" id="closeModalBtn">Batal</button>
+                <button class="btn-kirim" id="confirmSetorBtn">
+                    <i class="fas fa-check"></i> Kirim & Dapatkan Poin
+                </button>
+            </div>
 
-}
+            <div style="margin-top:8px; font-size:11px; color:#5a7a68; text-align:center;">
+                <i class="fas fa-info-circle"></i> Limbah akan diolah oleh Karang Taruna / OSIS menjadi maggot & pupuk.
+            </div>
+        </div>
+    </div>
 
+    <!-- ============================================================== -->
+    <!-- ========== JAVASCRIPT (Interaktif) ========================== -->
+    <!-- ============================================================== -->
+    <script>
+        (function() {
+            'use strict';
 
-/* =================================================
-   NOTIFIKASI
-================================================= */
+            // DOM refs
+            const modal = document.getElementById('setorModal');
+            const openBtn = document.getElementById('openModalBtn');
+            const closeBtn = document.getElementById('closeModalBtn');
+            const confirmBtn = document.getElementById('confirmSetorBtn');
+            const weightInput = document.getElementById('weightInput');
+            const nilaiDisplay = document.getElementById('nilaiDisplay');
+            const cameraPreview = document.getElementById('cameraPreview');
 
-function notifikasi(text){
+            // School buttons
+            const schoolBtns = document.querySelectorAll('.school-option button');
 
-    const box =
-    document.getElementById("notice");
+            // ----- Fungsi update nilai berdasarkan berat (simulasi AI) -----
+            function updateNilai() {
+                let weight = parseFloat(weightInput.value) || 0;
+                // Simulasi: 1 kg = 35 Eco-Coins + bonus random kecil
+                let base = weight * 35;
+                let bonus = Math.floor(Math.random() * 20) + 5; // 5-25 bonus
+                let total = Math.round(base + bonus);
+                if (weight <= 0) total = 0;
+                nilaiDisplay.textContent = `🪙 ${total} Eco-Coins`;
+                return total;
+            }
 
+            // ----- Event: weight input berubah -----
+            weightInput.addEventListener('input', updateNilai);
 
-    box.innerText =
-    text;
+            // ----- School button toggle -----
+            schoolBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    schoolBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
 
+            // ----- Open Modal -----
+            openBtn.addEventListener('click', function() {
+                modal.classList.add('active');
+                // Reset / update nilai
+                updateNilai();
+                // Animasi camera preview (simulasi AI detect)
+                cameraPreview.innerHTML = `
+                    <i class="fas fa-spinner fa-pulse" style="font-size:40px;"></i>
+                    <span>AI menganalisis...</span>
+                    <span class="ai-tag"><i class="fas fa-microchip"></i> Deteksi gambar</span>
+                `;
+                setTimeout(() => {
+                    cameraPreview.innerHTML = `
+                        <i class="fas fa-check-circle" style="color:#2d6a4f; font-size:40px;"></i>
+                        <span>✅ 5 Kg Sayuran & 2 Kg Jerami</span>
+                        <span class="ai-tag"><i class="fas fa-microchip"></i> Terdeteksi</span>
+                    `;
+                    updateNilai();
+                }, 1200);
+            });
 
-    box.classList.add("show");
+            // ----- Close Modal -----
+            function closeModal() {
+                modal.classList.remove('active');
+                // Reset camera preview ke default
+                cameraPreview.innerHTML = `
+                    <i class="fas fa-image"></i>
+                    <span>Klik untuk ambil foto</span>
+                    <span class="ai-tag"><i class="fas fa-microchip"></i> AI siap mendeteksi</span>
+                `;
+            }
 
+            closeBtn.addEventListener('click', closeModal);
 
-    setTimeout(function(){
+            // klik di luar modal (overlay) juga tutup
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
 
-        box.classList.remove("show");
+            // ----- Confirm Setor (simulasi sukses) -----
+            confirmBtn.addEventListener('click', function() {
+                const weight = parseFloat(weightInput.value) || 0;
+                if (weight <= 0) {
+                    alert('⚠️ Masukkan berat limbah terlebih dahulu!');
+                    return;
+                }
 
-    },3000);
+                // Ambil nilai terbaru
+                const totalCoins = updateNilai();
 
-}
+                // Ambil nama sekolah aktif
+                let activeSchool = 'SMA Negeri 1';
+                document.querySelectorAll('.school-option button').forEach(b => {
+                    if (b.classList.contains('active')) {
+                        activeSchool = b.textContent.trim();
+                    }
+                });
 
+                // Simulasi sukses
+                alert(`✅ Berhasil!\n\nAnda menyetor ${weight} Kg limbah ke ${activeSchool}.\n+${totalCoins} Eco-Coins telah ditambahkan ke dompet Anda.\n\nLimbah akan diolah menjadi pakan maggot & pupuk organik.`);
 
-/* =================================================
-   MULAI APLIKASI
-================================================= */
+                // Update UI: tambahkan koin ke wallet (simulasi)
+                const walletCoinSpan = document.querySelector('.coin-amount');
+                let current = parseInt(walletCoinSpan.textContent.replace(/[^0-9]/g, '')) || 1450;
+                let newTotal = current + totalCoins;
+                walletCoinSpan.innerHTML = `<i class="fas fa-coins"></i> ${newTotal.toLocaleString()}`;
 
-update();
+                // Tambahkan activity baru (simulasi)
+                const activityContainer = document.querySelector('.activity-item').parentNode;
+                const newActivity = document.createElement('div');
+                newActivity.className = 'activity-item';
+                newActivity.innerHTML = `
+                    <div class="icon-circle green"><i class="fas fa-upload"></i></div>
+                    <div class="desc">
+                        Setor ${weight} Kg Limbah
+                        <small>Baru saja · ${activeSchool}</small>
+                    </div>
+                    <div class="coin-change plus">+${totalCoins}</div>
+                `;
+                activityContainer.insertBefore(newActivity, activityContainer.firstChild);
 
-</script>
+                // Tutup modal
+                closeModal();
+            });
+
+            // ----- Inisialisasi: nilai awal -----
+            updateNilai();
+
+            // ----- (Opsional) tombol reward interaksi sederhana -----
+            document.querySelectorAll('.reward-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const name = this.querySelector('.name')?.textContent || 'item';
+                    const price = this.querySelector('.price')?.textContent.replace(/[^0-9]/g, '') || '0';
+                    alert(`🛒 Anda memilih ${name}\nHarga: ${price} Eco-Coins\n\nKoin akan dipotong dan barang bisa diambil di sekolah.`);
+                });
+            });
+
+            console.log('🌱 EcoFarm Connect siap!');
+        })();
+    </script>
 
 </body>
 </html>
