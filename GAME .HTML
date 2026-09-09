@@ -1,570 +1,1019 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>EcoFarm · waste & farming game</title>
-  <!-- Font Awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoFarm Game - Pengolahan Limbah & Pertanian</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
 
-    body {
-      background: linear-gradient(145deg, #0b2a1e 0%, #1a4a33 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
+        body {
+            background: linear-gradient(135deg, #0d2818 0%, #1a4a33 50%, #0d2818 100%);
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    /* main game-card */
-    .game-dashboard {
-      max-width: 480px;
-      width: 100%;
-      background: rgba(34, 68, 51, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-radius: 56px 56px 40px 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 0 2px #7cb083 inset;
-      padding: 24px 20px 30px;
-      transition: all 0.2s ease;
-      border: 1px solid #a7d6a7;
-    }
+        .app-container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
 
-    /* ===== profile row ===== */
-    .profile-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: rgba(0,0,0,0.25);
-      border-radius: 100px;
-      padding: 8px 16px 8px 10px;
-      backdrop-filter: blur(4px);
-      border: 1px solid #7cb083;
-      margin-bottom: 20px;
-    }
+        /* MAIN DASHBOARD */
+        .dashboard {
+            background: rgba(26, 59, 41, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 24px 20px 28px;
+            border: 2px solid #5d9b6d;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 4px #2a5a3a inset;
+            transition: all 0.3s ease;
+        }
 
-    .avatar {
-      position: relative;
-      width: 64px;
-      height: 64px;
-      background: radial-gradient(circle at 30% 30%, #f7e8b0, #d9b382);
-      border-radius: 50%;
-      border: 3px solid #f5d742;
-      box-shadow: 0 0 0 3px #1a3a2a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 34px;
-      color: #3d2b1a;
-    }
+        /* USER SELECTOR */
+        .user-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 14px;
+            border-radius: 60px;
+            border: 1px solid #4a8a55;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-    .level-badge {
-      position: absolute;
-      bottom: -6px;
-      right: -6px;
-      background: #f5b042;
-      color: #1f2f1f;
-      font-weight: 800;
-      font-size: 14px;
-      padding: 4px 10px;
-      border-radius: 40px;
-      border: 2px solid #1e3d28;
-      box-shadow: 0 2px 0 #0f1f12;
-      letter-spacing: 0.5px;
-    }
+        .user-btn {
+            background: #1d3d2a;
+            border: 2px solid #3a7a47;
+            color: #b8e0b8;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .user-info {
-      flex: 1;
-    }
+        .user-btn:hover {
+            transform: scale(1.05);
+            background: #2a5a3a;
+        }
 
-    .user-name {
-      font-weight: 700;
-      font-size: 20px;
-      color: #f7f7d8;
-      text-shadow: 0 2px 3px #0f2a1a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        .user-btn.active {
+            background: #f5c542;
+            color: #1a3a22;
+            border-color: #f5d742;
+            box-shadow: 0 0 20px #f5c54266;
+        }
 
-    .user-name i {
-      color: #ffd966;
-      font-size: 16px;
-    }
+        .user-btn i {
+            font-size: 16px;
+        }
 
-    .user-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: #b5e0b5;
-      background: #1e3f2c;
-      display: inline-block;
-      padding: 2px 16px 2px 12px;
-      border-radius: 40px;
-      border: 1px solid #7cb083;
-      backdrop-filter: blur(2px);
-      margin-top: 2px;
-    }
+        /* PROFILE */
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 100px;
+            padding: 8px 18px 8px 10px;
+            border: 1px solid #5d9b6d;
+            margin-bottom: 18px;
+        }
 
-    .user-title i {
-      margin-right: 6px;
-      color: #f5d742;
-    }
+        .avatar {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle at 30% 30%, #f7e8b0, #d9b382);
+            border-radius: 50%;
+            border: 3px solid #f5d742;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 0 0 3px #1a3a2a;
+            flex-shrink: 0;
+        }
 
-    /* ===== coin wallet ===== */
-    .wallet-section {
-      background: linear-gradient(135deg, #2d543c, #1d3a28);
-      border-radius: 60px;
-      padding: 14px 20px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 2px solid #b5d6a3;
-      box-shadow: 0 8px 0 #0a1e12, inset 0 2px 10px #b3e0a0;
-    }
+        .level-badge {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            background: #f5b042;
+            color: #1a2a1a;
+            font-weight: 800;
+            font-size: 13px;
+            padding: 3px 12px;
+            border-radius: 40px;
+            border: 2px solid #1e3d28;
+            box-shadow: 0 2px 0 #0f1f12;
+        }
 
-    .coin-display {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .user-info {
+            flex: 1;
+        }
 
-    .coin-icon {
-      font-size: 38px;
-      color: #f7d44a;
-      filter: drop-shadow(0 4px 4px #1f3a1a);
-    }
+        .user-name {
+            font-weight: 800;
+            font-size: 20px;
+            color: #f7f7d8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .coin-amount {
-      font-size: 32px;
-      font-weight: 800;
-      color: #feffd2;
-      letter-spacing: 1px;
-      text-shadow: 0 3px 0 #2b4f2b;
-    }
+        .user-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #b5e0b5;
+            background: #1e3f2c;
+            padding: 3px 16px 3px 12px;
+            border-radius: 40px;
+            border: 1px solid #5d9b6d;
+            display: inline-block;
+            margin-top: 2px;
+        }
 
-    .btn-deposit {
-      background: #facc15;
-      border: none;
-      border-radius: 60px;
-      padding: 12px 22px;
-      font-weight: 800;
-      font-size: 18px;
-      color: #1f3d28;
-      box-shadow: 0 6px 0 #b58b1a, 0 8px 12px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: all 0.08s linear;
-      border: 2px solid #fce285;
-    }
+        .user-title i {
+            color: #f5d742;
+            margin-right: 4px;
+        }
 
-    .btn-deposit:active {
-      transform: translateY(6px);
-      box-shadow: 0 2px 0 #b58b1a;
-    }
+        /* WALLET */
+        .wallet-section {
+            background: linear-gradient(135deg, #2d543c, #1a3a28);
+            border-radius: 60px;
+            padding: 14px 20px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid #8bc48b;
+            box-shadow: 0 6px 0 #0a1e12, inset 0 2px 10px #7cb08366;
+        }
 
-    .btn-deposit i {
-      font-size: 20px;
-    }
+        .coin-display {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    /* ===== level progress + streak ===== */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
+        .coin-icon {
+            font-size: 38px;
+            color: #f7d44a;
+            filter: drop-shadow(0 4px 4px #1f3a1a);
+        }
 
-    .stat-card {
-      background: #1e3d2b;
-      border-radius: 32px;
-      padding: 14px 8px;
-      text-align: center;
-      border: 1px solid #68a06b;
-      box-shadow: inset 0 0 10px #2c5a3a;
-      backdrop-filter: blur(2px);
-    }
+        .coin-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #feffd2;
+            text-shadow: 0 3px 0 #2b4f2b;
+        }
 
-    .stat-card i {
-      font-size: 24px;
-      color: #f5c542;
-      margin-right: 6px;
-    }
+        .btn-deposit {
+            background: #facc15;
+            border: none;
+            border-radius: 60px;
+            padding: 12px 24px;
+            font-weight: 800;
+            font-size: 18px;
+            color: #1f3d28;
+            box-shadow: 0 6px 0 #b58b1a, 0 8px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.08s linear;
+            border: 2px solid #fce285;
+        }
 
-    .stat-card .stat-value {
-      font-size: 26px;
-      font-weight: 800;
-      color: #f2f7d7;
-      display: block;
-      line-height: 1.2;
-    }
+        .btn-deposit:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #b58b1a;
+        }
 
-    .stat-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #b1d9b1;
-      letter-spacing: 0.3px;
-    }
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
 
-    /* ===== AI CHAT CARD ===== */
-    .ai-chat-card {
-      background: #132b1d;
-      border-radius: 44px;
-      padding: 18px 20px 22px;
-      border: 2px solid #7fb07f;
-      box-shadow: 0 8px 0 #0d1f13, inset 0 0 20px #2d6b3a;
-      margin: 22px 0 12px;
-    }
+        .stat-card {
+            background: #1a3a26;
+            border-radius: 28px;
+            padding: 12px 6px;
+            text-align: center;
+            border: 1px solid #4a8a55;
+            box-shadow: inset 0 0 15px #1d4d2a;
+        }
 
-    .chat-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #e3f0d3;
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 16px;
-      background: #234d30;
-      padding: 6px 16px 6px 12px;
-      border-radius: 40px;
-      width: fit-content;
-      border: 1px solid #7cb083;
-    }
+        .stat-card i {
+            font-size: 20px;
+            color: #f5c542;
+        }
 
-    .chat-header i {
-      color: #87e0b0;
-      font-size: 22px;
-      background: #0f2e1b;
-      padding: 6px;
-      border-radius: 50%;
-    }
+        .stat-card .stat-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f2f7d7;
+            display: block;
+            line-height: 1.2;
+        }
 
-    .chat-preview {
-      background: #1d3a27;
-      border-radius: 30px;
-      padding: 12px 16px;
-      color: #cdedc5;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border: 1px solid #54965a;
-      flex-wrap: wrap;
-    }
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #b1d9b1;
+        }
 
-    .chat-preview .message {
-      flex: 1;
-      font-size: 15px;
-      font-weight: 400;
-      background: #0b2317;
-      padding: 8px 14px;
-      border-radius: 40px;
-      border-left: 4px solid #b8d97a;
-    }
+        /* XP BAR */
+        .xp-bar-container {
+            background: #0d2417;
+            border-radius: 40px;
+            padding: 4px;
+            margin-bottom: 18px;
+            border: 1px solid #4a8a55;
+            position: relative;
+        }
 
-    .chat-actions {
-      display: flex;
-      gap: 8px;
-    }
+        .xp-bar {
+            height: 22px;
+            background: linear-gradient(90deg, #f5c542, #f7d44a);
+            border-radius: 40px;
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #1a2a1a;
+            min-width: 40px;
+        }
 
-    .chat-btn {
-      background: #3d6d48;
-      border: none;
-      border-radius: 40px;
-      padding: 8px 14px;
-      font-weight: 600;
-      color: #f5ffea;
-      box-shadow: 0 4px 0 #1c3a20;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      border: 1px solid #89b884;
-      cursor: pointer;
-      transition: 0.04s linear;
-    }
+        .xp-text {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: #f5f5d0;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
 
-    .chat-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 #1c3a20;
-    }
+        /* AI CHAT */
+        .ai-chat-card {
+            background: #0f2619;
+            border-radius: 40px;
+            padding: 16px 18px 20px;
+            border: 2px solid #5d9b6d;
+            box-shadow: 0 6px 0 #0a1a0e, inset 0 0 30px #1d4d2a44;
+            margin: 16px 0 12px;
+        }
 
-    .chat-btn i {
-      font-size: 18px;
-    }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e3f0d3;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 12px;
+            background: #1a4028;
+            padding: 4px 16px 4px 10px;
+            border-radius: 40px;
+            width: fit-content;
+            border: 1px solid #5d9b6d;
+        }
 
-    .camera-btn {
-      background: #4d3f1f;
-      border-color: #dbb052;
-    }
+        .chat-header i {
+            color: #87e0b0;
+            font-size: 20px;
+            background: #0f2e1b;
+            padding: 6px;
+            border-radius: 50%;
+        }
 
-    /* ===== farm / waste stats ===== */
-    .farm-stats {
-      display: flex;
-      justify-content: space-around;
-      margin: 20px 0 6px;
-      background: #1d3a2a;
-      border-radius: 40px;
-      padding: 12px 4px;
-      border: 1px solid #75a573;
-    }
+        .chat-messages {
+            background: #0d2417;
+            border-radius: 24px;
+            padding: 14px 16px;
+            min-height: 80px;
+            max-height: 180px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            border: 1px solid #3a7a47;
+        }
 
-    .farm-stat-item {
-      text-align: center;
-      color: #daf0d0;
-    }
+        .chat-message {
+            color: #d4f0d4;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 6px 0;
+            border-bottom: 1px solid #1d3d2a;
+        }
 
-    .farm-stat-item i {
-      color: #f7d44a;
-      font-size: 20px;
-    }
+        .chat-message:last-child {
+            border-bottom: none;
+        }
 
-    .farm-stat-item span {
-      display: block;
-      font-weight: 700;
-      font-size: 18px;
-      color: #f9fad6;
-    }
+        .chat-message .sender {
+            font-weight: 700;
+            color: #f5c542;
+        }
 
-    /* ===== responsive ===== */
-    @media (max-width: 440px) {
-      .game-dashboard { padding: 16px; }
-      .btn-deposit { padding: 10px 14px; font-size: 16px; }
-      .coin-amount { font-size: 26px; }
-    }
-  </style>
+        .chat-message .sender.user {
+            color: #7dd3fc;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 40px;
+            border: 2px solid #3a7a47;
+            background: #0d2417;
+            color: #e0f0e0;
+            font-size: 14px;
+            outline: none;
+            min-width: 120px;
+        }
+
+        .chat-input::placeholder {
+            color: #6a9a7a;
+        }
+
+        .chat-input:focus {
+            border-color: #f5c542;
+        }
+
+        .chat-btn {
+            background: #2a5a3a;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 18px;
+            font-weight: 700;
+            color: #f5ffea;
+            box-shadow: 0 4px 0 #14301a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            border: 1px solid #5d9b6d;
+            cursor: pointer;
+            transition: 0.04s linear;
+        }
+
+        .chat-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #14301a;
+        }
+
+        .chat-btn.primary {
+            background: #f5c542;
+            color: #1a2a1a;
+            border-color: #f5d742;
+            box-shadow: 0 4px 0 #b58b1a;
+        }
+
+        .chat-btn.primary:active {
+            box-shadow: 0 1px 0 #b58b1a;
+        }
+
+        /* FARM STATS */
+        .farm-stats {
+            display: flex;
+            justify-content: space-around;
+            background: #1a3a26;
+            border-radius: 40px;
+            padding: 10px 4px;
+            border: 1px solid #4a8a55;
+            margin-top: 14px;
+        }
+
+        .farm-stat-item {
+            text-align: center;
+            color: #daf0d0;
+        }
+
+        .farm-stat-item i {
+            color: #f7d44a;
+            font-size: 18px;
+        }
+
+        .farm-stat-item span {
+            display: block;
+            font-weight: 700;
+            font-size: 18px;
+            color: #f9fad6;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a3a26;
+            color: #f5f5d0;
+            padding: 14px 28px;
+            border-radius: 60px;
+            border: 2px solid #f5c542;
+            font-weight: 700;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: #0d2417;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #5d9b6d;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .dashboard { padding: 16px; }
+            .stats-grid { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+            .stat-card .stat-value { font-size: 18px; }
+            .btn-deposit { padding: 10px 16px; font-size: 15px; }
+            .coin-amount { font-size: 26px; }
+            .user-btn { font-size: 12px; padding: 6px 12px; }
+        }
+    </style>
 </head>
 <body>
-  <div class="game-dashboard" id="app">
 
-    <!-- PROFILE ROW -->
-    <div class="profile-row">
-      <div class="avatar">
-        🌾
-        <span class="level-badge">Lv.8</span>
-      </div>
-      <div class="user-info">
-        <div class="user-name">
-          Petani Hijau
-          <i class="fas fa-leaf" style="color:#7ed47e;"></i>
+    <div class="app-container">
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+
+        <div class="dashboard">
+            <!-- USER SELECTOR -->
+            <div class="user-selector" id="userSelector">
+                <button class="user-btn active" data-user="petani">
+                    <i class="fas fa-user"></i> Petani
+                </button>
+                <button class="user-btn" data-user="nelayan">
+                    <i class="fas fa-fish"></i> Nelayan
+                </button>
+                <button class="user-btn" data-user="peternak">
+                    <i class="fas fa-cow"></i> Peternak
+                </button>
+                <button class="user-btn" data-user="wirausaha">
+                    <i class="fas fa-store"></i> Wirausaha
+                </button>
+            </div>
+
+            <!-- PROFILE -->
+            <div class="profile-row">
+                <div class="avatar" id="avatarEmoji">
+                    🌾
+                    <span class="level-badge" id="levelBadge">Lv.1</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="userNameDisplay">
+                        Petani Hijau
+                        <i class="fas fa-leaf" style="color:#7ed47e;"></i>
+                    </div>
+                    <div class="user-title" id="userTitleDisplay">
+                        <i class="fas fa-star"></i> Pemula
+                    </div>
+                </div>
+                <div style="margin-left: auto;">
+                    <i class="fas fa-trophy" style="color: #f5b042; font-size: 28px; filter: drop-shadow(0 0 8px #f5b04266);"></i>
+                </div>
+            </div>
+
+            <!-- WALLET -->
+            <div class="wallet-section">
+                <div class="coin-display">
+                    <i class="fas fa-coins coin-icon"></i>
+                    <span class="coin-amount" id="coinCounter">0</span>
+                </div>
+                <button class="btn-deposit" id="depositBtn">
+                    <i class="fas fa-recycle"></i> Setor
+                </button>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-seedling"></i>
+                    <span class="stat-value" id="levelDisplay">1</span>
+                    <span class="stat-label">Level</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <span class="stat-value" id="xpDisplay">0</span>
+                    <span class="stat-label">XP</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-fire"></i>
+                    <span class="stat-value" id="streakDisplay">0</span>
+                    <span class="stat-label">Streak</span>
+                </div>
+            </div>
+
+            <!-- XP BAR -->
+            <div class="xp-bar-container">
+                <div class="xp-bar" id="xpBar" style="width: 0%;">
+                    <span class="xp-text" id="xpText">0 / 100 XP</span>
+                </div>
+            </div>
+
+            <!-- AI CHAT -->
+            <div class="ai-chat-card">
+                <div class="chat-header">
+                    <i class="fas fa-robot"></i> AI Tani · Bijak
+                    <span style="margin-left: auto; font-size: 12px; background: #15331f; padding: 2px 12px; border-radius: 60px; border:1px solid #5d9b6d;">
+                        <i class="fas fa-circle" style="color: #7cf07c; font-size: 8px;"></i> online
+                    </span>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message">
+                        <span class="sender">🤖 AI:</span> Halo! Saya AI pertanian. Tanyakan apa saja tentang pengolahan limbah atau pertanian. Kamu juga bisa foto tanaman untuk deteksi!
+                    </div>
+                </div>
+                <div class="chat-input-row">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Tanya AI tentang pertanian..." />
+                    <button class="chat-btn primary" id="sendChatBtn"><i class="fas fa-paper-plane"></i> Kirim</button>
+                    <button class="chat-btn" id="photoBtn"><i class="fas fa-camera"></i> Foto</button>
+                </div>
+            </div>
+
+            <!-- FARM STATS -->
+            <div class="farm-stats">
+                <div class="farm-stat-item">
+                    <i class="fas fa-tractor"></i>
+                    <span id="lahanCount">0</span> <small>lahan</small>
+                </div>
+                <div class="farm-stat-item">
+                    <i class="fas fa-recycle"></i>
+                    <span id="wasteProcessed">0</span> <small>olah limbah</small>
+                </div>
+                <div class="farm-stat-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="harvestCount">0</span> <small>panen</small>
+                </div>
+            </div>
         </div>
-        <div class="user-title">
-          <i class="fas fa-star"></i> Master Gardener
-        </div>
-      </div>
-      <div style="margin-left: auto; display: flex; gap: 6px;">
-        <i class="fas fa-trophy" style="color: #f5b042; font-size: 28px; filter: drop-shadow(0 0 6px #f5b042);"></i>
-      </div>
     </div>
 
-    <!-- WALLET + DEPOSIT -->
-    <div class="wallet-section">
-      <div class="coin-display">
-        <i class="fas fa-coins coin-icon"></i>
-        <span class="coin-amount" id="coinCounter">2,480</span>
-      </div>
-      <button class="btn-deposit" id="depositBtn">
-        <i class="fas fa-recycle"></i> Setor
-      </button>
-    </div>
+    <script>
+        // ============================================================
+        //  FULLY FUNCTIONAL GAME ENGINE
+        // ============================================================
 
-    <!-- STATS grid : level + XP -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <i class="fas fa-seedling"></i>
-        <span class="stat-value">8</span>
-        <span class="stat-label">Level Petani</span>
-      </div>
-      <div class="stat-card">
-        <i class="fas fa-fire"></i>
-        <span class="stat-value">1.2k</span>
-        <span class="stat-label">XP / next</span>
-      </div>
-    </div>
+        // ---------- DATA ----------
+        const users = {
+            petani: {
+                name: 'Petani Hijau',
+                emoji: '🌾',
+                title: 'Pemula',
+                level: 1,
+                xp: 0,
+                coins: 100,
+                streak: 0,
+                lahan: 3,
+                wasteProcessed: 0,
+                harvest: 2,
+                xpToNext: 100
+            },
+            nelayan: {
+                name: 'Nelayan Laut',
+                emoji: '🐟',
+                title: 'Pemula',
+                level: 1,
+                xp: 0,
+                coins: 80,
+                streak: 0,
+                lahan: 1,
+                wasteProcessed: 0,
+                harvest: 3,
+                xpToNext: 100
+            },
+            peternak: {
+                name: 'Peternak Jaya',
+                emoji: '🐄',
+                title: 'Pemula',
+                level: 1,
+                xp: 0,
+                coins: 120,
+                streak: 0,
+                lahan: 2,
+                wasteProcessed: 0,
+                harvest: 1,
+                xpToNext: 100
+            },
+            wirausaha: {
+                name: 'Wirausaha Muda',
+                emoji: '🏪',
+                title: 'Pemula',
+                level: 1,
+                xp: 0,
+                coins: 150,
+                streak: 0,
+                lahan: 2,
+                wasteProcessed: 0,
+                harvest: 2,
+                xpToNext: 100
+            }
+        };
 
-    <!-- AI CHAT (dengan foto & tanya) -->
-    <div class="ai-chat-card">
-      <div class="chat-header">
-        <i class="fas fa-robot"></i> AI Tani · Bijak
-        <span style="margin-left: auto; font-size: 14px; background: #15331f; padding: 2px 14px; border-radius: 60px; border:1px solid #7bb07b;"><i class="fas fa-circle" style="color: #7cf07c; font-size: 10px;"></i> aktif</span>
-      </div>
-      <div class="chat-preview">
-        <div class="message">
-          <i class="fas fa-quote-left" style="opacity: 0.5; margin-right: 6px;"></i>
-          Halo! foto atau tanya soal limbah & tanaman...
-        </div>
-        <div class="chat-actions">
-          <button class="chat-btn camera-btn" id="cameraBtn"><i class="fas fa-camera"></i> Foto</button>
-          <button class="chat-btn" id="askBtn"><i class="fas fa-pen"></i> Tanya</button>
-        </div>
-      </div>
-      <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
-        <span style="background: #0d2d1a; border-radius: 60px; padding: 4px 16px; border:1px solid #5e8f5e; color: #b7e0b7; font-size: 13px;"><i class="fas fa-leaf"></i> deteksi hama</span>
-        <span style="background: #0d2d1a; border-radius: 60px; padding: 4px 16px; border:1px solid #5e8f5e; color: #b7e0b7; font-size: 13px;"><i class="fas fa-trash"></i> limbah organik</span>
-        <span style="background: #0d2d1a; border-radius: 60px; padding: 4px 16px; border:1px solid #5e8f5e; color: #b7e0b7; font-size: 13px;"><i class="fas fa-seedling"></i> kompos</span>
-      </div>
-    </div>
+        // Level titles
+        const levelTitles = [
+            'Pemula', 'Petani Muda', 'Petani Tangguh', 'Petani Handal',
+            'Master Gardener', 'Eco Warrior', 'Legendary Farmer', 'Green Emperor'
+        ];
 
-    <!-- tambahan farm stat (game feel) -->
-    <div class="farm-stats">
-      <div class="farm-stat-item">
-        <i class="fas fa-tractor"></i>
-        <span>12</span> <small>lahan</small>
-      </div>
-      <div class="farm-stat-item">
-        <i class="fas fa-recycle"></i>
-        <span>4.2t</span> <small>olah limbah</small>
-      </div>
-      <div class="farm-stat-item">
-        <i class="fas fa-clock"></i>
-        <span>6h</span> <small>panen</small>
-      </div>
-    </div>
+        // ---------- STATE ----------
+        let currentUser = 'petani';
+        let state = JSON.parse(JSON.stringify(users[currentUser]));
 
-    <!-- footer game-like -->
-    <div style="display: flex; justify-content: center; margin-top: 18px; gap: 14px; color: #97b897; font-size: 13px; background: #0c281a; padding: 6px 12px; border-radius: 60px; border:1px solid #46834b; width: fit-content; margin-left: auto; margin-right: auto;">
-      <i class="fas fa-gamepad"></i> quest: setor 3x limbah
-      <i class="fas fa-chevron-right" style="color: #e5b13b;"></i> +50 XP
-    </div>
-  </div>
+        // ---------- DOM REFS ----------
+        const $ = id => document.getElementById(id);
+        const coinCounter = $('coinCounter');
+        const levelDisplay = $('levelDisplay');
+        const xpDisplay = $('xpDisplay');
+        const streakDisplay = $('streakDisplay');
+        const xpBar = $('xpBar');
+        const xpText = $('xpText');
+        const levelBadge = $('levelBadge');
+        const userNameDisplay = $('userNameDisplay');
+        const userTitleDisplay = $('userTitleDisplay');
+        const avatarEmoji = $('avatarEmoji');
+        const lahanCount = $('lahanCount');
+        const wasteProcessed = $('wasteProcessed');
+        const harvestCount = $('harvestCount');
+        const chatMessages = $('chatMessages');
+        const chatInput = $('chatInput');
+        const sendChatBtn = $('sendChatBtn');
+        const photoBtn = $('photoBtn');
+        const depositBtn = $('depositBtn');
+        const toast = $('toast');
 
-  <script>
-    (function() {
-      "use strict";
+        // ---------- TOAST ----------
+        let toastTimeout;
 
-      // DOM elements
-      const coinSpan = document.getElementById('coinCounter');
-      const depositBtn = document.getElementById('depositBtn');
-      const cameraBtn = document.getElementById('cameraBtn');
-      const askBtn = document.getElementById('askBtn');
-
-      // Local state (game-like)
-      let coinAmount = 2480;   // starting value
-
-      // helper: format number with comma
-      function formatCoin(val) {
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
-
-      // update UI coin
-      function updateCoinDisplay() {
-        coinSpan.textContent = formatCoin(coinAmount);
-      }
-
-      // DEPOSIT WASTE (game action)
-      function handleDeposit() {
-        // random gain between 25 - 80 coins
-        const gain = Math.floor(Math.random() * 55) + 25;
-        coinAmount += gain;
-        updateCoinDisplay();
-
-        // haptic-like feedback (visual)
-        depositBtn.style.transform = 'scale(0.95)';
-        setTimeout(() => { depositBtn.style.transform = ''; }, 100);
-
-        // extra pop-up effect (optional)
-        const popup = document.createElement('div');
-        popup.textContent = `+${gain} 🪙`;
-        popup.style.position = 'fixed';
-        popup.style.left = '50%';
-        popup.style.top = '40%';
-        popup.style.transform = 'translate(-50%, -50%)';
-        popup.style.background = '#1d3a1d';
-        popup.style.color = '#f5e56b';
-        popup.style.padding = '18px 32px';
-        popup.style.borderRadius = '80px';
-        popup.style.fontWeight = '800';
-        popup.style.fontSize = '28px';
-        popup.style.border = '3px solid #f5c542';
-        popup.style.boxShadow = '0 12px 0 #0a1e0a';
-        popup.style.zIndex = '999';
-        popup.style.transition = 'opacity 0.2s';
-        popup.style.pointerEvents = 'none';
-        document.body.appendChild(popup);
-        setTimeout(() => {
-          popup.style.opacity = '0';
-          setTimeout(() => popup.remove(), 300);
-        }, 700);
-
-        // juga naikkan level (simulasi)
-        const levelBadge = document.querySelector('.level-badge');
-        if (levelBadge) {
-          let lv = parseInt(levelBadge.textContent.replace('Lv.','')) || 8;
-          if (coinAmount > 2800 && lv < 9) {
-            levelBadge.textContent = 'Lv.9';
-            // update title to master ++
-            const title = document.querySelector('.user-title');
-            if (title) title.innerHTML = '<i class="fas fa-star"></i> Master Gardener ★';
-          } else if (coinAmount > 3200 && lv < 10) {
-            levelBadge.textContent = 'Lv.10';
-            const title = document.querySelector('.user-title');
-            if (title) title.innerHTML = '<i class="fas fa-crown"></i> Legendary Farmer';
-          }
+        function showToast(msg, duration = 2000) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), duration);
         }
-      }
 
-      // AI CHAT : simulasi foto & tanya
-      function simulateAI(trigger) {
-        const msgDiv = document.querySelector('.chat-preview .message');
-        if (!msgDiv) return;
-        const originalMsg = msgDiv.innerHTML;
-
-        if (trigger === 'camera') {
-          msgDiv.innerHTML = `<i class="fas fa-camera" style="margin-right: 8px;"></i> 📷 Menganalisis foto... (simulasi) “Tanaman terlihat sehat, tapi ada hama kecil di daun. Semprot organik!”`;
-        } else if (trigger === 'ask') {
-          msgDiv.innerHTML = `<i class="fas fa-comment" style="margin-right: 8px;"></i> 🤖 “Untuk limbah pertanian, buat kompos dari sisa panen. Tambahkan EM4.”`;
+        // ---------- SAVE / LOAD ----------
+        function saveState() {
+            localStorage.setItem('ecofarm_user', currentUser);
+            localStorage.setItem('ecofarm_state', JSON.stringify(state));
         }
 
-        // reset after 4 detik ke pesan awal
-        setTimeout(() => {
-          msgDiv.innerHTML = `<i class="fas fa-quote-left" style="opacity: 0.5; margin-right: 6px;"></i> Halo! foto atau tanya soal limbah & tanaman...`;
-        }, 5000);
-      }
-
-      // --- event listeners ---
-      depositBtn.addEventListener('click', handleDeposit);
-
-      cameraBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        simulateAI('camera');
-        // little haptic
-        cameraBtn.style.transform = 'scale(0.9)';
-        setTimeout(() => cameraBtn.style.transform = '', 120);
-      });
-
-      askBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        simulateAI('ask');
-        askBtn.style.transform = 'scale(0.9)';
-        setTimeout(() => askBtn.style.transform = '', 120);
-      });
-
-      // tambahan: tombol deposit juga dapat diakses dari keyboard (enter)
-      // inisialisasi
-      updateCoinDisplay();
-
-      // extra: saat pertama kali load, tampilkan pesan selamat datang di chat
-      setTimeout(() => {
-        const msgDiv = document.querySelector('.chat-preview .message');
-        if (msgDiv) {
-          msgDiv.innerHTML = `<i class="fas fa-seedling" style="margin-right: 6px; color: #9bd69b;"></i> Selamat datang, Master! foto tanaman atau tanya soal limbah.`;
-          setTimeout(() => {
-            msgDiv.innerHTML = `<i class="fas fa-quote-left" style="opacity: 0.5; margin-right: 6px;"></i> Halo! foto atau tanya soal limbah & tanaman...`;
-          }, 3000);
+        function loadState() {
+            const savedUser = localStorage.getItem('ecofarm_user');
+            const savedState = localStorage.getItem('ecofarm_state');
+            if (savedUser && savedState) {
+                try {
+                    currentUser = savedUser;
+                    state = JSON.parse(savedState);
+                    // Ensure all properties exist
+                    const template = users[currentUser] || users.petani;
+                    Object.keys(template).forEach(key => {
+                        if (state[key] === undefined) state[key] = template[key];
+                    });
+                    return true;
+                } catch (e) {
+                    console.warn('Load state failed, using default');
+                }
+            }
+            return false;
         }
-      }, 400);
 
-      // level badge tambahan jika user klik "setor" berulang
-      console.log('🌱 EcoFarm game dashboard siap!');
-    })();
-  </script>
+        // ---------- LEVEL SYSTEM ----------
+        function getXpForLevel(level) {
+            return Math.floor(100 + (level - 1) * 35 + Math.pow(level - 1, 1.5) * 5);
+        }
+
+        function getTitleForLevel(level) {
+            const titles = ['Pemula', 'Petani Muda', 'Petani Tangguh', 'Petani Handal',
+                'Master Gardener', 'Eco Warrior', 'Legendary Farmer', 'Green Emperor',
+                'Duta Bumi', 'Pahlawan Hijau'
+            ];
+            const idx = Math.min(level - 1, titles.length - 1);
+            return titles[Math.max(0, idx)];
+        }
+
+        function checkLevelUp() {
+            let needed = getXpForLevel(state.level);
+            while (state.xp >= needed) {
+                state.xp -= needed;
+                state.level++;
+                needed = getXpForLevel(state.level);
+                showToast(`🎉 LEVEL UP! Level ${state.level}!`, 2500);
+                // Update title
+                state.title = getTitleForLevel(state.level);
+                // Bonus coins
+                const bonus = 50 + state.level * 10;
+                state.coins += bonus;
+                showToast(`💰 Bonus ${bonus} koin!`, 2000);
+            }
+            // Update XP to next
+            state.xpToNext = needed;
+        }
+
+        // ---------- RENDER UI ----------
+        function render() {
+            // Coin
+            coinCounter.textContent = state.coins.toLocaleString();
+
+            // Level & XP
+            levelDisplay.textContent = state.level;
+            xpDisplay.textContent = state.xp;
+            levelBadge.textContent = `Lv.${state.level}`;
+
+            // Streak
+            streakDisplay.textContent = state.streak || 0;
+
+            // XP Bar
+            const needed = getXpForLevel(state.level);
+            const pct = Math.min(100, (state.xp / needed) * 100);
+            xpBar.style.width = pct + '%';
+            xpText.textContent = `${state.xp} / ${needed} XP`;
+
+            // Profile
+            userNameDisplay.innerHTML = `${state.name} <i class="fas fa-leaf" style="color:#7ed47e;"></i>`;
+            userTitleDisplay.innerHTML = `<i class="fas fa-star"></i> ${state.title}`;
+            avatarEmoji.innerHTML = `${state.emoji} <span class="level-badge" id="levelBadge">Lv.${state.level}</span>`;
+
+            // Farm stats
+            lahanCount.textContent = state.lahan || 0;
+            wasteProcessed.textContent = state.wasteProcessed || 0;
+            harvestCount.textContent = state.harvest || 0;
+
+            // User selector active
+            document.querySelectorAll('.user-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.user === currentUser);
+            });
+
+            saveState();
+        }
+
+        // ---------- ADD XP ----------
+        function addXP(amount) {
+            state.xp += amount;
+            checkLevelUp();
+            render();
+        }
+
+        // ---------- DEPOSIT WASTE ----------
+        function depositWaste() {
+            // Random gain
+            const gain = Math.floor(Math.random() * 40) + 20;
+            const xpGain = Math.floor(gain / 2) + 5;
+
+            state.coins += gain;
+            state.wasteProcessed = (state.wasteProcessed || 0) + 1;
+            state.streak = (state.streak || 0) + 1;
+            addXP(xpGain);
+
+            // Random lahan / harvest update
+            if (Math.random() > 0.7) {
+                state.lahan = (state.lahan || 0) + 1;
+                showToast('🌱 Lahan baru bertambah! +1', 1800);
+            }
+            if (Math.random() > 0.8) {
+                state.harvest = (state.harvest || 0) + 1;
+                showToast('🌾 Panen berhasil! +1', 1800);
+            }
+
+            render();
+            showToast(`✅ Setor limbah! +${gain} 🪙 +${xpGain} XP`, 1800);
+        }
+
+        // ---------- AI CHAT ----------
+        // GEMINI API integration (free tier)
+        const GEMINI_API_KEY = ''; // Kosongkan, user bisa isi sendiri
+        const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+
+        async function askAI(prompt) {
+            // Add user message
+            addChatMessage('user', prompt);
+
+            // Show loading
+            const loadingMsg = addChatMessage('ai', '⏳ Memproses...');
+
+            try {
+                let responseText = '';
+
+                // If API key is set, use real API
+                if (GEMINI_API_KEY && GEMINI_API_KEY.length > 10) {
+                    const resp = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `Kamu adalah AI pertanian dan pengolahan limbah. Jawab dengan bahasa Indonesia yang ramah dan informatif. Pertanyaan: ${prompt}`
+                                }]
+                            }]
+                        })
+                    });
+
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak bisa memproses.';
+                    } else {
+                        responseText = '⚠️ Error API. Periksa koneksi atau API key.';
+                    }
+                } else {
+                    // Offline mode: smart responses
+                    responseText = getOfflineResponse(prompt);
+                }
+
+                // Replace loading message
+                loadingMsg.remove();
+                addChatMessage('ai', responseText);
+
+                // Give XP for asking
+                addXP(2);
+
+            } catch (e) {
+                loadingMsg.remove();
+                addChatMessage('ai', '⚠️ Terjadi kesalahan. Coba lagi nanti.');
+                console.error(e);
+            }
+        }
+
+        // Offline response generator
+        function getOfflineResponse(prompt) {
+            const p = prompt.toLowerCase();
+            if (p.includes('limbah') || p.includes('sampah')) {
+                return '♻️ Untuk pengolahan limbah pertanian, Anda bisa membuat kompos dari sisa panen. Pisahkan limbah organik dan anorganik. Limbah organik bisa diolah menjadi pupuk kompos yang kaya nutrisi.';
+            }
+            if (p.includes('hama') || p.includes('penyakit')) {
+                return '🐛 Deteksi hama: Perhatikan daun yang berlubang atau menguning. Gunakan pestisida organik seperti ekstrak bawang putih atau minyak neem. Juga jaga kebersihan lahan.';
+            }
+            if (p.includes('kompos') || p.includes('pupuk')) {
+                return '🌱 Cara membuat kompos: campur limbah organik (daun, sisa sayur) dengan tanah, tambahkan EM4, tutup dan diamkan 2-3 minggu. Aduk setiap 3 hari.';
+            }
+            if (p.includes('tanam') || p.includes('menanam')) {
+                return '🌿 Tips menanam: pastikan media tanam subur, beri jarak tanam yang cukup, siram pagi dan sore, dan beri pupuk organik secara rutin.';
+            }
+            if (p.includes('panen')) {
+                return '🌾 Tanda panen: perhatikan warna dan tekstur buah/sayur. Panen di pagi hari untuk hasil terbaik. Gunakan alat yang tajam agar tidak merusak tanaman.';
+            }
+            return '🌾 Halo! Saya AI pertanian. Saya bisa bantu soal:\n- Pengolahan limbah organik\n- Deteksi hama & penyakit\n- Cara membuat kompos\n- Tips menanam & panen\n- Konsultasi pertanian\n\nCoba tanyakan sesuatu! 📱';
+        }
+
+        // Chat UI helpers
+        function addChatMessage(sender, text) {
+            const div = document.createElement('div');
+            div.className = 'chat-message';
+            const icon = sender === 'user' ? '👤' : '🤖';
+            const cls = sender === 'user' ? 'user' : '';
+            div.innerHTML = `<span class="sender ${cls}">${icon} ${sender === 'user' ? 'Anda' : 'AI'}:</span> ${text}`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return div;
+        }
+
+        // ---------- PHOTO SIMULATION ----------
+        function simulatePhoto() {
+            const responses = [
+                '📸 Foto terdeteksi: Tanaman terlihat sehat dengan daun hijau segar. Tidak ada tanda hama signifikan. Pertahankan perawatan!',
+                '📸 Deteksi: Ada bercak kuning pada daun bagian bawah. Kemungkinan kekurangan nitrogen. Tambahkan pupuk kandang!',
+                '📸 Analisis: Tanaman menunjukkan pertumbuhan optimal. Saran: tambahkan kompos untuk hasil lebih maksimal.',
+                '📸 Terdeteksi hama kutu putih pada batang. Semprot dengan larutan sabun insektisida organik.',
+                '📸 Kondisi tanah terlihat subur. Kadar air cukup. Lanjutkan pola penyiraman saat ini.'
+            ];
+            const msg = responses[Math.floor(Math.random() * responses.length)];
+            addChatMessage('ai', msg);
+            addXP(3);
+            showToast('📸 +3 XP dari foto', 1500);
+        }
+
+        // ---------- CHANGE USER ----------
+        function changeUser(userId) {
+            if (userId === currentUser) return;
+
+            // Save current state
+            users[currentUser] = { ...state };
+
+            // Load new user
+            currentUser = userId;
+            if (users[currentUser]) {
+                state = JSON.parse(JSON.stringify(users[currentUser]));
+            } else {
+                state = JSON.parse(JSON.stringify(users.petani));
+                currentUser = 'petani';
+            }
+
+            // Clear chat
+            chatMessages.innerHTML = `
+                <div class="chat-message">
+                    <span class="sender">🤖 AI:</span> Halo ${state.name}! Saya AI pertanian. Silakan tanya apa saja.
+                </div>
+            `;
+
+            render();
+            showToast(`👤 Berganti ke ${state.name}`, 1500);
+        }
+
+        // ---------- EVENT LISTENERS ----------
+        // User buttons
+        document.querySelectorAll('.user-btn').forEach(btn => {
+            btn.addEventListener('click', () => changeUser(btn.dataset.user));
+        });
+
+        // Deposit
+        depositBtn.addEventListener('click', depositWaste);
+
+        // Send chat
+        async function handleSendChat() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            chatInput.value = '';
+            await askAI(text);
+        }
+
+        sendChatBtn.addEventListener('click', handleSendChat);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleSendChat();
+        });
+
+        // Photo
+        photoBtn.addEventListener('click', simulatePhoto);
+
+        // ---------- INIT ----------
+        function init() {
+            const loaded = loadState();
+            if (!loaded) {
+                // Set default
+                state = JSON.parse(JSON.stringify(users.petani));
+                currentUser = 'petani';
+            }
+            render();
+
+            // Welcome message
+            setTimeout(() => {
+                addChatMessage('ai', `👋 Selamat datang, ${state.name}! Ayo mulai petualangan pertanian dan pengolahan limbahmu.`);
+            }, 300);
+        }
+
+        init();
+
+        // Keyboard shortcut: Ctrl+Enter untuk kirim
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                handleSendChat();
+            }
+        });
+
+        console.log('🌱 EcoFarm Game siap!');
+        console.log('💡 Tips: Ganti user, setor limbah, tanya AI, dan naikkan level!');
+        console.log('🔑 Untuk AI real, masukkan GEMINI_API_KEY di kode.');
+    </script>
+
 </body>
 </html>
