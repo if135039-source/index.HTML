@@ -4,37 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EcoMaggot - Game Petani Hijau</title>
+<title>EcoMaggot - Petani Berdampak</title>
 
 <style>
-
-/* =========================
-   DASAR
-========================= */
-
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #eef8ef;
-    color: #24452b;
+    background: #f1f8f3;
+    color: #183b25;
 }
 
-/* =========================
-   HEADER
-========================= */
-
+/* HEADER */
 header {
-    background: #2e7d32;
+    background: linear-gradient(135deg, #187a42, #39a85d);
     color: white;
-    padding: 18px 7%;
+    padding: 18px 6%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .logo {
@@ -42,954 +37,527 @@ header {
     font-weight: bold;
 }
 
-.player {
-    font-size: 16px;
+.logo span {
+    color: #d9ff6b;
 }
 
-/* =========================
-   MAIN
-========================= */
-
-main {
-    width: 90%;
-    max-width: 1200px;
-    margin: auto;
-}
-
-/* =========================
-   WELCOME
-========================= */
-
-.welcome {
-    margin-top: 30px;
+header button {
     background: white;
-    padding: 30px;
+    border: none;
+    padding: 9px 16px;
     border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    cursor: pointer;
+    color: #187a42;
+    font-weight: bold;
 }
 
-.welcome h1 {
-    margin-bottom: 10px;
+/* MAIN */
+.container {
+    width: 92%;
+    max-width: 1200px;
+    margin: 25px auto;
 }
 
-/* =========================
-   STATISTIK
-========================= */
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.stat-card {
+/* PROFILE */
+.profile {
     background: white;
-    padding: 20px;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
-}
-
-.stat-card span {
-    font-size: 30px;
-}
-
-.stat-card h3 {
-    margin: 8px 0;
-}
-
-.stat-card strong {
-    font-size: 25px;
-    color: #2e7d32;
-}
-
-/* =========================
-   LEVEL
-========================= */
-
-.level-box {
-    margin-top: 20px;
-    background: white;
-    padding: 20px;
-    border-radius: 18px;
-}
-
-.level-title {
+    border-radius: 22px;
+    padding: 25px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
 }
 
-.progress-background {
-    height: 18px;
-    background: #dce8dc;
+.profile-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.avatar {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: #d9f5df;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.level {
+    color: #219653;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+/* COIN */
+.wallet {
+    background: linear-gradient(135deg, #f7c948, #f2a900);
+    color: #573c00;
+    padding: 20px;
+    border-radius: 20px;
+    min-width: 230px;
+}
+
+.wallet h3 {
+    margin-bottom: 8px;
+}
+
+.coin {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* PROGRESS */
+.progress-box {
+    background: white;
+    margin-top: 20px;
+    padding: 22px;
+    border-radius: 20px;
+}
+
+.progress-bar {
+    height: 15px;
+    background: #e1e8e3;
     border-radius: 20px;
     overflow: hidden;
+    margin-top: 12px;
 }
 
 .progress {
     height: 100%;
+    background: linear-gradient(90deg, #25a55f, #8bd450);
     width: 0%;
-    background: #43a047;
-    transition: width 0.5s;
+    transition: 0.5s;
 }
 
-/* =========================
-   GAME AREA
-========================= */
-
-.game-area {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+/* BUTTON */
+.deposit-btn {
+    width: 100%;
     margin-top: 20px;
-}
-
-.garden,
-.missions {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
-}
-
-.garden h2,
-.missions h2 {
-    margin-bottom: 20px;
-}
-
-/* =========================
-   KEBUN
-========================= */
-
-.garden-box {
-    height: 300px;
-    border-radius: 20px;
-
-    background:
-        linear-gradient(
-            #b8e6ff 0 35%,
-            #76b852 35% 100%
-        );
-
-    position: relative;
-    overflow: hidden;
-}
-
-.farmer {
-    position: absolute;
-    bottom: 30px;
-    left: 45%;
-    font-size: 60px;
-}
-
-.tree {
-    position: absolute;
-    font-size: 45px;
-}
-
-.tree1 {
-    bottom: 40px;
-    left: 15%;
-}
-
-.tree2 {
-    bottom: 90px;
-    right: 20%;
-}
-
-.tree3 {
-    bottom: 30px;
-    right: 5%;
-}
-
-/* =========================
-   MISI
-========================= */
-
-.mission-card {
-    border: 2px solid #e4eee4;
     padding: 18px;
-    border-radius: 15px;
-    margin-bottom: 15px;
-}
-
-.mission-card h3 {
-    margin-bottom: 5px;
-}
-
-.mission-card p {
-    color: #777;
-    margin-bottom: 15px;
-}
-
-input {
-    width: 80px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-button {
     border: none;
-    background: #43a047;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-button:hover {
-    background: #2e7d32;
-    transform: scale(1.03);
-}
-
-.reward {
-    display: inline-block;
-    margin-top: 10px;
-    color: #f57c00;
-    font-weight: bold;
-}
-
-/* =========================
-   REWARD
-========================= */
-
-.reward-section {
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
-    margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
-}
-
-.reward-section h2 {
-    margin-bottom: 8px;
-}
-
-.reward-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.reward-card {
-    border: 2px solid #e2eee2;
     border-radius: 18px;
-    padding: 20px;
-    text-align: center;
+    background: linear-gradient(135deg, #138a4b, #35bd68);
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.reward-icon {
-    font-size: 45px;
-    margin-bottom: 10px;
+.deposit-btn:hover {
+    transform: scale(1.02);
 }
 
-.reward-card h3 {
-    margin-bottom: 8px;
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 20px;
 }
 
-.reward-card p {
-    color: #777;
-    font-size: 14px;
-    margin-bottom: 10px;
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
 }
 
-.reward-card strong {
-    display: block;
-    color: #f57c00;
+.card h3 {
     margin-bottom: 12px;
 }
 
-/* =========================
-   RIWAYAT
-========================= */
-
-.history {
-    margin-top: 20px;
-    background: white;
-    padding: 25px;
-    border-radius: 20px;
+.stat {
+    font-size: 27px;
+    font-weight: bold;
+    color: #18844a;
 }
 
-.history h2 {
+/* SECTION */
+.section {
+    margin-top: 25px;
+}
+
+.section-title {
     margin-bottom: 15px;
 }
 
-.history-item {
-    background: #eef8ef;
-    padding: 12px;
-    margin-bottom: 8px;
+/* REWARD */
+.reward {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 15px;
+    border-radius: 14px;
+    background: #f1f8f3;
+}
+
+.reward button {
+    border: none;
+    background: #218c50;
+    color: white;
+    padding: 8px 13px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.reward button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+/* ACHIEVEMENT */
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.badge {
+    background: #fff8d7;
+    padding: 15px;
+    border-radius: 15px;
+    min-width: 150px;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    padding: 25px;
+    border-radius: 22px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 25px;
+}
+
+input, select {
+    width: 100%;
+    padding: 13px;
+    margin-top: 7px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
     border-radius: 10px;
 }
 
-/* =========================
-   RESET
-========================= */
-
-.reset {
-    margin: 25px 0;
-    background: #d32f2f;
-}
-
-/* =========================
-   NOTIFIKASI
-========================= */
-
-#notification {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    background: #2e7d32;
-    color: white;
-    padding: 18px 25px;
-    border-radius: 12px;
-
-    transform: translateX(150%);
-    transition: 0.4s;
-
-    z-index: 1000;
-}
-
-#notification.show {
-    transform: translateX(0);
-}
-
-/* =========================
-   POPUP LEVEL
-========================= */
-
-.popup {
-    position: fixed;
-    inset: 0;
-
-    background: rgba(0,0,0,0.5);
-
+.ai-result {
+    background: #eef9f1;
+    padding: 18px;
+    border-radius: 15px;
+    margin-top: 15px;
     display: none;
-    justify-content: center;
-    align-items: center;
-
-    z-index: 2000;
 }
 
-.popup.show {
-    display: flex;
+.photo-preview {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-top: 10px;
+    display: none;
 }
 
-.popup-content {
-    background: white;
-    padding: 40px;
-    border-radius: 25px;
-    text-align: center;
-    animation: pop 0.4s;
-}
-
-.popup-content h1 {
-    font-size: 70px;
-}
-
-.popup-content h2 {
-    margin-bottom: 10px;
-}
-
-.popup-content p {
-    margin-bottom: 20px;
-    color: #2e7d32;
+.submit {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    background: #198b4b;
+    color: white;
+    border-radius: 12px;
+    font-size: 16px;
     font-weight: bold;
+    cursor: pointer;
 }
 
-/* =========================
-   FOOTER
-========================= */
-
+/* FOOTER */
 footer {
     text-align: center;
-    padding: 25px;
-    color: #777;
+    padding: 30px;
+    color: #6b776f;
 }
 
-/* =========================
-   ANIMASI
-========================= */
+/* MOBILE */
+@media(max-width: 800px) {
 
-@keyframes pop {
-
-    from {
-        transform: scale(0.5);
-        opacity: 0;
+    .profile {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-}
-
-/* =========================
-   RESPONSIVE HP
-========================= */
-
-@media (max-width: 800px) {
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .game-area {
+    .grid {
         grid-template-columns: 1fr;
     }
 
-    .reward-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .wallet {
+        width: 100%;
     }
-
 }
-
-@media (max-width: 500px) {
-
-    .stats {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .reward-grid {
-        grid-template-columns: 1fr;
-    }
-
-    header {
-        padding: 15px;
-    }
-
-}
-
 </style>
 </head>
 
-
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
-
 <header>
-
-    <div class="logo">
-        🌱 EcoMaggot
-    </div>
-
-    <div class="player">
-        👨‍🌾 <span id="playerName">
-            Eco Farmer
-        </span>
-    </div>
-
+    <div class="logo">🌱 Eco<span>Maggot</span></div>
+    <button onclick="showAbout()">Tentang</button>
 </header>
 
+<div class="container">
 
-<main>
+    <!-- PROFILE -->
+    <div class="profile">
 
-<!-- =========================
-     WELCOME
-========================= -->
+        <div class="profile-left">
 
-<section class="welcome">
+            <div class="avatar">👨‍🌾</div>
 
-    <h1>
-        Halo, Eco Farmer! 🌱
-    </h1>
+            <div>
+                <h2 id="farmerName">Pak Budi</h2>
 
-    <p>
-        Kumpulkan limbah pertanian,
-        rawat maggot, kembangkan kebun,
-        dapatkan Eco-Points dan tukarkan
-        dengan reward!
-    </p>
+                <div class="level" id="levelName">
+                    🌱 Level 1 — Petani Pemula
+                </div>
 
-</section>
+                <small>
+                    Desa EcoMaggot
+                </small>
+            </div>
 
+        </div>
 
-<!-- =========================
-     STATISTIK
-========================= -->
+        <div class="wallet">
 
-<section class="stats">
+            <h3>🪙 DOMPET ECO-COIN</h3>
 
-    <div class="stat-card">
+            <div class="coin">
+                <span id="coins">0</span> EcoCoin
+            </div>
 
-        <span>🪙</span>
-
-        <h3>
-            Eco-Points
-        </h3>
-
-        <strong id="points">
-            0
-        </strong>
+        </div>
 
     </div>
 
 
-    <div class="stat-card">
+    <!-- LEVEL -->
+    <div class="progress-box">
 
-        <span>🏆</span>
-
-        <h3>
-            Level
+        <h3 id="nextLevel">
+            Menuju Level 2
         </h3>
 
-        <strong id="level">
-            1
-        </strong>
+        <p>
+            Total limbah:
+            <b><span id="totalWaste">0</span> kg</b>
+        </p>
+
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <p style="margin-top:8px">
+            <span id="progressText">0 / 50 kg</span>
+        </p>
 
     </div>
 
 
-    <div class="stat-card">
+    <!-- SETOR LIMBAH -->
+    <button class="deposit-btn" onclick="openDeposit()">
+        ♻️ SETOR LIMBAH SEKARANG
+    </button>
 
-        <span>♻️</span>
 
-        <h3>
-            Limbah
-        </h3>
+    <!-- STATISTIK -->
+    <div class="grid">
 
-        <strong id="totalWaste">
-            0 kg
-        </strong>
+        <div class="card">
+            <h3>♻️ Total Limbah</h3>
+            <div class="stat">
+                <span id="statWaste">0</span> kg
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🪙 Eco-Coin</h3>
+            <div class="stat">
+                <span id="statCoins">0</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📦 Jumlah Setoran</h3>
+            <div class="stat">
+                <span id="statDeposits">0</span>
+            </div>
+        </div>
 
     </div>
 
 
-    <div class="stat-card">
+    <!-- REWARD -->
+    <div class="section">
 
-        <span>🔥</span>
-
-        <h3>
-            Streak
-        </h3>
-
-        <strong id="streak">
-            0 hari
-        </strong>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     LEVEL
-========================= -->
-
-<section class="level-box">
-
-    <div class="level-title">
-
-        <h2 id="levelName">
-            Petani Pemula 🌱
+        <h2 class="section-title">
+            🎁 Eco-Reward
         </h2>
 
-        <span id="levelText">
-            Level 1
-        </span>
+        <div class="card">
 
-    </div>
+            <div class="reward">
 
+                <div>
+                    🐛 <b>Pakan Maggot</b>
+                    <br>
+                    <small>500 EcoCoin</small>
+                </div>
 
-    <div class="progress-background">
+                <button onclick="redeem(500, 'Pakan Maggot')">
+                    Tukarkan
+                </button>
 
-        <div
-            class="progress"
-            id="levelProgress">
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     GAME
-========================= -->
-
-<section class="game-area">
-
-
-<!-- KEBUN -->
-
-<div class="garden">
-
-    <h2>
-        🌾 Kebun Saya
-    </h2>
-
-
-    <div class="garden-box">
-
-        <div class="tree tree1">
-            🌱
-        </div>
-
-        <div class="tree tree2">
-            🌿
-        </div>
-
-        <div class="tree tree3">
-            🌻
-        </div>
-
-        <div class="farmer">
-            👨‍🌾
-        </div>
-
-    </div>
-
-
-    <p style="margin-top:15px;">
-        Selesaikan misi untuk
-        mengembangkan kebunmu!
-    </p>
-
-</div>
-
-
-<!-- MISI -->
-
-<div class="missions">
-
-    <h2>
-        🎯 Misi Hari Ini
-    </h2>
-
-
-    <!-- LIMBAH -->
-
-    <div
-        class="mission-card"
-        id="mission-waste">
-
-        <h3>
-            ♻️ Kumpulkan Limbah
-        </h3>
-
-        <p>
-            Setorkan limbah organik
-            pertanian.
-        </p>
-
-
-        <input
-            type="number"
-            id="wasteInput"
-            placeholder="Kg"
-            min="1"
-        >
-
-
-        <button
-            onclick="submitWaste()">
-
-            Setor
-
-        </button>
-
-
-        <span class="reward">
-            +10 poin/kg
-        </span>
-
-    </div>
-
-
-    <!-- MAGGOT -->
-
-    <div
-        class="mission-card"
-        id="mission-maggot">
-
-        <h3>
-            🐛 Rawat Maggot
-        </h3>
-
-        <p>
-            Rawat budidaya maggot BSF.
-        </p>
-
-
-        <button
-            onclick="careMaggot()">
-
-            Selesaikan
-
-        </button>
-
-
-        <span class="reward">
-            +30 poin
-        </span>
-
-    </div>
-
-
-    <!-- TANAMAN -->
-
-    <div
-        class="mission-card"
-        id="mission-plant">
-
-        <h3>
-            🌱 Rawat Tanaman
-        </h3>
-
-        <p>
-            Rawat tanaman di kebun.
-        </p>
-
-
-        <button
-            onclick="carePlant()">
-
-            Selesaikan
-
-        </button>
-
-
-        <span class="reward">
-            +20 poin
-        </span>
-
-    </div>
-
-</div>
-
-</section>
-
-
-<!-- =========================
-     REWARD
-========================= -->
-
-<section class="reward-section">
-
-    <h2>
-        🎁 Eco Reward
-    </h2>
-
-    <p>
-        Gunakan Eco-Points untuk
-        mendapatkan reward.
-    </p>
-
-
-    <div class="reward-grid">
-
-
-        <div class="reward-card">
-
-            <div class="reward-icon">
-                🏅
             </div>
 
-            <h3>
-                Eco Beginner
-            </h3>
 
-            <p>
-                Badge penghargaan
-            </p>
+            <div class="reward">
 
-            <strong>
-                100 Poin
-            </strong>
+                <div>
+                    🌱 <b>Pupuk Organik Cair</b>
+                    <br>
+                    <small>750 EcoCoin</small>
+                </div>
 
-            <button
-                onclick="redeemReward(1)">
+                <button onclick="redeem(750, 'Pupuk Organik Cair')">
+                    Tukarkan
+                </button>
 
-                Tukarkan
-
-            </button>
-
-        </div>
-
-
-        <div class="reward-card">
-
-            <div class="reward-icon">
-                🌱
             </div>
 
-            <h3>
-                Bibit Tanaman
-            </h3>
 
-            <p>
-                Bibit untuk kebun
-            </p>
+            <div class="reward">
 
-            <strong>
-                250 Poin
-            </strong>
+                <div>
+                    🌾 <b>Paket Pupuk Sawah</b>
+                    <br>
+                    <small>1500 EcoCoin</small>
+                </div>
 
-            <button
-                onclick="redeemReward(2)">
+                <button onclick="redeem(1500, 'Paket Pupuk Sawah')">
+                    Tukarkan
+                </button>
 
-                Tukarkan
-
-            </button>
-
-        </div>
-
-
-        <div class="reward-card">
-
-            <div class="reward-icon">
-                🐛
             </div>
-
-            <h3>
-                Maggot BSF
-            </h3>
-
-            <p>
-                Pakan ternak
-            </p>
-
-            <strong>
-                500 Poin
-            </strong>
-
-            <button
-                onclick="redeemReward(3)">
-
-                Tukarkan
-
-            </button>
-
-        </div>
-
-
-        <div class="reward-card">
-
-            <div class="reward-icon">
-                💧
-            </div>
-
-            <h3>
-                Pupuk Organik
-            </h3>
-
-            <p>
-                Pupuk untuk sawah
-            </p>
-
-            <strong>
-                750 Poin
-            </strong>
-
-            <button
-                onclick="redeemReward(4)">
-
-                Tukarkan
-
-            </button>
-
-        </div>
-
-
-        <div class="reward-card">
-
-            <div class="reward-icon">
-                🏆
-            </div>
-
-            <h3>
-                Eco Hero
-            </h3>
-
-            <p>
-                Badge spesial
-            </p>
-
-            <strong>
-                1000 Poin
-            </strong>
-
-            <button
-                onclick="redeemReward(5)">
-
-                Tukarkan
-
-            </button>
 
         </div>
 
     </div>
 
-</section>
 
+    <!-- ACHIEVEMENT -->
+    <div class="section">
 
-<!-- =========================
-     RIWAYAT
-========================= -->
-
-<section class="history">
-
-    <h2>
-        📜 Riwayat Reward
-    </h2>
-
-    <div id="rewardHistory">
-        Belum ada reward.
-    </div>
-
-</section>
-
-
-<button
-    class="reset"
-    onclick="resetGame()">
-
-    🔄 Reset Game
-
-</button>
-
-</main>
-
-
-<!-- NOTIFICATION -->
-
-<div id="notification"></div>
-
-
-<!-- LEVEL UP -->
-
-<div
-    id="levelUpPopup"
-    class="popup">
-
-    <div class="popup-content">
-
-        <h1>
-            🎉
-        </h1>
-
-        <h2>
-            LEVEL UP!
+        <h2 class="section-title">
+            🏆 Achievement
         </h2>
 
-        <p id="newLevel">
-            Eco Hero
-        </p>
+        <div class="card">
 
-        <button
-            onclick="closePopup()">
+            <div class="badges">
 
-            Lanjut Bermain
+                <div class="badge">
+                    🌱
+                    <b>First Waste</b>
+                    <br>
+                    <small>Setoran pertama</small>
+                </div>
 
-        </button>
+                <div class="badge">
+                    ♻️
+                    <b>Eco Starter</b>
+                    <br>
+                    <small>50 kg limbah</small>
+                </div>
+
+                <div class="badge">
+                    🐛
+                    <b>Maggot Friend</b>
+                    <br>
+                    <small>250 kg limbah</small>
+                </div>
+
+                <div class="badge">
+                    🌳
+                    <b>Green Farmer</b>
+                    <br>
+                    <small>500 kg limbah</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DAMPAK -->
+    <div class="section">
+
+        <h2 class="section-title">
+            🌍 Dampak Saya
+        </h2>
+
+        <div class="card">
+
+            <p>
+                Anda telah menyetor
+                <b><span id="impactWaste">0</span> kg</b>
+                limbah pertanian.
+            </p>
+
+            <br>
+
+            <p>
+                🔥 Limbah yang berhasil dialihkan:
+                <b><span id="impactWaste2">0</span> kg</b>
+            </p>
+
+            <br>
+
+            <p>
+                🐛 Potensi menjadi pakan maggot:
+                <b><span id="maggotPotential">0</span> kg</b>
+            </p>
+
+            <br>
+
+            <p>
+                🌱 Potensi menjadi pupuk:
+                <b><span id="fertilizerPotential">0</span> kg</b>
+            </p>
+
+        </div>
 
     </div>
 
@@ -997,856 +565,538 @@ footer {
 
 
 <footer>
-
-    🌱 EcoMaggot |
-    Game Edukasi Pengelolaan Limbah Pertanian
-
+    🌱 EcoMaggot © 2026
+    <br>
+    <small>
+        Mengubah limbah menjadi nilai bagi petani.
+    </small>
 </footer>
 
 
+<!-- MODAL SETOR -->
+<div class="modal" id="depositModal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="closeDeposit()">×</span>
+
+        <h2>♻️ Setor Limbah</h2>
+
+        <br>
+
+        <label>
+            Nama Petani
+        </label>
+
+        <input
+            type="text"
+            id="inputName"
+            placeholder="Contoh: Pak Budi"
+        >
+
+
+        <label>
+            Jenis Limbah
+        </label>
+
+        <select id="wasteType">
+
+            <option value="sayuran">
+                🥬 Sayuran Busuk
+            </option>
+
+            <option value="buah">
+                🍌 Kulit / Sisa Buah
+            </option>
+
+            <option value="jerami">
+                🌾 Jerami / Sisa Tanaman
+            </option>
+
+            <option value="jagung">
+                🌽 Sisa Jagung
+            </option>
+
+            <option value="lainnya">
+                ♻️ Organik Lainnya
+            </option>
+
+        </select>
+
+
+        <label>
+            Perkiraan Berat (kg)
+        </label>
+
+        <input
+            type="number"
+            id="wasteWeight"
+            placeholder="Contoh: 10"
+            min="1"
+        >
+
+
+        <label>
+            Foto Limbah
+        </label>
+
+        <input
+            type="file"
+            id="wastePhoto"
+            accept="image/*"
+            capture="environment"
+            onchange="previewPhoto(event)"
+        >
+
+        <img
+            id="photoPreview"
+            class="photo-preview"
+        >
+
+
+        <button class="submit" onclick="analyzeWaste()">
+            🤖 Analisis dengan Eco-AI
+        </button>
+
+
+        <div class="ai-result" id="aiResult">
+
+            <h3>🤖 Hasil Eco-AI</h3>
+
+            <br>
+
+            <p>
+                Jenis:
+                <b id="resultType">-</b>
+            </p>
+
+            <p>
+                Berat:
+                <b><span id="resultWeight">0</span> kg</b>
+            </p>
+
+            <p>
+                Nilai limbah:
+                <b>Rp<span id="resultPrice">0</span></b>
+            </p>
+
+            <p>
+                Eco-Coin:
+                <b>+<span id="resultCoins">0</span> 🪙</b>
+            </p>
+
+            <br>
+
+            <p>
+                🐛 Potensi:
+                <b>Pakan maggot BSF</b>
+            </p>
+
+            <br>
+
+            <button class="submit" onclick="confirmDeposit()">
+                ✅ Konfirmasi Setoran
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+
 <script>
 
-/* =================================
-   DATA PEMAIN
-================================= */
+let data = JSON.parse(localStorage.getItem("ecoMaggotData")) || {
 
-let player = {
-
-    name: "Eco Farmer",
-
-    points: 0,
-
-    level: 1,
-
-    totalWaste: 0,
-
-    streak: 0,
-
-    rewards: []
+    name: "Pak Budi",
+    waste: 0,
+    coins: 0,
+    deposits: 0
 
 };
 
 
-/* =================================
-   LEVEL
-================================= */
+let pendingWaste = 0;
+let pendingCoins = 0;
+let pendingPrice = 0;
+
+
+/* HARGA LIMBAH */
+
+const prices = {
+
+    sayuran: 500,
+    buah: 600,
+    jerami: 300,
+    jagung: 450,
+    lainnya: 300
+
+};
+
+
+/* LEVEL */
 
 const levels = [
 
     {
-        level: 1,
-        name: "Petani Pemula 🌱",
-        required: 0
+        min: 0,
+        max: 50,
+        name: "🌱 Level 1 — Petani Pemula"
     },
 
     {
-        level: 2,
-        name: "Pengumpul Limbah ♻️",
-        required: 100
+        min: 51,
+        max: 150,
+        name: "🌿 Level 2 — Petani Peduli"
     },
 
     {
-        level: 3,
-        name: "Peternak Maggot 🐛",
-        required: 300
+        min: 151,
+        max: 300,
+        name: "♻️ Level 3 — Pejuang Lingkungan"
     },
 
     {
-        level: 4,
-        name: "Petani Hijau 🌿",
-        required: 600
+        min: 301,
+        max: 500,
+        name: "🐛 Level 4 — Sahabat Maggot"
     },
 
     {
-        level: 5,
-        name: "Eco Hero 🏆",
-        required: 1000
+        min: 501,
+        max: 1000,
+        name: "🌳 Level 5 — Petani Eco Hero"
+    },
+
+    {
+        min: 1001,
+        max: Infinity,
+        name: "🏆 Level 6 — EcoMaggot Legend"
     }
 
 ];
 
 
-/* =================================
-   MISI
-================================= */
+/* UPDATE DASHBOARD */
 
-let missions = {
+function updateDashboard() {
 
-    waste: false,
+    document.getElementById("farmerName").innerText =
+        data.name;
 
-    maggot: false,
+    document.getElementById("coins").innerText =
+        data.coins.toLocaleString();
 
-    plant: false
+    document.getElementById("statCoins").innerText =
+        data.coins.toLocaleString();
 
-};
+    document.getElementById("totalWaste").innerText =
+        data.waste.toFixed(1);
 
+    document.getElementById("statWaste").innerText =
+        data.waste.toFixed(1);
 
-/* =================================
-   REWARD
-================================= */
+    document.getElementById("statDeposits").innerText =
+        data.deposits;
 
-const rewards = [
+    document.getElementById("impactWaste").innerText =
+        data.waste.toFixed(1);
 
-    {
-        id: 1,
-        name: "Badge Eco Beginner 🏅",
-        price: 100
-    },
+    document.getElementById("impactWaste2").innerText =
+        data.waste.toFixed(1);
 
-    {
-        id: 2,
-        name: "Bibit Tanaman 🌱",
-        price: 250
-    },
+    document.getElementById("maggotPotential").innerText =
+        (data.waste * 0.7).toFixed(1);
 
-    {
-        id: 3,
-        name: "Maggot BSF 🐛",
-        price: 500
-    },
-
-    {
-        id: 4,
-        name: "Pupuk Organik 💧",
-        price: 750
-    },
-
-    {
-        id: 5,
-        name: "Badge Eco Hero 🏆",
-        price: 1000
-    }
-
-];
+    document.getElementById("fertilizerPotential").innerText =
+        (data.waste * 0.3).toFixed(1);
 
 
-/* =================================
-   LOAD DATA
-================================= */
-
-function loadGame() {
-
-    const saved =
-        localStorage.getItem(
-            "ecoMaggotGame"
-        );
-
-
-    if (saved) {
-
-        player =
-            JSON.parse(saved);
-
-    }
-
-
-    updateDisplay();
-
-}
-
-
-/* =================================
-   SAVE DATA
-================================= */
-
-function saveGame() {
-
-    localStorage.setItem(
-
-        "ecoMaggotGame",
-
-        JSON.stringify(player)
-
-    );
-
-}
-
-
-/* =================================
-   TAMBAH POIN
-================================= */
-
-function addPoints(
-    amount,
-    message
-) {
-
-    player.points += amount;
-
-
-    showNotification(
-
-        `🎉 +${amount} Eco-Points!<br>${message}`
-
+    let currentLevel = levels.find(
+        level =>
+        data.waste >= level.min &&
+        data.waste <= level.max
     );
 
 
-    checkLevel();
-
-    saveGame();
-
-    updateDisplay();
-
-}
+    let index = levels.indexOf(currentLevel);
 
 
-/* =================================
-   SETOR LIMBAH
-================================= */
-
-function submitWaste() {
-
-    const input =
-        document.getElementById(
-            "wasteInput"
-        );
+    document.getElementById("levelName").innerText =
+        currentLevel.name;
 
 
-    const waste =
-        Number(input.value);
+    if (index < levels.length - 1) {
 
+        let next = levels[index + 1];
 
-    if (!waste || waste <= 0) {
+        let needed =
+            next.min - data.waste;
 
-        showNotification(
-            "⚠️ Masukkan jumlah limbah!"
-        );
+        document.getElementById("nextLevel").innerText =
+            `🎮 ${needed.toFixed(1)} kg lagi menuju ${next.name}`;
 
-        return;
+        let percentage =
+            ((data.waste - currentLevel.min) /
+            (next.min - currentLevel.min)) * 100;
+
+        document.getElementById("progress").style.width =
+            Math.min(100, Math.max(0, percentage)) + "%";
+
+        document.getElementById("progressText").innerText =
+            `${data.waste.toFixed(1)} / ${next.min} kg`;
 
     }
 
+    else {
 
-    const points =
-        waste * 10;
+        document.getElementById("nextLevel").innerText =
+            "🏆 Level maksimal tercapai!";
 
-
-    player.totalWaste +=
-        waste;
-
-
-    addPoints(
-
-        points,
-
-        `Kamu mengumpulkan ${waste} kg limbah! ♻️`
-
-    );
-
-
-    missions.waste =
-        true;
-
-
-    input.value = "";
-
-
-    completeMission(
-        "mission-waste"
-    );
-
-
-    checkAllMissions();
-
-}
-
-
-/* =================================
-   RAWAT MAGGOT
-================================= */
-
-function careMaggot() {
-
-    if (missions.maggot) {
-
-        showNotification(
-            "🐛 Misi sudah selesai!"
-        );
-
-        return;
-
-    }
-
-
-    missions.maggot = true;
-
-
-    addPoints(
-        30,
-        "Maggot BSF berhasil dirawat! 🐛"
-    );
-
-
-    completeMission(
-        "mission-maggot"
-    );
-
-
-    checkAllMissions();
-
-}
-
-
-/* =================================
-   RAWAT TANAMAN
-================================= */
-
-function carePlant() {
-
-    if (missions.plant) {
-
-        showNotification(
-            "🌱 Misi sudah selesai!"
-        );
-
-        return;
-
-    }
-
-
-    missions.plant = true;
-
-
-    addPoints(
-        20,
-        "Tanaman berhasil dirawat! 🌱"
-    );
-
-
-    completeMission(
-        "mission-plant"
-    );
-
-
-    checkAllMissions();
-
-}
-
-
-/* =================================
-   MISI SELESAI
-================================= */
-
-function completeMission(id) {
-
-    const element =
-        document.getElementById(id);
-
-
-    if (element) {
-
-        element.style.background =
-            "#e8f5e9";
-
-        element.style.borderColor =
-            "#66bb6a";
-
-    }
-
-}
-
-
-/* =================================
-   BONUS SEMUA MISI
-================================= */
-
-function checkAllMissions() {
-
-    if (
-
-        missions.waste &&
-        missions.maggot &&
-        missions.plant
-
-    ) {
-
-        setTimeout(() => {
-
-            player.points += 50;
-
-
-            showNotification(
-                "🎁 Semua misi selesai! Bonus +50 poin!"
-            );
-
-
-            saveGame();
-
-            updateDisplay();
-
-
-        }, 500);
-
-
-        missions = {
-
-            waste: false,
-
-            maggot: false,
-
-            plant: false
-
-        };
-
-    }
-
-}
-
-
-/* =================================
-   CEK LEVEL
-================================= */
-
-function checkLevel() {
-
-    let newLevel = 1;
-
-
-    levels.forEach(
-        level => {
-
-            if (
-                player.points >=
-                level.required
-            ) {
-
-                newLevel =
-                    level.level;
-
-            }
-
-        }
-    );
-
-
-    if (
-        newLevel >
-        player.level
-    ) {
-
-        player.level =
-            newLevel;
-
-
-        const current =
-            levels.find(
-                level =>
-                    level.level ===
-                    newLevel
-            );
-
-
-        showLevelUp(
-            current.name
-        );
-
-    }
-
-}
-
-
-/* =================================
-   REDEEM REWARD
-================================= */
-
-function redeemReward(id) {
-
-    const reward =
-        rewards.find(
-            item =>
-                item.id === id
-        );
-
-
-    if (!reward) return;
-
-
-    if (
-        player.points <
-        reward.price
-    ) {
-
-        showNotification(
-
-            `❌ Poin tidak cukup!<br>
-             Butuh ${reward.price} poin.`
-
-        );
-
-        return;
-
-    }
-
-
-    player.points -=
-        reward.price;
-
-
-    player.rewards.push({
-
-        name:
-            reward.name,
-
-        date:
-            new Date()
-            .toLocaleString(
-                "id-ID"
-            )
-
-    });
-
-
-    showNotification(
-
-        `🎁 Reward berhasil ditukar!<br>
-         ${reward.name}`
-
-    );
-
-
-    saveGame();
-
-    updateDisplay();
-
-}
-
-
-/* =================================
-   UPDATE TAMPILAN
-================================= */
-
-function updateDisplay() {
-
-    document.getElementById(
-        "points"
-    ).innerText =
-        player.points;
-
-
-    document.getElementById(
-        "level"
-    ).innerText =
-        player.level;
-
-
-    document.getElementById(
-        "levelText"
-    ).innerText =
-        "Level " +
-        player.level;
-
-
-    document.getElementById(
-        "totalWaste"
-    ).innerText =
-        player.totalWaste +
-        " kg";
-
-
-    document.getElementById(
-        "streak"
-    ).innerText =
-        player.streak +
-        " hari";
-
-
-    const current =
-        levels.find(
-            item =>
-                item.level ===
-                player.level
-        );
-
-
-    document.getElementById(
-        "levelName"
-    ).innerText =
-        current.name;
-
-
-    updateProgress();
-
-    updateHistory();
-
-}
-
-
-/* =================================
-   PROGRESS BAR
-================================= */
-
-function updateProgress() {
-
-    const current =
-        levels.find(
-            item =>
-                item.level ===
-                player.level
-        );
-
-
-    const next =
-        levels.find(
-            item =>
-                item.level ===
-                player.level + 1
-        );
-
-
-    const progress =
-        document.getElementById(
-            "levelProgress"
-        );
-
-
-    if (!next) {
-
-        progress.style.width =
+        document.getElementById("progress").style.width =
             "100%";
 
+        document.getElementById("progressText").innerText =
+            "EcoMaggot Legend";
+
+    }
+
+
+    localStorage.setItem(
+        "ecoMaggotData",
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* OPEN MODAL */
+
+function openDeposit() {
+
+    document.getElementById("depositModal").style.display =
+        "flex";
+
+}
+
+
+/* CLOSE MODAL */
+
+function closeDeposit() {
+
+    document.getElementById("depositModal").style.display =
+        "none";
+
+}
+
+
+/* PREVIEW FOTO */
+
+function previewPhoto(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const preview =
+        document.getElementById("photoPreview");
+
+    preview.src =
+        URL.createObjectURL(file);
+
+    preview.style.display =
+        "block";
+
+}
+
+
+/* ANALISIS AI */
+
+function analyzeWaste() {
+
+    const name =
+        document.getElementById("inputName").value;
+
+    const type =
+        document.getElementById("wasteType").value;
+
+    const weight =
+        parseFloat(
+            document.getElementById("wasteWeight").value
+        );
+
+
+    if (name.trim() !== "") {
+
+        data.name = name;
+
+    }
+
+
+    if (!weight || weight <= 0) {
+
+        alert("Masukkan berat limbah terlebih dahulu.");
+
         return;
 
     }
 
 
-    const percentage =
+    pendingWaste = weight;
 
-        (
-            (
-                player.points -
-                current.required
-            ) /
+    pendingPrice =
+        weight * prices[type];
 
-            (
-                next.required -
-                current.required
-            )
-        ) * 100;
+    pendingCoins =
+        Math.round(weight * 10);
 
 
-    progress.style.width =
+    const names = {
 
-        Math.min(
-            percentage,
-            100
-        ) + "%";
+        sayuran: "🥬 Sayuran Busuk",
+
+        buah: "🍌 Kulit / Sisa Buah",
+
+        jerami: "🌾 Jerami / Sisa Tanaman",
+
+        jagung: "🌽 Sisa Jagung",
+
+        lainnya: "♻️ Limbah Organik"
+
+    };
+
+
+    document.getElementById("resultType").innerText =
+        names[type];
+
+    document.getElementById("resultWeight").innerText =
+        weight;
+
+    document.getElementById("resultPrice").innerText =
+        pendingPrice.toLocaleString("id-ID");
+
+    document.getElementById("resultCoins").innerText =
+        pendingCoins;
+
+
+    document.getElementById("aiResult").style.display =
+        "block";
 
 }
 
 
-/* =================================
-   HISTORY
-================================= */
+/* KONFIRMASI */
 
-function updateHistory() {
+function confirmDeposit() {
 
-    const history =
-        document.getElementById(
-            "rewardHistory"
+    data.waste += pendingWaste;
+
+    data.coins += pendingCoins;
+
+    data.deposits += 1;
+
+
+    localStorage.setItem(
+        "ecoMaggotData",
+        JSON.stringify(data)
+    );
+
+
+    updateDashboard();
+
+    alert(
+        `🎉 Setoran berhasil!\n\n` +
+        `♻️ Limbah: ${pendingWaste} kg\n` +
+        `💰 Nilai: Rp${pendingPrice.toLocaleString("id-ID")}\n` +
+        `🪙 EcoCoin: +${pendingCoins}`
+    );
+
+
+    document.getElementById("aiResult").style.display =
+        "none";
+
+    document.getElementById("wasteWeight").value =
+        "";
+
+    document.getElementById("wastePhoto").value =
+        "";
+
+    document.getElementById("photoPreview").style.display =
+        "none";
+
+    closeDeposit();
+
+}
+
+
+/* REWARD */
+
+function redeem(cost, reward) {
+
+    if (data.coins < cost) {
+
+        alert(
+            `EcoCoin kamu belum cukup.\n\n` +
+            `Dibutuhkan: ${cost} EcoCoin\n` +
+            `EcoCoin kamu: ${data.coins}`
         );
-
-
-    if (
-        player.rewards.length === 0
-    ) {
-
-        history.innerHTML =
-            "Belum ada reward.";
 
         return;
 
     }
 
 
-    history.innerHTML =
-
-        player.rewards
-            .slice()
-            .reverse()
-            .map(
-
-                reward => `
-
-                    <div class="history-item">
-
-                        🎁 ${reward.name}
-
-                        <br>
-
-                        <small>
-                            ${reward.date}
-                        </small>
-
-                    </div>
-
-                `
-
-            )
-            .join("");
-
-}
+    data.coins -= cost;
 
 
-/* =================================
-   NOTIFIKASI
-================================= */
-
-function showNotification(
-    message
-) {
-
-    const notification =
-        document.getElementById(
-            "notification"
-        );
-
-
-    notification.innerHTML =
-        message;
-
-
-    notification.classList.add(
-        "show"
+    localStorage.setItem(
+        "ecoMaggotData",
+        JSON.stringify(data)
     );
 
 
-    setTimeout(() => {
-
-        notification.classList.remove(
-            "show"
-        );
-
-    }, 3000);
-
-}
+    updateDashboard();
 
 
-/* =================================
-   LEVEL UP
-================================= */
-
-function showLevelUp(
-    levelName
-) {
-
-    document.getElementById(
-        "newLevel"
-    ).innerText =
-        levelName;
-
-
-    document.getElementById(
-        "levelUpPopup"
-    ).classList.add(
-        "show"
+    alert(
+        `🎁 Penukaran berhasil!\n\n` +
+        `${reward}\n` +
+        `-${cost} EcoCoin`
     );
 
 }
 
 
-function closePopup() {
+/* ABOUT */
 
-    document.getElementById(
-        "levelUpPopup"
-    ).classList.remove(
-        "show"
+function showAbout() {
+
+    alert(
+        "🌱 EcoMaggot\n\n" +
+
+        "EcoMaggot adalah konsep aplikasi " +
+        "berbasis gamifikasi yang mengubah " +
+        "limbah pertanian menjadi nilai.\n\n" +
+
+        "👨‍🌾 Petani menyetor limbah\n" +
+        "🤖 Eco-AI membantu menganalisis\n" +
+        "🪙 Petani mendapatkan EcoCoin\n" +
+        "🏫 Siswa/komunitas mengolah limbah\n" +
+        "🐛 Menjadi pakan maggot\n" +
+        "🌱 Menghasilkan pupuk\n" +
+        "🎁 Reward kembali kepada petani."
     );
 
 }
 
 
-/* =================================
-   LOGIN HARIAN
-================================= */
+/* START */
 
-function dailyLogin() {
-
-    const today =
-        new Date()
-        .toLocaleDateString(
-            "id-ID"
-        );
-
-
-    const lastLogin =
-        localStorage.getItem(
-            "ecoMaggotLastLogin"
-        );
-
-
-    if (
-        lastLogin !== today
-    ) {
-
-        player.streak++;
-
-        player.points += 20;
-
-
-        localStorage.setItem(
-
-            "ecoMaggotLastLogin",
-
-            today
-
-        );
-
-
-        showNotification(
-            "🌞 Bonus login +20 Eco-Points!"
-        );
-
-
-        saveGame();
-
-    }
-
-}
-
-
-/* =================================
-   RESET GAME
-================================= */
-
-function resetGame() {
-
-    const confirmReset =
-        confirm(
-            "Yakin ingin menghapus semua progress?"
-        );
-
-
-    if (!confirmReset) return;
-
-
-    localStorage.removeItem(
-        "ecoMaggotGame"
-    );
-
-
-    localStorage.removeItem(
-        "ecoMaggotLastLogin"
-    );
-
-
-    location.reload();
-
-}
-
-
-/* =================================
-   MULAI GAME
-================================= */
-
-window.onload = function() {
-
-    loadGame();
-
-    dailyLogin();
-
-    updateDisplay();
-
-};
+updateDashboard();
 
 </script>
 
