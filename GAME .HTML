@@ -6,332 +6,348 @@
 <title>EcoMaggot - Smart Farming</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif
+}
 
 body{
-background:#f1f8f3;
-color:#173d28;
+  background:#f1f8f3;
+  color:#173d28;
 }
 
 header{
-background:linear-gradient(135deg,#126b3b,#36ad62);
-color:white;
-padding:15px 6%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-position:sticky;
-top:0;
-z-index:99;
+  background:linear-gradient(135deg,#126b3b,#36ad62);
+  color:white;
+  padding:15px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:99;
 }
 
 .logo{
-font-size:25px;
-font-weight:bold;
+  font-size:25px;
+  font-weight:bold;
 }
 
-.logo span{color:#e0ff70}
+.logo span{
+  color:#e0ff70
+}
 
 nav{
-display:flex;
-gap:5px;
+  display:flex;
+  gap:5px;
 }
 
 nav button{
-background:transparent;
-border:0;
-color:white;
-padding:10px 13px;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
+  background:transparent;
+  border:0;
+  color:white;
+  padding:10px 13px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
 nav button:hover{
-background:#ffffff30;
+  background:#ffffff30;
 }
 
 .container{
-width:92%;
-max-width:1200px;
-margin:25px auto;
+  width:92%;
+  max-width:1200px;
+  margin:25px auto;
 }
 
-.page{display:none}
-.page.active{display:block}
+.page{
+  display:none
+}
+
+.page.active{
+  display:block
+}
 
 .hero{
-background:linear-gradient(135deg,#126b3b,#45b96c);
-color:white;
-padding:30px;
-border-radius:25px;
-margin-bottom:20px;
+  background:linear-gradient(135deg,#126b3b,#45b96c);
+  color:white;
+  padding:30px;
+  border-radius:25px;
+  margin-bottom:20px;
 }
 
 .hero h1{
-font-size:31px;
-margin-bottom:10px;
+  font-size:31px;
+  margin-bottom:10px;
 }
 
 .hero p{
-line-height:1.6;
+  line-height:1.6;
 }
 
 .profile{
-background:white;
-padding:24px;
-border-radius:22px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:20px;
-box-shadow:0 5px 20px #0000000d;
+  background:white;
+  padding:24px;
+  border-radius:22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  box-shadow:0 5px 20px #0000000d;
 }
 
 .profileInfo{
-display:flex;
-align-items:center;
-gap:18px;
+  display:flex;
+  align-items:center;
+  gap:18px;
 }
 
 .avatar{
-width:75px;
-height:75px;
-background:#dff4e5;
-border-radius:50%;
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:40px;
+  width:75px;
+  height:75px;
+  background:#dff4e5;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
 }
 
 .level{
-color:#18874a;
-font-weight:bold;
-margin-top:7px;
+  color:#18874a;
+  font-weight:bold;
+  margin-top:7px;
 }
 
 .wallet{
-background:linear-gradient(135deg,#ffd95b,#efa800);
-padding:20px;
-border-radius:18px;
-min-width:230px;
-color:#5b4300;
+  background:linear-gradient(135deg,#ffd95b,#efa800);
+  padding:20px;
+  border-radius:18px;
+  min-width:230px;
+  color:#5b4300;
 }
 
 .wallet h3{
-margin-bottom:8px;
+  margin-bottom:8px;
 }
 
 .coin{
-font-size:28px;
-font-weight:bold;
+  font-size:28px;
+  font-weight:bold;
 }
 
 .progressCard{
-background:white;
-padding:22px;
-border-radius:20px;
-margin-top:20px;
+  background:white;
+  padding:22px;
+  border-radius:20px;
+  margin-top:20px;
 }
 
 .progressBar{
-height:15px;
-background:#e1e8e2;
-border-radius:20px;
-overflow:hidden;
-margin:12px 0;
+  height:15px;
+  background:#e1e8e2;
+  border-radius:20px;
+  overflow:hidden;
+  margin:12px 0;
 }
 
 .progress{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#20a957,#9bdf4e);
-transition:.6s;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#20a957,#9bdf4e);
+  transition:.6s;
 }
 
 .mainButton{
-width:100%;
-padding:17px;
-margin-top:20px;
-border:0;
-border-radius:17px;
-background:linear-gradient(135deg,#108348,#36bd69);
-color:white;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
+  width:100%;
+  padding:17px;
+  margin-top:20px;
+  border:0;
+  border-radius:17px;
+  background:linear-gradient(135deg,#108348,#36bd69);
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s;
 }
 
 .mainButton:hover{
-transform:translateY(-2px);
+  transform:translateY(-2px);
 }
 
 .grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:18px;
-margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:20px;
 }
 
 .card{
-background:white;
-padding:22px;
-border-radius:20px;
-box-shadow:0 4px 15px #0000000c;
+  background:white;
+  padding:22px;
+  border-radius:20px;
+  box-shadow:0 4px 15px #0000000c;
 }
 
 .stat{
-font-size:28px;
-font-weight:bold;
-color:#18874a;
-margin-top:8px;
+  font-size:28px;
+  font-weight:bold;
+  color:#18874a;
+  margin-top:8px;
 }
 
 .section{
-margin-top:25px;
+  margin-top:25px;
 }
 
 .section h2{
-margin-bottom:15px;
+  margin-bottom:15px;
 }
 
 .reward{
-background:#f1f8f3;
-padding:16px;
-border-radius:15px;
-margin-top:10px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+  background:#f1f8f3;
+  padding:16px;
+  border-radius:15px;
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .smallButton{
-background:#19894c;
-border:0;
-color:white;
-padding:9px 14px;
-border-radius:10px;
-cursor:pointer;
+  background:#19894c;
+  border:0;
+  color:white;
+  padding:9px 14px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.smallButton:hover{
+  background:#126b3b;
 }
 
 .badges{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
 }
 
 .badge{
-background:#fff8d8;
-padding:15px;
-border-radius:15px;
-min-width:160px;
+  background:#fff8d8;
+  padding:15px;
+  border-radius:15px;
+  min-width:160px;
 }
 
 .leader{
-display:flex;
-justify-content:space-between;
-padding:15px;
-background:#f2f7f3;
-border-radius:12px;
-margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:#f2f7f3;
+  border-radius:12px;
+  margin-top:10px;
 }
 
 .step{
-display:flex;
-align-items:center;
-gap:15px;
-padding:16px;
-background:#f3f8f4;
-border-radius:15px;
-margin-top:10px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:16px;
+  background:#f3f8f4;
+  border-radius:15px;
+  margin-top:10px;
 }
 
 .stepIcon{
-font-size:32px;
+  font-size:32px;
 }
 
 .aiBox{
-background:#edf9f0;
-padding:20px;
-border-radius:17px;
-margin-top:15px;
-display:none;
+  background:#edf9f0;
+  padding:20px;
+  border-radius:17px;
+  margin-top:15px;
+  display:none;
 }
 
 input,select{
-width:100%;
-padding:13px;
-border:1px solid #ccd6ce;
-border-radius:10px;
-margin-top:7px;
-margin-bottom:15px;
+  width:100%;
+  padding:13px;
+  border:1px solid #ccd6ce;
+  border-radius:10px;
+  margin-top:7px;
+  margin-bottom:15px;
 }
 
 .photo{
-width:100%;
-max-height:250px;
-object-fit:cover;
-border-radius:15px;
-display:none;
-margin-bottom:15px;
+  width:100%;
+  max-height:250px;
+  object-fit:cover;
+  border-radius:15px;
+  display:none;
+  margin-bottom:15px;
 }
 
 footer{
-text-align:center;
-padding:30px;
-color:#718078;
+  text-align:center;
+  padding:30px;
+  color:#718078;
 }
 
 .notice{
-position:fixed;
-right:20px;
-bottom:20px;
-background:#173d28;
-color:white;
-padding:16px 20px;
-border-radius:13px;
-opacity:0;
-transform:translateY(100px);
-transition:.4s;
-z-index:999;
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#173d28;
+  color:white;
+  padding:16px 20px;
+  border-radius:13px;
+  opacity:0;
+  transform:translateY(100px);
+  transition:.4s;
+  z-index:999;
 }
 
 .notice.show{
-opacity:1;
-transform:translateY(0);
+  opacity:1;
+  transform:translateY(0);
 }
 
 @media(max-width:800px){
 
-header{
-flex-direction:column;
-gap:10px;
-}
+  header{
+    flex-direction:column;
+    gap:10px;
+  }
 
-nav{
-width:100%;
-overflow-x:auto;
-justify-content:center;
-}
+  nav{
+    width:100%;
+    overflow-x:auto;
+    justify-content:center;
+  }
 
-.profile{
-flex-direction:column;
-align-items:stretch;
-}
+  .profile{
+    flex-direction:column;
+    align-items:stretch;
+  }
 
-.grid{
-grid-template-columns:1fr;
-}
+  .grid{
+    grid-template-columns:1fr;
+  }
 
-.wallet{
-width:100%;
-}
+  .wallet{
+    width:100%;
+  }
 
-.hero h1{
-font-size:25px;
-}
-
+  .hero h1{
+    font-size:25px;
+  }
 }
 </style>
 </head>
@@ -353,11 +369,9 @@ font-size:25px;
 
 </header>
 
-
 <div class="container">
 
-
-<!-- DASHBOARD -->
+<!-- ================= DASHBOARD ================= -->
 
 <section id="dashboard" class="page active">
 
@@ -373,17 +387,18 @@ Eco-Coin, maggot BSF dan pupuk organik.
 
 </div>
 
-
 <div class="profile">
 
 <div class="profileInfo">
 
-<div class="avatar">👨‍🌾</div>
+<div class="avatar">
+👨‍🌾
+</div>
 
 <div>
 
 <h2 id="nama">
-Pak Budi
+Nama Petani
 </h2>
 
 <div class="level" id="level">
@@ -398,7 +413,6 @@ Petani Mitra EcoMaggot
 
 </div>
 
-
 <div class="wallet">
 
 <h3>🪙 DOMPET ECO-COIN</h3>
@@ -412,7 +426,6 @@ Eco-Coin
 </div>
 
 </div>
-
 
 <div class="progressCard">
 
@@ -437,14 +450,9 @@ Menuju Level Berikutnya
 
 </div>
 
-
-<button class="mainButton"
-onclick="page('setor')">
-
+<button class="mainButton" onclick="page('setor')">
 ♻️ SETOR LIMBAH SEKARANG
-
 </button>
-
 
 <div class="grid">
 
@@ -458,7 +466,6 @@ onclick="page('setor')">
 
 </div>
 
-
 <div class="card">
 
 <h3>🪙 Eco-Coin</h3>
@@ -468,7 +475,6 @@ onclick="page('setor')">
 </div>
 
 </div>
-
 
 <div class="card">
 
@@ -481,7 +487,6 @@ onclick="page('setor')">
 </div>
 
 </div>
-
 
 <div class="section">
 
@@ -523,8 +528,7 @@ onclick="page('setor')">
 
 </section>
 
-
-<!-- SETOR -->
+<!-- ================= SETOR LIMBAH ================= -->
 
 <section id="setor" class="page">
 
@@ -540,7 +544,6 @@ Eco-Coin.
 
 </div>
 
-
 <div class="card">
 
 <label>Nama Petani</label>
@@ -548,9 +551,8 @@ Eco-Coin.
 <input
 id="inputNama"
 type="text"
-placeholder="Contoh: Pak Budi"
+placeholder="Masukkan nama petani"
 >
-
 
 <label>Jenis Limbah</label>
 
@@ -578,7 +580,6 @@ placeholder="Contoh: Pak Budi"
 
 </select>
 
-
 <label>Berat Limbah (kg)</label>
 
 <input
@@ -587,7 +588,6 @@ type="number"
 min="1"
 placeholder="Contoh: 10"
 >
-
 
 <label>📷 Foto Limbah</label>
 
@@ -604,7 +604,6 @@ id="preview"
 class="photo"
 >
 
-
 <button
 class="mainButton"
 onclick="analisis()">
@@ -612,7 +611,6 @@ onclick="analisis()">
 🤖 ANALISIS DENGAN ECO-AI
 
 </button>
-
 
 <div
 id="hasil"
@@ -661,7 +659,6 @@ Eco-Coin:
 <b>Pupuk Organik</b>
 </p>
 
-
 <button
 class="mainButton"
 onclick="konfirmasi()">
@@ -676,8 +673,7 @@ onclick="konfirmasi()">
 
 </section>
 
-
-<!-- REWARD -->
+<!-- ================= REWARD ================= -->
 
 <section id="reward" class="page">
 
@@ -693,7 +689,6 @@ kembali oleh petani.
 
 </div>
 
-
 <div class="card">
 
 <h2>
@@ -701,7 +696,6 @@ kembali oleh petani.
 <span id="rewardCoin">0</span>
 Eco-Coin
 </h2>
-
 
 <div class="reward">
 
@@ -721,7 +715,6 @@ Tukar
 
 </div>
 
-
 <div class="reward">
 
 <div>
@@ -739,7 +732,6 @@ Tukar
 </button>
 
 </div>
-
 
 <div class="reward">
 
@@ -760,7 +752,6 @@ Tukar
 </div>
 
 </div>
-
 
 <div class="section">
 
@@ -794,8 +785,7 @@ Tukar
 
 </section>
 
-
-<!-- DAMPAK -->
+<!-- ================= DAMPAK ================= -->
 
 <section id="dampak" class="page">
 
@@ -810,7 +800,6 @@ potensi untuk menjadi sumber daya baru.
 
 </div>
 
-
 <div class="grid">
 
 <div class="card">
@@ -823,7 +812,6 @@ potensi untuk menjadi sumber daya baru.
 
 </div>
 
-
 <div class="card">
 
 <h3>🐛 Potensi Pakan</h3>
@@ -833,7 +821,6 @@ potensi untuk menjadi sumber daya baru.
 </div>
 
 </div>
-
 
 <div class="card">
 
@@ -846,7 +833,6 @@ potensi untuk menjadi sumber daya baru.
 </div>
 
 </div>
-
 
 <div class="section">
 
@@ -868,7 +854,6 @@ Mengumpulkan dan menyetorkan limbah.
 
 </div>
 
-
 <div class="step">
 
 <div class="stepIcon">📱</div>
@@ -882,7 +867,6 @@ Mencatat limbah dan memberikan Eco-Coin.
 </div>
 
 </div>
-
 
 <div class="step">
 
@@ -898,7 +882,6 @@ Membantu proses pengolahan dan edukasi.
 
 </div>
 
-
 <div class="step">
 
 <div class="stepIcon">🐛</div>
@@ -913,7 +896,6 @@ Limbah dimanfaatkan sebagai media pakan.
 
 </div>
 
-
 <div class="step">
 
 <div class="stepIcon">🌱</div>
@@ -927,7 +909,6 @@ Hasil sampingan dapat dimanfaatkan kembali.
 </div>
 
 </div>
-
 
 <div class="step">
 
@@ -951,7 +932,6 @@ Nilai kembali kepada petani.
 
 </div>
 
-
 <footer>
 
 🌱 <b>EcoMaggot</b>
@@ -968,11 +948,9 @@ Proyek Inovasi Teknologi & Lingkungan SMA
 
 </footer>
 
-
 <div id="notice" class="notice">
 Berhasil!
 </div>
-
 
 <script>
 
@@ -982,439 +960,380 @@ let data =
 JSON.parse(localStorage.getItem("EcoMaggot"))
 ||
 {
-nama:"Pak Budi",
-limbah:0,
-coin:0,
-setoran:0
+  nama:"",
+  limbah:0,
+  coin:0,
+  setoran:0
 };
-
 
 let pendingWeight=0;
 let pendingCoin=0;
 let pendingPrice=0;
 
-
 /* ================= HARGA LIMBAH ================= */
 
 const harga={
-
-sayuran:500,
-buah:600,
-jerami:300,
-jagung:450,
-lainnya:300
-
+  sayuran:500,
+  buah:600,
+  jerami:300,
+  jagung:450,
+  lainnya:300
 };
-
 
 /* ================= LEVEL ================= */
 
 const levelData=[
 
 {
-min:0,
-next:50,
-nama:"🌱 Level 1 - Petani Pemula"
+  min:0,
+  next:50,
+  nama:"🌱 Level 1 - Petani Pemula"
 },
 
 {
-min:50,
-next:150,
-nama:"🌿 Level 2 - Petani Peduli"
+  min:50,
+  next:150,
+  nama:"🌿 Level 2 - Petani Peduli"
 },
 
 {
-min:150,
-next:300,
-nama:"♻️ Level 3 - Pejuang Lingkungan"
+  min:150,
+  next:300,
+  nama:"♻️ Level 3 - Pejuang Lingkungan"
 },
 
 {
-min:300,
-next:500,
-nama:"🐛 Level 4 - Sahabat Maggot"
+  min:300,
+  next:500,
+  nama:"🐛 Level 4 - Sahabat Maggot"
 },
 
 {
-min:500,
-next:1000,
-nama:"🌳 Level 5 - Petani Eco Hero"
+  min:500,
+  next:1000,
+  nama:"🌳 Level 5 - Petani Eco Hero"
 },
 
 {
-min:1000,
-next:Infinity,
-nama:"🏆 Level 6 - EcoMaggot Legend"
+  min:1000,
+  next:Infinity,
+  nama:"🏆 Level 6 - EcoMaggot Legend"
 }
 
 ];
-
 
 /* ================= PINDAH HALAMAN ================= */
 
 function page(id){
 
-document
-.querySelectorAll(".page")
-.forEach(x=>{
-x.classList.remove("active");
-});
+  document
+  .querySelectorAll(".page")
+  .forEach(x=>{
+    x.classList.remove("active");
+  });
 
-document
-.getElementById(id)
-.classList.add("active");
+  document
+  .getElementById(id)
+  .classList.add("active");
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 
-update();
-
+  update();
 }
-
 
 /* ================= UPDATE ================= */
 
 function update(){
 
-document.getElementById("nama")
-.innerText=data.nama;
+  document.getElementById("nama").innerText =
+    data.nama || "Nama Petani";
 
-document.getElementById("coin")
-.innerText=data.coin.toLocaleString();
+  document.getElementById("coin").innerText =
+    data.coin.toLocaleString("id-ID");
 
-document.getElementById("statCoin")
-.innerText=data.coin.toLocaleString();
+  document.getElementById("statCoin").innerText =
+    data.coin.toLocaleString("id-ID");
 
-document.getElementById("rewardCoin")
-.innerText=data.coin.toLocaleString();
+  document.getElementById("rewardCoin").innerText =
+    data.coin.toLocaleString("id-ID");
 
-document.getElementById("leader")
-.innerText=
-data.coin.toLocaleString()+" 🪙";
+  document.getElementById("leader").innerText =
+    data.coin.toLocaleString("id-ID")+" 🪙";
 
-document.getElementById("total")
-.innerText=data.limbah.toFixed(1);
+  document.getElementById("total").innerText =
+    data.limbah.toFixed(1);
 
-document.getElementById("statWaste")
-.innerText=data.limbah.toFixed(1);
+  document.getElementById("statWaste").innerText =
+    data.limbah.toFixed(1);
 
-document.getElementById("statDeposit")
-.innerText=data.setoran;
+  document.getElementById("statDeposit").innerText =
+    data.setoran;
 
-document.getElementById("dampakWaste")
-.innerText=data.limbah.toFixed(1);
+  document.getElementById("dampakWaste").innerText =
+    data.limbah.toFixed(1);
 
+  /* POTENSI */
 
-/* POTENSI */
+  document.getElementById("maggot").innerText =
+    (data.limbah*0.7).toFixed(1);
 
-document.getElementById("maggot")
-.innerText=
-(data.limbah*0.7).toFixed(1);
+  document.getElementById("pupuk").innerText =
+    (data.limbah*0.3).toFixed(1);
 
-document.getElementById("pupuk")
-.innerText=
-(data.limbah*0.3).toFixed(1);
+  /* LEVEL */
 
+  let current=levelData.find(x =>
+    data.limbah>=x.min &&
+    data.limbah<x.next
+  );
 
-/* LEVEL */
+  if(!current){
+    current=levelData[levelData.length-1];
+  }
 
-let current=levelData.find(x=>
-data.limbah>=x.min &&
-data.limbah<x.next
-);
+  document.getElementById("level").innerText =
+    current.nama;
 
-if(!current){
+  if(current.next!==Infinity){
 
-current=levelData[levelData.length-1];
+    let kurang =
+      current.next-data.limbah;
 
+    document.getElementById("next").innerText =
+      "🎮 "+Math.max(0,kurang).toFixed(1)+
+      " kg lagi menuju level berikutnya";
+
+    let percent =
+      ((data.limbah-current.min)/
+      (current.next-current.min))*100;
+
+    document.getElementById("bar").style.width =
+      Math.max(0,Math.min(100,percent))+"%";
+
+    document.getElementById("progressText").innerText =
+      data.limbah.toFixed(1)+
+      " / "+current.next+" kg";
+
+  }else{
+
+    document.getElementById("next").innerText =
+      "🏆 Kamu sudah menjadi EcoMaggot Legend!";
+
+    document.getElementById("bar").style.width =
+      "100%";
+
+    document.getElementById("progressText").innerText =
+      "LEVEL MAKSIMAL";
+  }
+
+  /* ISI NAMA DI FORM */
+
+  document.getElementById("inputNama").value =
+    data.nama || "";
+
+  /* SIMPAN */
+
+  localStorage.setItem(
+    "EcoMaggot",
+    JSON.stringify(data)
+  );
 }
-
-document.getElementById("level")
-.innerText=current.nama;
-
-
-if(current.next!==Infinity){
-
-let kurang=
-current.next-data.limbah;
-
-document.getElementById("next")
-.innerText=
-"🎮 "+kurang.toFixed(1)+
-" kg lagi menuju level berikutnya";
-
-
-let percent=
-((data.limbah-current.min)/
-(current.next-current.min))*100;
-
-document.getElementById("bar")
-.style.width=
-Math.max(0,Math.min(100,percent))+"%";
-
-document.getElementById("progressText")
-.innerText=
-data.limbah.toFixed(1)+
-" / "+current.next+" kg";
-
-}
-
-else{
-
-document.getElementById("next")
-.innerText=
-"🏆 Kamu sudah menjadi EcoMaggot Legend!";
-
-document.getElementById("bar")
-.style.width="100%";
-
-document.getElementById("progressText")
-.innerText=
-"LEVEL MAKSIMAL";
-
-}
-
-
-/* SIMPAN */
-
-localStorage.setItem(
-"EcoMaggot",
-JSON.stringify(data)
-);
-
-}
-
 
 /* ================= FOTO ================= */
 
 function preview(event){
 
-const file=
-event.target.files[0];
+  const file =
+    event.target.files[0];
 
-if(!file)return;
+  if(!file)return;
 
-const img=
-document.getElementById("preview");
+  const img =
+    document.getElementById("preview");
 
-img.src=
-URL.createObjectURL(file);
+  img.src =
+    URL.createObjectURL(file);
 
-img.style.display="block";
-
+  img.style.display =
+    "block";
 }
-
 
 /* ================= ECO AI ================= */
 
 function analisis(){
 
-let nama=
-document.getElementById("inputNama").value;
+  let nama =
+    document.getElementById("inputNama").value;
 
-let jenis=
-document.getElementById("jenis").value;
+  let jenis =
+    document.getElementById("jenis").value;
 
-let berat=
-parseFloat(
-document.getElementById("berat").value
-);
+  let berat =
+    parseFloat(
+      document.getElementById("berat").value
+    );
 
+  if(nama.trim()!==""){
+    data.nama=nama.trim();
+  }
 
-if(nama.trim()!==""){
+  if(!berat || berat<=0){
 
-data.nama=nama;
+    alert(
+      "Masukkan berat limbah terlebih dahulu!"
+    );
 
+    return;
+  }
+
+  pendingWeight=berat;
+
+  pendingPrice =
+    berat*harga[jenis];
+
+  pendingCoin =
+    Math.round(berat*10);
+
+  let namaJenis={
+
+    sayuran:"🥬 Sayuran Busuk",
+    buah:"🍌 Kulit / Sisa Buah",
+    jerami:"🌾 Jerami",
+    jagung:"🌽 Sisa Jagung",
+    lainnya:"♻️ Organik Lainnya"
+
+  };
+
+  document.getElementById("hasilJenis")
+    .innerText=namaJenis[jenis];
+
+  document.getElementById("hasilBerat")
+    .innerText=berat;
+
+  document.getElementById("harga")
+    .innerText=
+    pendingPrice.toLocaleString("id-ID");
+
+  document.getElementById("hasilCoin")
+    .innerText=pendingCoin;
+
+  document.getElementById("hasil")
+    .style.display="block";
+
+  notifikasi(
+    "🤖 Eco-AI selesai menganalisis!"
+  );
 }
-
-
-if(!berat || berat<=0){
-
-alert(
-"Masukkan berat limbah terlebih dahulu!"
-);
-
-return;
-
-}
-
-
-pendingWeight=berat;
-
-pendingPrice=
-berat*harga[jenis];
-
-pendingCoin=
-Math.round(berat*10);
-
-
-let namaJenis={
-
-sayuran:"🥬 Sayuran Busuk",
-buah:"🍌 Kulit / Sisa Buah",
-jerami:"🌾 Jerami",
-jagung:"🌽 Sisa Jagung",
-lainnya:"♻️ Organik Lainnya"
-
-};
-
-
-document.getElementById("hasilJenis")
-.innerText=namaJenis[jenis];
-
-document.getElementById("hasilBerat")
-.innerText=berat;
-
-document.getElementById("harga")
-.innerText=
-pendingPrice.toLocaleString("id-ID");
-
-document.getElementById("hasilCoin")
-.innerText=pendingCoin;
-
-document.getElementById("hasil")
-.style.display="block";
-
-
-notifikasi(
-"🤖 Eco-AI selesai menganalisis!"
-);
-
-}
-
 
 /* ================= KONFIRMASI SETORAN ================= */
 
 function konfirmasi(){
 
-if(pendingWeight<=0)return;
+  if(pendingWeight<=0)return;
 
+  let oldLevel =
+    levelData.find(x =>
+      data.limbah>=x.min &&
+      data.limbah<x.next
+    );
 
-let oldLevel=
-levelData.find(x=>
-data.limbah>=x.min &&
-data.limbah<x.next
-);
+  let oldLevelIndex =
+    levelData.indexOf(oldLevel);
 
+  data.limbah += pendingWeight;
+  data.coin += pendingCoin;
+  data.setoran++;
 
-let oldLevelIndex=
-levelData.indexOf(oldLevel);
+  update();
 
+  let newLevel =
+    levelData.find(x =>
+      data.limbah>=x.min &&
+      data.limbah<x.next
+    );
 
-data.limbah+=pendingWeight;
+  let newLevelIndex =
+    levelData.indexOf(newLevel);
 
-data.coin+=pendingCoin;
+  if(newLevelIndex>oldLevelIndex){
 
-data.setoran++;
+    notifikasi(
+      "🎉 LEVEL UP! Selamat!"
+    );
 
+  }else{
 
-update();
+    notifikasi(
+      "♻️ Setoran berhasil! +"+
+      pendingCoin+
+      " EcoCoin"
+    );
+  }
 
+  document.getElementById("hasil")
+    .style.display="none";
 
-let newLevel=
-levelData.find(x=>
-data.limbah>=x.min &&
-data.limbah<x.next
-);
+  document.getElementById("berat")
+    .value="";
 
+  document.getElementById("foto")
+    .value="";
 
-let newLevelIndex=
-levelData.indexOf(newLevel);
+  document.getElementById("preview")
+    .style.display="none";
 
+  pendingWeight=0;
+  pendingCoin=0;
+  pendingPrice=0;
 
-if(newLevelIndex>oldLevelIndex){
-
-notifikasi(
-"🎉 LEVEL UP! Selamat!"
-);
-
+  setTimeout(()=>{
+    page("dashboard");
+  },1200);
 }
-
-else{
-
-notifikasi(
-"♻️ Setoran berhasil! +"+
-pendingCoin+
-" EcoCoin"
-);
-
-}
-
-
-document.getElementById("hasil")
-.style.display="none";
-
-document.getElementById("berat")
-.value="";
-
-document.getElementById("foto")
-.value="";
-
-document.getElementById("preview")
-.style.display="none";
-
-
-pendingWeight=0;
-pendingCoin=0;
-pendingPrice=0;
-
-
-setTimeout(()=>{
-page("dashboard");
-},1200);
-
-}
-
 
 /* ================= TUKAR REWARD ================= */
 
 function tukar(hargaReward,namaReward){
 
-if(data.coin<hargaReward){
+  if(data.coin<hargaReward){
 
-notifikasi(
-"❌ Eco-Coin kamu belum cukup!"
-);
+    notifikasi(
+      "❌ Eco-Coin kamu belum cukup!"
+    );
 
-return;
+    return;
+  }
 
+  data.coin-=hargaReward;
+
+  update();
+
+  notifikasi(
+    "🎁 "+namaReward+
+    " berhasil ditukarkan!"
+  );
 }
-
-
-data.coin-=hargaReward;
-
-update();
-
-
-notifikasi(
-"🎁 "+namaReward+
-" berhasil ditukarkan!"
-);
-
-}
-
 
 /* ================= NOTIFIKASI ================= */
 
 function notifikasi(text){
 
-let box=
-document.getElementById("notice");
+  let box =
+    document.getElementById("notice");
 
-box.innerText=text;
+  box.innerText=text;
 
-box.classList.add("show");
+  box.classList.add("show");
 
-setTimeout(()=>{
+  setTimeout(()=>{
 
-box.classList.remove("show");
+    box.classList.remove("show");
 
-},3000);
-
+  },3000);
 }
-
 
 /* ================= MULAI ================= */
 
